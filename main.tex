@@ -183,10 +183,11 @@ The nodewatcher platform uses a single platform-independent schema to describe c
 One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do much re-configuration.
 It is a frequent occurrence that deployed devices need to be replaced when they stop functioning properly due to various hardware failures.
 
-However, some configuration properties depend on features which are inherently device-dependent (for example the number of ethernet ports, available wireless radios, supported protocols, etc.).
+However, while having a platform-independent configuration, some configuration properties depend on features which are inherently device-dependent (for example the number of ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
 This can either further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
-This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration based on the selected target device with all its hardware and software properties.
+This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
+This validation must be based on the selected target device with all its hardware and software properties.
 The nodewatcher platform enables such instant validation, which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
@@ -195,45 +196,86 @@ Having a single unified schema can quickly become a limiting factor and things n
 
 \begin{figure}
 \centering
-\begin{minted}[fontsize=\footnotesize]{python}
+\begin{minted}[fontsize=\small]{python}
 class VIFConfig(InterfaceConfig, RoutableInterface):
-    device = registry_fields.IntraRegistryForeignKey(
-        WifiRadioDeviceConfig, editable=False, null=False,
-        related_name='interfaces'
-    )
+  device = registry_fields.IntraRegistryForeignKey(
+    WifiRadioDeviceConfig, null=False,
+    related_name='interfaces'
+  )
 
-    mode = registry_fields.RegistryChoiceField(
-        'node.config', 'core.interfaces#wifi_mode')
-    essid = models.CharField(max_length=50,
-        verbose_name="ESSID")
-    bssid = registry_fields.MACAddressField(
-        verbose_name="BSSID",  blank=True, null=True)
+  mode = registry_fields.RegistryChoiceField(
+    'node.config', 'core.interfaces#wifi_mode')
+  essid = models.CharField(max_length=50,
+    verbose_name="ESSID")
+  bssid = registry_fields.MACAddressField(
+    verbose_name="BSSID",  blank=True, null=True)
+
+# Register schema item into the schema which makes it
+# available to any other module.
+registration.point('node.config').register_subitem(
+  WifiRadioDeviceConfig, VIFConfig)
 \end{minted}
 \caption{An example of a platform-independent schema definition for a virtual wireless interface configuration.}
 \label{fig:schema-module-wifi}
 \end{figure}
 
 The nodewatcher platform avoids this problem by making the platform-independent schema itself completely extensible.
-It is the individual modules that register parts of the schema and the final schema is composed from all these parts.
-An example of such a schema part definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
+It is the individual modules that may register schema items and the final schema is the union of all these items.
+An example of such a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
-    \item The schema parts are class-based, which means they can be extended later on by other modules (in the example the \texttt{VIFConfig} extends a more generic \texttt{InterfaceConfig} which may be provided by another module).
+    \item The schema items are class-based, which means they can be extended later on by other modules (in the example the \texttt{VIFConfig} extends a more generic \texttt{InterfaceConfig} which may be provided by another module).
     \item Fields that represent enumerations (in the example \texttt{mode} is such a field) do not hardcode the possible options, but only provide an \textit{extension point} where additional choices can later be registered by other modules.
     Each such extension point is attached to a unique name (e.g. \texttt{core.interfaces\#wifi\_mode}) that may be referenced later when extending it.
-    \item Schema parts may reference other parts (in the example, \texttt{device} references the parent radio device that this virtual wireless network configuration is being configured on).
+    \item Schema items may reference other items (in the example, \texttt{device} references the parent radio device that this virtual wireless network configuration is being configured on).
 \end{itemize}
 
-To construct the base schema that is available with the nodewatcher platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included items common to most of the communities.
-But even these base parts of the schema are just module registrations which makes them removable in case some community needs to really change how things work.
+To construct the base schema that is available with the nodewatcher platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
+But even these base items of the schema are just module registrations which makes them removable in case some community needs to really change how things work.
 
+The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{ONeil_2008} as the mentioned schema items are actually models.
+The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like nodewatcher, modules may want to query on fields defined by other modules somewhere in the schema. For example, there is an item called \texttt{GeneralConfig} in the base schema, enabling users to configure a \texttt{name} for a node:
 
-- the need for extensibility mentioned in the introduction
-    - each module may register additional configuration items and may also extend existing configuration items
-    - show how we manage the extensible configuration using our lightweight ORM extensions
+\begin{minted}[fontsize=\small]{python}
+class GeneralConfig(NodeConfigRegistryItem):
+  name = models.CharField(
+    max_length=30,
+    null=True,
+    validators=[core_validators.NodeNameValidator()],
+  )
+\end{minted}
 
-- how the schema was designed
-- show sample of platform-independent configuration schema
-  - GIS/location, network interfaces, routing, etc.
+This base item does not provide any other fields besides the node name, leaving potential extensions to other modules.
+Let us now say that we would like to also add a choice field which would specify what device is in use on a specific node. We may do that in another module by saying:
+\begin{minted}[fontsize=\small]{python}
+class ExtendedConfig(GeneralConfig):
+  device = registry_fields.RegistryChoiceField(
+    'node.config', 'core.general#device', blank=True)
+\end{minted}
+
+Imagine now a module that would like to perform a query listing only nodes that use a device called \texttt{tp-wr741ndv4}.
+As mentioned, these two classes actually represent ORM model definitions so a traditional query traversing these two relations would go something like:
+\begin{minted}[fontsize=\small]{python}
+Node.objects.filter(
+  generalconfig__extendedconfig__device='tp-wr741ndv4'
+)
+\end{minted}
+
+Here we make the assumption that there is a one-to-one relation between node and \texttt{GeneralConfig}.
+While one-to-many relations are also supported (so each node can have multiple instances of a model), we limit ourselves to this simple case for ease of exposition.
+Note how even in this very simple example we had to explicitly specify the hierarchical path that is spanning these two relations.
+This makes such a method not very developer-friendly under the requirement of extensibility and even more complex schemas.
+One of the features that the registry enables, is that we can simplify the same query as:
+\begin{minted}[fontsize=\small]{python}
+Node.objects.registry_filter(
+  core_general__device='tp-wr741ndv4'
+)
+\end{minted}
+
+In this case, the \texttt{core.general} is the \textit{registry identifier} that is attached to the base model and represents itself or any of its subclasses at the same time.
+In the background, the proper relations are automatically deduced and the query executed.
+Similar extensions are also provided for simplified fetching of fields deeply nested in the schema.
+
+\subsection{Form Generation and Rule-based Defaults}
 
 - another important issue to address is how to specify defaults so users can quickly get working configurations for some common use cases; rules engine?
 
