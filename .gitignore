@@ -15,3 +15,4 @@ main.pdf
 *.out
 *.spl
 mpxerr.tex
+*.synctex.gz
