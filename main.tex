@@ -277,11 +277,21 @@ Similar extensions are also provided for simplified fetching of fields deeply ne
 
 \subsection{Form Generation and Rule-based Defaults}
 
+
 - another important issue to address is how to specify defaults so users can quickly get working configurations for some common use cases; rules engine?
 
 \subsection{Resource Allocation}
 
-- need to support allocation of resources like IP addresses
+As in any network, there is also a need to perform IP address resource allocation in community networks.
+This is especially the case in IPv4-based networks where it is hard to automatically generate node addresses without collisions due to the small available space.
+
+%TODO citation for buddy allocation scheme
+In order to support that, nodewatcher implements a hierarchical buddy allocation scheme [?] extended with support for hold down timers.
+At the top level IP space is split into multiple pools from which other objects (for example nodes) may request specific allocations.
+Hold down timers are necessary to avoid collisions with nodes that have been recently removed.
+When an allocation is freed, it is still marked as \textit{reserved} until the hold down timer expires.
+
+This is required especially in community networks where nodes may not be completely removed and may actually reappear at a later time, causing routing conflicts.
 
 \subsection{Firmware Generator}
 \label{sec:firmware-generator}
