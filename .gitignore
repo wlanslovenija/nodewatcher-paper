@@ -1,0 +1,17 @@
+*.dvi
+*.0
+*.log
+*.mpx
+*.mp
+*.aux
+*.lof
+*.lot
+*.toc
+main.pdf
+*.ptb
+*.brf
+*.bbl
+*.blg
+*.out
+*.spl
+mpxerr.tex

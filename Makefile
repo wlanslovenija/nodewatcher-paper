@@ -11,7 +11,7 @@ $(DOCUMENT): $(TEXFILE) $(BIBFILE)
 	pdflatex -interaction=batchmode "$<"
 
 clean:
-	rm -f *.dvi *.0 *.log *.mpx *.mp *.aux *.lof *.lot *.toc main.pdf *.ptb *.brf *.bbl *.blg *.out mpxerr.tex
+	rm -f *.dvi *.0 *.log *.mpx *.mp *.aux *.lof *.lot *.toc main.pdf *.ptb *.brf *.bbl *.blg *.out mpxerr.tex *.spl
 
 .PHONY: all clean
 
