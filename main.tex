@@ -297,34 +297,111 @@ This is required especially in community networks where nodes may not be complet
 \label{sec:firmware-generator}
 
 Traditionally, devices may be configured manually before they are deployed.
-This is usually done either through a command-line interface or a graphical user interface, depending on the firmware running on the device.
+This is usually done either through a command-line interface via SSH or a graphical user interface via HTTP, depending on the firmware running on the device.
 In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
 In community wireless networks, devices are sometimes deployed in hard-to-reach locations like rooftops or high towers and fixing certain problems requires physical access to the device.
 
 As described, the nodewatcher platform can be used to store device configurations in a platform-independent way.
 But this configuration cannot directly be used on devices.
-Different operating systems like the open source OpenWrt or the proprietary RouterOS that are usually used on devices commonly used in community networks, have completely different ways of being configured.
+Different operating systems like the open source OpenWrt [?] or the proprietary RouterOS [?] that are usually used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
 
-There are however some differences between platforms which may prevent certain configurations from being properly instantiated on one platform even when those same configurations work without issues on another platform.
-More, even within the same platform different devices have different capabilities due to differences in their hardware.
-Configuration which was platform-independent and unaware of the target device in the first stage can produce problems while being applied to a specific device and platform.
+However, such a step presents some additional challenges that prevent a straightforward transformation of any configuration based on the platform-independent schema to a device-specific one.
+This is due to the fact that there are differences between operating systems which may prevent certain configurations from being properly instantiated on one operating system even when those same configurations work without issues on another one.
+Additionally even using the same operating system, devices have different capabilities due to differences in their hardware.
+Configuration which was platform-independent and unaware of the target device in the first stage can produce problems while being applied to a specific device and operating system.
 This conflict may result in some unpleasant, but realistic, scenarios:
 \begin{enumerate}[label=\roman*)]
-\item Because the target device model has switched ports designated as LAN and WAN, the network configuration of the ports will be incorrect.
+\item Devices have different default network switch layouts and VLAN tags.
+As usually nodes use the WAN-designated port for the internet uplink and the LAN-designated port for routing to nodes in the same location, such a misconfiguration will cause connectivity issues.
 
-\item The device requires a specific package to be installed before one can use its wireless interface.
-Also the wireless radio only supports IEEE802.11a channels.
-Since the configuration system is not aware of this, blind configuration transformation to the target platform results in a failure to bring up the wireless device.
+\item Configuration of some wireless authentication mechanisms requires the installation of specialized packages on some operating systems.
+Without them even a valid configuration will simply not work.
 
-%TODO some more scenarios?
+\item Different devices have different radio capabilities.
+For example, some devices only support IEEE802.11a channels and if the configuration system is not aware of this, blind configuration transformation to the target platform results in a failure to bring up the wireless device.
 \end{enumerate}
 
-- how platform-independent configuration can be transformed for various platforms
+These scenarios show that supporting informed decisions of the configuration transformation process requires the use of a device database component.
+Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device:
+\begin{minted}[fontsize=\small]{python}
+class TPLinkWR741NDv1(cgm_devices.DeviceBase):
+  identifier = 'tp-wr741ndv1'
+  name = "WR741ND (v1)"
+  manufacturer = "TP-Link"
+  url = 'http://www.tp-link.com/'
+  architecture = 'ar71xx'
+  radios = [
+    cgm_devices.IntegratedRadio('wifi0', "Wifi0", [
+      cgm_protocols.IEEE80211BGN(
+        cgm_protocols.IEEE80211BGN.SHORT_GI_20,
+        cgm_protocols.IEEE80211BGN.SHORT_GI_40,
+        cgm_protocols.IEEE80211BGN.RX_STBC1,
+        cgm_protocols.IEEE80211BGN.DSSS_CCK_40,
+      )
+    ], [
+      cgm_devices.AntennaConnector('a1', "Antenna0")
+    ], [
+      cgm_devices.DeviceRadio.MultipleSSID,
+    ])
+  ]
+  switches = [
+    cgm_devices.Switch(
+      'sw0', "Switch0",
+      ports=5,
+      cpu_port=0,
+      vlans=16,
+    )
+  ]
+  ports = [
+    cgm_devices.EthernetPort('wan0', "Wan0"),
+    cgm_devices.SwitchedEthernetPort(
+      'lan0', "Lan0",
+      switch='sw0',
+      vlan=1,
+      ports=[0, 1, 2, 3, 4],
+    )
+  ]
+  antennas = [
+    cgm_devices.InternalAntenna(
+      identifier='a1',
+      polarization='horizontal',
+      angle_horizontal=360,
+      angle_vertical=75,
+      gain=2,
+    )
+  ]
+  # Configuration below this point describes
+  # differences for each supported operating
+  # system (in this case 'openwrt').
+  port_map = {
+    'openwrt': {
+      'wifi0': 'radio0',
+      'sw0': 'switch0',
+      'wan0': 'eth1',
+      'lan0': 'eth0',
+    }
+  }
+  drivers = {
+    'openwrt': {
+      'wifi0': 'mac80211'
+    }
+  }
+  profiles = {
+    'openwrt': {
+      'name': 'TLWR741',
+      'files': [
+        'openwrt-ar71xx-generic-tl-wr741nd-v1.bin'
+      ]
+    }
+  }
+\end{minted}
 
-Supporting informed decisions of the configuration transformation process requires the use of a device database component.
-  - declarative device descriptors containing hardware properties and radio capabilities
+Device descriptors may be subclassed in order to simplify definitions of new devices with only slight variations.
+This feature greatly improves the time to support new devices which is important in the quickly evolving community networks.
+
+- how platform-independent configuration can be transformed for various platforms
 
 - openwrt-based buildsystem combined with Docker containers for easier deployment; builder accessed via an SSH connection; a nice figure showing this process: platform-indep. config -> platform config -> builders (docker containers) -> firmware images
 
