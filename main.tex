@@ -232,7 +232,7 @@ An example of such a schema item definition is shown in Figure~\ref{fig:schema-m
 \end{itemize}
 
 To construct the base schema that is available with the nodewatcher platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
-But even these base items of the schema are just module registrations which makes them removable in case some community needs to really change how things work.
+But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
 The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{ONeil_2008} as the mentioned schema items are actually models.
 The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like nodewatcher, modules may want to query on fields defined by other modules somewhere in the schema. For example, there is an item called \texttt{GeneralConfig} in the base schema, enabling users to configure a \texttt{name} for a node:
@@ -275,12 +275,12 @@ Node.objects.registry_filter(
 
 In this case, the \texttt{core.general} is the \textit{registry identifier} that is attached to the base model and represents itself or any of its subclasses at the same time.
 In the background, the proper relations are automatically deduced and the query executed.
-Similar extensions are also provided for simplified fetching of fields deeply nested in the schema.
+Similar extensions are also provided for simplified fetching of fields deeply nested in the schema by deducing and performing the required table join operations.
 
 \subsection{Form Generation and Rule-based Defaults}
 
 Having an extensible schema is a nice step towards reusable modules shared between community networks.
-But a schema is just useful for module developers so that they have a place to store various configuration values.
+But a schema is useful just for module developers so that they have a place to store various configuration values.
 For platform users, the frontend (web interface) is even more important.
 
 There are two issues regarding user interaction with the configuration schema:
@@ -288,15 +288,16 @@ There are two issues regarding user interaction with the configuration schema:
 \item there must be a way for the users to enter configuration values conforming to the specified schema;
 \item since the schema may be complex, there needs to be a way for project maintainers to be able to codify context-sensitive configuration defaults.
 \end{enumerate*}
-The first issue is addressed in nodewatcher by the registry API's ability to automatically generate a user interface conforming to the schema.
-This interface may be customized by the module developers where needed, but even defaults are immediately usable for simple modules.
+The first issue is addressed in nodewatcher by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
+Automatic form generation simplifies the module development process and reduces code duplication.
+The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple modules.
 
 Solving the second issue may be approached from various angles.
 One solution would be for network maintainers to provide pre-defined templates of configuration defaults.
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
-Nodewatcher takes a different approach, enabling codification of defaults in the form of simple declarative rules like the following example showing context-sensitive wireless ESSID configuration:
+Nodewatcher takes a different approach, enabling codification of defaults in the form of simple declarative rules. The following example shows context-sensitive default wireless ESSID configuration:
 \begin{minted}[fontsize=\small]{python}
 # When the project name is 'Ljubljana'.
 rule(project == "Ljubljana",
@@ -316,6 +317,9 @@ Rules in this example only apply to a specific project and configure two virtual
 In case the radio does not support configuring virtual interfaces, only one network may be configured, and in this case a single mesh mode interface is configured.
 The benefit of using a declarative approach for specifying rules instead of an imperative one is that the rules may only be evaluated when needed~-- in the above example, the inner rules will be evaluated only when the project changes and not when any other fields in the schema change.
 This is an important detail as defaults should not overwrite configuration when changing an unrelated setting.
+
+Evaluation of these rules is achieved by first generating an expression tree and then lazily evaluating only those sub-trees which contain expressions that match the current configuration value change.
+In order to detect which rules have already been evaluated, forms generated by the registry contain internal state.
 
 \subsection{Resource Allocation}
 
@@ -342,12 +346,12 @@ The firmware builders are Docker containers with pre-built firmware build toolch
 \end{figure*}
 
 Traditionally, devices may be configured manually before they are deployed.
-This is usually done either through a command-line interface via SSH or a graphical user interface via HTTP, depending on the firmware running on the device.
+This is usually done either through a command-line interface via secure shell (SSH) or a graphical user interface via HTTP, depending on the firmware running on the device.
 In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
 In community wireless networks, devices are sometimes deployed in hard-to-reach locations like rooftops or high towers and fixing certain problems requires physical access to the device.
 
-As described, the nodewatcher platform can be used to store device configurations in a platform-independent way.
+As described, the nodewatcher platform can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
 But this configuration cannot directly be used on devices.
 Different operating systems like the open source OpenWrt [?] or the proprietary RouterOS [?] that are usually used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
@@ -362,7 +366,7 @@ This conflict may result in some unpleasant, but realistic, scenarios:
 As usually nodes use the WAN-designated port for the internet uplink and the LAN-designated port for routing to nodes in the same location, such a misconfiguration will cause connectivity issues.
 
 \item Configuration of some wireless authentication mechanisms requires the installation of specialized packages on some operating systems.
-Without them even a valid configuration will simply not work.
+Without them even an otherwise valid configuration will simply not work.
 
 \item Different devices have different radio capabilities.
 For example, some devices only support IEEE802.11a channels and if the configuration system is not aware of this, blind configuration transformation to the target platform results in a failure to bring up the wireless device.
@@ -447,7 +451,7 @@ Device descriptors may be subclassed in order to simplify definitions of new dev
 This feature greatly improves the time to fully support new devices which is important in the quickly evolving community networks.
 
 Using these device descriptors and the platform-independent configuration provided in the first stage, nodewatcher is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
-The transformation step is built by a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
+The transformation step is built from a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
 Such a modular transformation step ensures that the pipeline can be adapted to a wide range of transformations (for example, supporting various routing protocols, sensor inputs, network configurations etc.), so everything that a target device and operating system support may be used.
 Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cycle}, the transformation module pipeline may also raise errors when parts of the input configuration could not be properly transformed.
 These errors are immediately propagated up to the user who is entering configuration via the nodewatcher's web interface, so that problems may be corrected as soon as possible.
@@ -457,9 +461,9 @@ In order to further ease deployment, the resulting device-specific configuration
 Such pre-generated firmware images further reduce the room for errors as no configuration needs to be transferred separately or entered manually.
 Besides reducing errors, packaging software (firmware) together with its configuration is also beneficial for ensuring that the configuration really is applicable to the used software versions as both can be tested together.
 Otherwise, using a stale configuration on a newer operating system or newer versions of some packages may result in failing devices.
-Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks  that would be beneficial to existing and emerging networks.
+Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks  that would be beneficial to existing and emerging networks alike.
 
-The underlying firmware build system has been built in such a way that it is extensible to different operating systems and platforms.
+The underlying firmware build system has been designed in such a way that it is extensible to different operating systems and platforms.
 To achieve this, the build system is structured into multiple Docker containers~\cite{Docker_2013}.
 Docker containers are a lightweight wrapper around the Linux namespacing API and filesystem layers with a goal to enable an interface for packaging applications in a reusable and extensible way.
 Namespaces provide container isolation (the containers still share the host kernel), so that adjacent containers running on the same host are unable to see or influence each other's processes, network configuration, etc.
@@ -469,12 +473,12 @@ The build process is specific for each operating system and currently only OpenW
 
 When the device-specific configuraion has been generated by the transformation step (see the central node in Figure~\ref{fig:firmware-build-system}), a suitable builder is selected based on the architecture and software platform specified in the device descriptor.
 After a builder is identified, the nodewatcher process establishes a secure shell (SSH) connection to the selected container, transfers the configuration there and starts the build process which completes in a matter of seconds.
-This decoupling of configuration and actual builders enables the builder containers to be actually deployed on another machine with more resources.
+This decoupling of configuration and firmware builders enables the builder containers to be deployed on another machine with more resources.
 
 By packaging firmware builders as containers, nodewatcher enables simple reuse and sharing of ready-made builders between community networks.
 Compiling and preparing a range of firmware builder toolchains can be a lengthy process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their nodewatcher instances without compiling anything.
 
-The described system is also extensible -- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation process.
+The described system is also extensible -- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
 
 \subsection{Network Monitoring}
 
