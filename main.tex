@@ -332,7 +332,7 @@ For example, some devices only support IEEE802.11a channels and if the configura
 \end{enumerate}
 
 These scenarios show that supporting informed decisions of the configuration transformation process requires the use of a device database component.
-Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device:
+Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device~-- example for an actual device is as follows:
 \begin{minted}[fontsize=\small]{python}
 class TPLinkWR741NDv1(cgm_devices.DeviceBase):
   identifier = 'tp-wr741ndv1'
@@ -440,6 +440,16 @@ Compiling and preparing a range of firmware builder toolchains can be a lengthy 
 The described system is also extensible -- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation process.
 
 \subsection{Network Monitoring}
+
+After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for compliance.
+In the same way as the configuration transformation step performed static validation on device configuration before it was deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
+The scope of the latter is also much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
+
+One may ask why should monitoring be integrated into the provisioning platform?
+Existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
+This enables the system to quickly detect configuration errors (for example after someone manually edited configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
+Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or a specific import script for the target monitoring system (which is usually not very portable among different communities).
+Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks.
 
 - a nice figure showing how data flows from the devices via the nodewatcher-agent via http/json to the monitor process and then is stored via datastream
 - nodewatcher-agent
