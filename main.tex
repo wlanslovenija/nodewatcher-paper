@@ -409,13 +409,20 @@ class TPLinkWR741NDv1(cgm_devices.DeviceBase):
 Device descriptors may be subclassed in order to simplify definitions of new devices with only slight variations.
 This feature greatly improves the time to fully support new devices which is important in the quickly evolving community networks.
 
-Using these device descriptors and the platform-independent configuration provided in the first stage, nodewatcher is able to generate device-specific configuration together with a firmware image which may be flashed directly onto the target device.
+Using these device descriptors and the platform-independent configuration provided in the first stage, nodewatcher is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
+The transformation step is built by a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
+Such a modular transformation step ensures that the pipeline can be adapted to a wide range of transformations (for example, supporting various routing protocols, sensor inputs, network configurations etc.), so everything that a target device and operating system support may be used.
+Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cycle}, the transformation module pipeline may also raise errors when parts of the input configuration could not be properly transformed.
+These errors are immediately propagated up to the user who is entering configuration via the nodewatcher's web interface, so that problems may be corrected as soon as possible.
+The validation system will not save a configuration which has outstanding errors, preventing invalid configurations from being used to deploy devices.
+
+In order to further ease deployment, the resulting device-specific configuration may be packaged together with a firmware image which may be then flashed directly onto the target device.
 Such pre-generated firmware images further reduce the room for errors as no configuration needs to be transferred separately or entered manually.
 Besides reducing errors, packaging software (firmware) together with its configuration is also beneficial for ensuring that the configuration really is applicable to the used software versions as both can be tested together.
 Otherwise, using a stale configuration on a newer operating system or newer versions of some packages may result in failing devices.
-Bundling firmware together with node-specific configuration is a novel way of provisioning community networks that is currently not used in any other community network.
+Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks  that would be beneficial to existing and emerging networks.
 
-The underlying firmware build system has been built in such a way that it is extensible to different operating systems and platforms (see Figure~\ref{fig:firmware-build-system} for an overview of the whole build pipeline).
+The underlying firmware build system has been built in such a way that it is extensible to different operating systems and platforms.
 To achieve this, the build system is structured into multiple Docker containers~\cite{Docker_2013}.
 Docker containers are a lightweight wrapper around the Linux namespacing API and filesystem layers with a goal to enable an interface for packaging applications in a reusable and extensible way.
 Namespaces provide container isolation (the containers still share the host kernel), so that adjacent containers running on the same host are unable to see or influence each other's processes, network configuration, etc.
