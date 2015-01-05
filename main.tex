@@ -5,6 +5,8 @@
 \usepackage{amsfonts,amsmath,amssymb}
 \usepackage{url}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{fancyref}
 \usepackage{url}
 \usepackage{mathtools}
@@ -277,8 +279,43 @@ Similar extensions are also provided for simplified fetching of fields deeply ne
 
 \subsection{Form Generation and Rule-based Defaults}
 
+Having an extensible schema is a nice step towards reusable modules shared between community networks.
+But a schema is just useful for module developers so that they have a place to store various configuration values.
+For platform users, the frontend (web interface) is even more important.
 
-- another important issue to address is how to specify defaults so users can quickly get working configurations for some common use cases; rules engine?
+There are two issues regarding user interaction with the configuration schema:
+\begin{enumerate*}[label=\itshape\alph*\upshape)]
+\item there must be a way for the users to enter configuration values conforming to the specified schema;
+\item since the schema may be complex, there needs to be a way for project maintainers to be able to codify context-sensitive configuration defaults.
+\end{enumerate*}
+The first issue is addressed in nodewatcher by the registry API's ability to automatically generate a user interface conforming to the schema.
+This interface may be customized by the module developers where needed, but even defaults are immediately usable for simple modules.
+
+Solving the second issue may be approached from various angles.
+One solution would be for network maintainers to provide pre-defined templates of configuration defaults.
+The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
+One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
+
+Nodewatcher takes a different approach, enabling codification of defaults in the form of simple declarative rules like the following example showing context-sensitive wireless ESSID configuration:
+\begin{minted}[fontsize=\small]{python}
+# When the project name is 'Ljubljana'.
+rule(project == "Ljubljana",
+  # When the radio supports multiple VIFs.
+  rule(contains(radio0.features, "vifs"),
+    assign(radio0, mode="ap", essid="ap.lj"),
+    assign(radio0, mode="mesh", essid="mesh.lj")
+  ),
+  # When the radio only supports a single VIF.
+  rule(~contains(radio0.features, "vifs"),
+    assign(radio0, mode="mesh", essid="ap.lj")
+  )
+)
+\end{minted}
+
+Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
+In case the radio does not support configuring virtual interfaces, only one network may be configured, and in this case a single mesh mode interface is configured.
+The benefit of using a declarative approach for specifying rules instead of an imperative one is that the rules may only be evaluated when needed~-- in the above example, the inner rules will be evaluated only when the project changes and not when any other fields in the schema change.
+This is an important detail as defaults should not overwrite configuration when changing an unrelated setting.
 
 \subsection{Resource Allocation}
 
