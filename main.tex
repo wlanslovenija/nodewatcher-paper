@@ -113,8 +113,8 @@ This is the approach that we are taking with the nodewatcher v3 platform.
 We make the following novel contributions:
 \begin{itemize}
 \item A modular open platform that may be easily tailored to the needs of any community network.
-\item An extensible per-node firmware image generation module that enables generation of pre-configured images for specific nodes in order to eliminate any manual configuration requirement on the nodes.
-\item An extensible monitoring system module with a scalable time-series data storage backend enabling large-scale collection of status and other telemetry data while supporting interactive visualizations.
+\item An extensible per-node firmware image generation system that enables generation of pre-configured images for specific nodes in order to eliminate any manual configuration requirement on the nodes.
+\item An extensible monitoring system with a scalable time-series data storage backend enabling large-scale collection of status and other telemetry data while supporting interactive visualizations.
 \end{itemize}
 
 The rest of this paper is organized as follows.
@@ -126,7 +126,7 @@ Section~\ref{sec:conclusion} presents conclusions and ideas for future work.
 \section{Related Work}
 \label{sec:related-work}
 
-A lot of research has been done into individual wireless mesh network building blocks, among them are routing~\cite{Murray_2010,Neumann_2012}, security~\cite{Siddiqui_2007}, and analysis of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008}.
+A lot of research has been done into individual wireless mesh network building blocks. Among them are routing~\cite{Murray_2010,Neumann_2012}, security~\cite{Siddiqui_2007}, and analysis of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008}.
 But research into community network management solutions and best practices still remains scarce.
 This is why most of the related work in this area comes from the individual community networks which have each developed its own solutions, practices and philosophy.
 
@@ -153,7 +153,7 @@ Freifunk FFM/CNDB features an extensive database schema which models everything 
 With its very detailed modelling of individual objects it is an example of the large common base approach.
 Similar to Nodeshot, there is no common approach to managing schema extensions and there is also no monitoring support.
 
-None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, which reduces the administration burden.
+None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, reducing the required administration burden.
 
 \subsection{Traditional Network Management}
 
@@ -184,9 +184,9 @@ The cycle starts with the \textit{configuration stage} where devices are configu
 At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device.
 The latter only happens in the next stage, the \textit{generation stage}, where platform-independent configuration is transformed to device- and platform-specific configuration.
 For easier deployment, a firmware image for the target device may also be generated.
-In the \textit{deployment stage}, configuration or firmware is applied to the target device and the device is deployed in the field.
+Then, in the \textit{deployment stage}, configuration or firmware is applied to the target device and the device is deployed in the field.
 As soon as the device is deployed and is able to join the network, it is monitored by the platform.
-In the \textit{monitoring stage}, the device is actively monitored for correct operation in context of the whole network.
+In the \textit{monitoring stage}, the device is actively validated for correct operation in context of the whole network.
 In case errors in configuration or other problems are detected, the device's maintainer is notified so the device may be fixed and/or reconfigured, repeating the cycle.
 
 The nodewatcher platform aims to provide components for all stages of the described device management cycle.
@@ -195,17 +195,17 @@ In the next sections we will describe the network management platform components
 
 \subsection{Platform-independent Configuration}
 
-Community networks are usually built from a wide range of devices, containing everything from off-the-shelf home routers to specialized devices used for backbone links and regular servers used for core services.
+Community networks are usually built using a wide range of devices, containing everything from off-the-shelf home routers to specialized devices used for backbone links and regular servers used for core services.
 The nodewatcher platform uses a single platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
 One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do much re-configuration.
 It is a frequent occurrence that deployed devices need to be replaced when they stop functioning properly due to various hardware failures.
 
-However, while having a platform-independent configuration, some configuration properties depend on features which are inherently device-dependent (for example the number of ethernet ports, available wireless radios, supported protocols, etc.).
+However, while having a platform-independent configuration is a noble goal, some configuration properties inherently depend on features which are inherently device-dependent (for example the number of ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
-This can either further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
+This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
 This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
-This validation must be based on the selected target device with all its hardware and software properties.
-The nodewatcher platform enables such instant validation, which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
+Such validation must be based on the selected target device with all its hardware and software properties.
+The nodewatcher platform enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
 Communities will usually have some specifics regarding their operations~-- either because of different local regulations or differences in philosophy.
@@ -238,7 +238,7 @@ registration.point('node.config').register_subitem(
 
 The nodewatcher platform avoids this problem by making the platform-independent schema itself completely extensible.
 It is the individual modules that may register schema items and the final schema is the union of all these items.
-An example of such a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
+An example of a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
     \item The schema items are class-based, which means they can be extended later on by other modules (in the example the \texttt{VIFConfig} extends a more generic \texttt{InterfaceConfig} which may be provided by another module).
     \item Fields that represent enumerations (in the example \texttt{mode} is such a field) do not hardcode the possible options, but only provide an \textit{extension point} where additional choices can later be registered by other modules.
@@ -313,7 +313,7 @@ There are two issues regarding user interaction with the configuration schema:
 \end{enumerate*}
 The first issue is addressed in nodewatcher by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
 Automatic form generation simplifies the module development process and reduces code duplication.
-The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple modules.
+The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.
 
 Solving the second issue may be approached from various angles.
 One solution would be for network maintainers to provide pre-defined templates of configuration defaults.
@@ -337,7 +337,7 @@ rule(project == "Ljubljana",
 \end{minted}
 
 Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
-In case the radio does not support configuring virtual interfaces, only one network may be configured, and in this case a single mesh mode interface is configured.
+In case the radio does not support configuring virtual interfaces, only one network may be set, and in this case a single mesh mode interface is configured.
 The benefit of using a declarative approach for specifying rules instead of an imperative one is that the rules may only be evaluated when needed~-- in the above example, the inner rules will be evaluated only when the project changes and not when any other fields in the schema change.
 This is an important detail as defaults should not overwrite configuration when changing an unrelated setting.
 
@@ -475,7 +475,7 @@ Compiling and preparing a range of firmware builder toolchains can be a lengthy 
 \label{sec:network-monitoring}
 
 After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for compliance.
-In the same way as the configuration transformation step performed static validation on device configuration before it was deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
+In the same way as the configuration transformation step performs static validation of device configuration before it is deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
 While validation is common to both, the scope of the latter is much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
 Besides performing configuration compliance validation, monitoring may also be used to collect various sensor data through time.
 This is useful for diagnostics under changing network conditions and can also be used to collect various sensor data coming from external sources like temperature, humidity and lightning strike detection sensors.
@@ -488,16 +488,16 @@ Thus, an integrated monitoring component is key in ensuring ease of deployment a
 An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
 
 Data collection starts on the devices and is implemented by the \texttt{nodewatcher-agent} process.
-It is a small C application with a minimal core which is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
+It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
 Each module is a shared library which is loaded when the agent process starts.
 Having modules as shared libraries enables simple extension of the monitoring agent by third-party packages.
 Modules may independently fetch data from external sources providing state like current resource usage reported by the Linux kernel, status of various interfaces, wireless configuration and site survey, connected clients, external sensor input, etc.
 
-As can be seen from this description, the monitoring agent is similar in design to other parts of nodewatcher, with a focus on modularity.
+As can be seen from its description, the monitoring agent is similar in design to other parts of nodewatcher, with a focus on modularity.
 An important feature of a monitoring agent that runs on remote devices is the ability for modules to independently evolve their schema.
 In order to add features to existing modules there needs to be a way to version the state schema which is reported back to the monitoring pipeline.
 This is especially the case in community networks where there are many different devices with different firmware versions and also with different versions of the monitoring modules.
-A single version for all modules is not enough as when modules are developed by different developers, possibly from different community networks and independent schema evolution is required.
+A single version for all modules is not enough as modules may be developed by different developers, possibly from different community networks and independent schema evolution is required.
 
 \begin{figure}
 \centering
