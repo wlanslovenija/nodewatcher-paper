@@ -476,19 +476,66 @@ Compiling and preparing a range of firmware builder toolchains can be a lengthy 
 
 After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for compliance.
 In the same way as the configuration transformation step performed static validation on device configuration before it was deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
-The scope of the latter is also much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
+While validation is common to both, the scope of the latter is much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
+Besides performing configuration compliance validation, monitoring may also be used to collect various sensor data through time.
+This is useful for diagnostics under changing network conditions and can also be used to collect various sensor data coming from external sources like temperature, humidity and lightning strike detection sensors.
 
 One may ask why should monitoring be integrated into the provisioning platform?
-Existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
+It is true that existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
 This enables the system to quickly detect configuration errors (for example after someone manually edited configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
-Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or a specific import script for the target monitoring system (which is usually not very portable among different communities).
-Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks. An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store as one of the sinks.
+Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or specific import scripts for the target monitoring system (which is usually not very portable among different communities).
+Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks.
+An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
 
-- a nice figure showing how data flows from the devices via the nodewatcher-agent via http/json to the monitor process and then is stored via datastream
-- nodewatcher-agent
-  - runs on OpenWrt
-  - supports various data reporting via an extensible JSON schema
-  - modules may evolve their schema independently from others (schema versioning)
+Data collection starts on the devices and is implemented by the \texttt{nodewatcher-agent} process.
+It is a small C application with a minimal core which is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
+Each module is a shared library which is loaded when the agent process starts.
+Having modules as shared libraries enables simple extension of the monitoring agent by third-party packages.
+Modules may independently fetch data from external sources providing state like current resource usage reported by the Linux kernel, status of various interfaces, wireless configuration and site survey, connected clients, external sensor input, etc.
+
+As can be seen from this description, the monitoring agent is similar in design to other parts of nodewatcher, with a focus on modularity.
+An important feature of a monitoring agent that runs on remote devices is the ability for modules to independently evolve their schema.
+In order to add features to existing modules there needs to be a way to version the state schema which is reported back to the monitoring pipeline.
+This is especially the case in community networks where there are many different devices with different firmware versions and also with different versions of the monitoring modules.
+A single version for all modules is not enough as when modules are developed by different developers, possibly from different community networks and independent schema evolution is required.
+
+\begin{figure}
+\centering
+\begin{minted}[fontsize=\small]{json}
+{
+  "core.general": {
+    "_meta": { "version": 4 },
+    
+    "uuid": "64840ad9-aac1-4494-b4d1-9de5d8cbedd9",
+    "hostname": "test-4",
+    "uptime": 4612,
+    "hardware": {
+      "board": "tl-wr741nd-v4",
+      "model": "TP-Link TL-WR740N/ND v4"
+    }
+  },
+  "core.resources": {
+    "_meta": { "version": 2 },
+    
+    "memory": {
+      "total": 32768,
+      "free": 24611
+    }
+  }
+}
+\end{minted}
+\caption{Part of the JSON schema compiled by the nodewatcher monitoring agent, showing sample output for two monitoring modules.}
+\label{fig:monitoring-json-schema}
+\end{figure}
+
+Node state compiled by the agent is a structured JSON document where the top level contains one dictionary element for each module with the element's key being the module identifier.
+A partial example of such a state is shown in Figure~\ref{fig:monitoring-json-schema}.
+Each module element may provide whatever elements it wants to report for the current state.
+The agent will automatically create a special \texttt{\_meta} element containing the module metadata~-- currently a module version number.
+By inspecting the metadata, the processing pipeline is able to handle multiple versions of the schema for different modules.
+
+On the backend, the processing of all operations related to monitoring is handled by the monitoring pipeline.
+
 - backend processing architecture (monitord)
   - enables constructions of arbitrary processing pipelines
   - supports automatic parallelization of operations based on the constructed pipeline
