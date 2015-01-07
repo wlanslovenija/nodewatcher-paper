@@ -104,11 +104,11 @@ Each community has at least slight differences in their vision and operation phi
 \end{enumerate*}
 
 In order to address this, there are at least two approaches that can be taken.
-The first approach is to try to create a common system that addresses the needs of as many of communities as possible by providing a large feature set and a large configuration schema encompassing all possible scenarios.
+The first one is \textit{the large common base approach} which tries to create a common system that addresses the needs of as many of communities as possible by providing a large feature set and a large configuration schema encompassing all possible scenarios.
 This approach has been tried as part of an interoperability effort [?] established between community networks, to come up with a common schema upon which so called node databases could be built.
 The problem is that it is hard to come up with a one-fits-all solution and large monolithic schemas can quickly become unmanageable.
 
-The other approach is to create a minimal core, but to make it completely modular and extensible at multiple points so that community networks can tailor it to their needs, whatever they might be.
+The other way is \textit{the extensible core approach} where the aim is to create a minimal core, but to make it completely modular and extensible at multiple points so that community networks can tailor it to their needs, whatever they might be.
 This is the approach that we are taking with the nodewatcher v3 platform.
 We make the following novel contributions:
 \begin{itemize}
@@ -126,19 +126,34 @@ Section~\ref{sec:conclusion} presents conclusions and ideas for future work.
 \section{Related Work}
 \label{sec:related-work}
 
-There exist several proposals on how to manage networks, traditional and community ones.
-We survey them in this section and show contrasts with our platform.
+A lot of research has been done into individual wireless mesh network building blocks, among them are routing~\cite{Murray_2010,Neumann_2012}, security~\cite{Siddiqui_2007}, and analysis of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008}.
+But research into community network management solutions and best practices still remains scarce.
+This is why most of the related work in this area comes from the individual community networks which have each developed its own solutions, practices and philosophy.
+
+In this section we survey the most visible management solutions developed by community networks worldwide and compare them to the approach taken by nodewatcher.
 
 \subsection{Node Databases}
 
-Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the multitude of wireless mesh nodes.
+Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the growing number of wireless mesh nodes.
 
 One of the oldest and largest mesh networks are Guifi.net \cite{Guifi_2003,Vega_2012} and the \textit{Athens Wireless Metropolitan Network} with its WiND \cite{AWMN_WIND_2002} (Wireless Node Database).
-As the node database solutions evolved with the network, both are tailored to specific structures of their respective networks and its management structure.
-% TODO
+As the node database solutions evolved with the respective networks, both are tailored to specific structures of their networks and its management structure.
+Their codebase is monolithic, making it hard to extend with new features or customizations.
+This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend templates and core functionalities.
+Additionally, network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
 
-- Freifunk FFM/CWNOS \cite{Funkfeuer_2012}
-- Nodeshot \cite{Nodeshot_2012}
+Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
+Nodeshot is an extensible web application for management of community geographic data.
+It focuses on mapping features with a more modular approach where various functionalities are extracted into modules.
+The modular approach makes extending the application easier, but in contrast to nodewatcher, modularity ends there.
+There is no common approach to managing schema extensions and interfaces between modules are still tightly coupled.
+There is some monitoring support, but it is mostly limited to device discovery in an existing network and is not meant for long-term monitoring and diagnostics.
+
+Freifunk FFM/CNDB features an extensive database schema which models everything from devices to companies and people.
+With its very detailed modelling of individual objects it is an example of the large common base approach.
+Similar to Nodeshot, there is no common approach to managing schema extensions and there is also no monitoring support.
+
+None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, which reduces the administration burden.
 
 \subsection{Traditional Network Management}
 
@@ -279,6 +294,14 @@ Similar extensions are also provided for simplified fetching of fields deeply ne
 
 \subsection{Form Generation and Rule-based Defaults}
 
+\begin{figure*}
+  \centering
+  \includegraphics[scale=0.5]{figures/firmware-buildsystem.pdf}
+  \caption{An overview of the firmware build system, coming from platform-independent configuration in the first stage to the fully configured firmware image that may be flashed directly onto the target device in the final stage.
+The firmware builders are Docker containers with pre-built firmware build toolchains.}
+  \label{fig:firmware-build-system}
+\end{figure*}
+
 Having an extensible schema is a nice step towards reusable modules shared between community networks.
 But a schema is useful just for module developers so that they have a place to store various configuration values.
 For platform users, the frontend (web interface) is even more important.
@@ -337,14 +360,6 @@ This is required especially in community networks where nodes may not be complet
 \subsection{Firmware Generator}
 \label{sec:firmware-generator}
 
-\begin{figure*}
-  \centering
-  \includegraphics[scale=0.5]{figures/firmware-buildsystem.pdf}
-  \caption{An overview of the firmware build system, coming from platform-independent configuration in the first stage to the fully configured firmware image that may be flashed directly onto the target device in the final stage.
-The firmware builders are Docker containers with pre-built firmware build toolchains.}
-  \label{fig:firmware-build-system}
-\end{figure*}
-
 Traditionally, devices may be configured manually before they are deployed.
 This is usually done either through a command-line interface via secure shell (SSH) or a graphical user interface via HTTP, depending on the firmware running on the device.
 In both cases, however, this is an error-prone process due to manual user input.
@@ -353,7 +368,7 @@ In community wireless networks, devices are sometimes deployed in hard-to-reach 
 
 As described, the nodewatcher platform can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
 But this configuration cannot directly be used on devices.
-Different operating systems like the open source OpenWrt [?] or the proprietary RouterOS [?] that are usually used on devices in community networks, have completely different ways of being configured.
+Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995} that are frequently used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
 
 However, such a step presents some additional challenges that prevent a straightforward transformation of any configuration based on the platform-independent schema to a device-specific one.
@@ -373,7 +388,7 @@ For example, some devices only support IEEE802.11a channels and if the configura
 \end{enumerate}
 
 These scenarios show that supporting informed decisions of the configuration transformation process requires the use of a device database component.
-Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device~-- example for an actual device is as follows:
+Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device~-- example of a descriptor part for an actual device is as follows:
 \begin{minted}[fontsize=\small]{python}
 class TPLinkWR741NDv1(cgm_devices.DeviceBase):
   identifier = 'tp-wr741ndv1'
@@ -383,12 +398,7 @@ class TPLinkWR741NDv1(cgm_devices.DeviceBase):
   architecture = 'ar71xx'
   radios = [
     cgm_devices.IntegratedRadio('wifi0', "Wifi0", [
-      cgm_protocols.IEEE80211BGN(
-        cgm_protocols.IEEE80211BGN.SHORT_GI_20,
-        cgm_protocols.IEEE80211BGN.SHORT_GI_40,
-        cgm_protocols.IEEE80211BGN.RX_STBC1,
-        cgm_protocols.IEEE80211BGN.DSSS_CCK_40,
-      )
+      cgm_protocols.IEEE80211BGN()
     ], [
       cgm_devices.AntennaConnector('a1', "Antenna0")
     ], [
@@ -421,34 +431,17 @@ class TPLinkWR741NDv1(cgm_devices.DeviceBase):
       gain=2,
     )
   ]
-  # Configuration below this point describes
-  # differences for each supported operating
-  # system (in this case 'openwrt').
-  port_map = {
-    'openwrt': {
-      'wifi0': 'radio0',
-      'sw0': 'switch0',
-      'wan0': 'eth1',
-      'lan0': 'eth0',
-    }
-  }
-  drivers = {
-    'openwrt': {
-      'wifi0': 'mac80211'
-    }
-  }
-  profiles = {
-    'openwrt': {
-      'name': 'TLWR741',
-      'files': [
-        'openwrt-ar71xx-generic-tl-wr741nd-v1.bin'
-      ]
-    }
-  }
 \end{minted}
 
 Device descriptors may be subclassed in order to simplify definitions of new devices with only slight variations.
 This feature greatly improves the time to fully support new devices which is important in the quickly evolving community networks.
+
+\begin{figure*}
+  \centering
+  \includegraphics[scale=0.5]{figures/monitoring-pipeline.pdf}
+  \caption{An overview of the nodewatcher monitoring components. Telemetry data is collected on the devices by \texttt{nodewatcher-agent} modules and is then transported over HTTP to the monitoring pipeline. One of the modules in the pipeline is the datastream processor which stores all the historical data as time series, supporting later interactive visualization through time.}
+  \label{fig:monitoring-pipeline}
+\end{figure*}
 
 Using these device descriptors and the platform-independent configuration provided in the first stage, nodewatcher is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
 The transformation step is built from a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
@@ -476,11 +469,10 @@ After a builder is identified, the nodewatcher process establishes a secure shel
 This decoupling of configuration and firmware builders enables the builder containers to be deployed on another machine with more resources.
 
 By packaging firmware builders as containers, nodewatcher enables simple reuse and sharing of ready-made builders between community networks.
-Compiling and preparing a range of firmware builder toolchains can be a lengthy process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their nodewatcher instances without compiling anything.
-
-The described system is also extensible -- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
+Compiling and preparing a range of firmware builder toolchains can be a lengthy process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their nodewatcher instances without compiling anything. The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
 
 \subsection{Network Monitoring}
+\label{sec:network-monitoring}
 
 After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for compliance.
 In the same way as the configuration transformation step performed static validation on device configuration before it was deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
@@ -490,7 +482,7 @@ One may ask why should monitoring be integrated into the provisioning platform?
 Existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
 This enables the system to quickly detect configuration errors (for example after someone manually edited configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
 Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or a specific import script for the target monitoring system (which is usually not very portable among different communities).
-Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks.
+Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks. An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store as one of the sinks.
 
 - a nice figure showing how data flows from the devices via the nodewatcher-agent via http/json to the monitor process and then is stored via datastream
 - nodewatcher-agent
