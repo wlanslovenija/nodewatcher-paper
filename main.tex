@@ -210,24 +210,21 @@ Having a single unified schema can quickly become a limiting factor and things n
 \centering
 \begin{minted}[fontsize=\small]{python}
 class VIFConfig(InterfaceConfig, RoutableInterface):
-  device = registry_fields.IntraRegistryForeignKey(
-    WifiRadioDeviceConfig, null=False,
+  device = IntraRegistryForeignKey(
+    WifiRadioDeviceConfig,
     related_name='interfaces'
   )
 
-  mode = registry_fields.RegistryChoiceField(
-    'node.config', 'core.interfaces#wifi_mode')
-  essid = models.CharField(max_length=50,
-    verbose_name="ESSID")
-  bssid = registry_fields.MACAddressField(
-    verbose_name="BSSID",  blank=True, null=True)
+  mode = ChoiceField('core.interfaces#wifi_mode')
+  essid = CharField()
+  bssid = MACAddressField()
 
 # Register schema item into the schema which makes it
 # available to any other module.
 registration.point('node.config').register_subitem(
   WifiRadioDeviceConfig, VIFConfig)
 \end{minted}
-\caption{An example of a platform-independent schema definition for a virtual wireless interface configuration.}
+\caption{A simplified example of a platform-independent schema definition for a virtual wireless interface configuration.}
 \label{fig:schema-module-wifi}
 \end{figure}
 
