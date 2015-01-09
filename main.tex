@@ -83,6 +83,7 @@ Because of this growth pattern and community involvement, management of such net
 \begin{itemize}
 \item In most of the community networks, people who maintain the network infrastructure are volunteers with limited free time that they can spend on network management.
 This makes efficient management very important for network growth.
+Besides efficiency, an important factor in increasing growth is also the accessibility of network management functions to users who do not have deep technical knowledge of networking specific to mesh networks.
 
 \item There are many repetitive tasks in community network operation, especially related to configuration, deployment and monitoring of network equipment.
 Without a suitable overall management system, all these steps (flashing and configuring devices, allocating resources, diagnosing problems) need to be done manually which is time-consuming and prone to errors.
@@ -310,8 +311,9 @@ The first issue is addressed in nodewatcher by the registry API's ability to aut
 Automatic form generation simplifies the module development process and reduces code duplication.
 The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.
 
-Solving the second issue may be approached from various angles.
-One solution would be for network maintainers to provide pre-defined templates of configuration defaults.
+Addressing the second issue is especially important in order for community networks to be more accessible to people that do not have all the deep technical knowledge on how to configure devices.
+Having the ability to define sensible defaults for such users is a feature that enables the community to also include such users.
+A possible solution would be for network maintainers to provide pre-defined templates of configuration defaults.
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
