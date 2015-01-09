@@ -285,6 +285,13 @@ Similar extensions are also provided for simplified fetching of fields deeply ne
 
 \subsection{Form Generation and Rule-based Defaults}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.5]{figures/defaults-rules-tree.pdf}
+  \caption{Example showing a compacted expression tree for specification of context-sensitive defaults for a wireless ESSID configuration. Hexagons are rule condition expressions while squares are action expressions.}
+  \label{fig:defaults-rules-example}
+\end{figure}
+
 \begin{figure*}
   \centering
   \includegraphics[scale=0.5]{figures/firmware-buildsystem.pdf}
@@ -311,22 +318,8 @@ One solution would be for network maintainers to provide pre-defined templates o
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
-Nodewatcher takes a different approach, enabling codification of defaults in the form of simple declarative rules. The following example shows context-sensitive default wireless ESSID configuration:
-\begin{minted}[fontsize=\small]{python}
-# When the project name is 'Ljubljana'.
-rule(project == "Ljubljana",
-  # When the radio supports multiple VIFs.
-  rule(contains(radio0.features, "vifs"),
-    assign(radio0, mode="ap", essid="ap.lj"),
-    assign(radio0, mode="mesh", essid="mesh.lj")
-  ),
-  # When the radio only supports a single VIF.
-  rule(~contains(radio0.features, "vifs"),
-    assign(radio0, mode="mesh", essid="ap.lj")
-  )
-)
-\end{minted}
-
+Nodewatcher takes a different approach, enabling codification of defaults in the form of simple declarative rules.
+The example in Figure~\ref{fig:defaults-rules-example} shows context-sensitive default wireless ESSID configuration.
 Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
 In case the radio does not support configuring virtual interfaces, only one network may be set, and in this case a single mesh mode interface is configured.
 The benefit of using a declarative approach for specifying rules instead of an imperative one is that the rules may only be evaluated when needed~-- in the above example, the inner rules will be evaluated only when the project changes and not when any other fields in the schema change.
