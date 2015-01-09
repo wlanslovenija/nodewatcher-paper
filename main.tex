@@ -159,11 +159,6 @@ None of the existing solutions support generating functional and pre-configured 
 
 - Traditional network management systems?
 
-\subsection{Modular Platforms}
-
-Trac as an example of modular system for managing open source projects.
-Trac Hacks. -> Same for networks.
-
 \section{Platform}
 \label{sec:platform}
 
@@ -249,46 +244,42 @@ An example of a schema item definition is shown in Figure~\ref{fig:schema-module
 To construct the base schema that is available with the nodewatcher platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
-The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{ONeil_2008} as the mentioned schema items are actually models.
-The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like nodewatcher, modules may want to query on fields defined by other modules somewhere in the schema. For example, there is an item called \texttt{GeneralConfig} in the base schema, enabling users to configure a \texttt{name} for a node:
+The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
+The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like nodewatcher, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
 
 \begin{minted}[fontsize=\small]{python}
-class GeneralConfig(NodeConfigRegistryItem):
-  name = models.CharField(
-    max_length=30,
-    null=True,
-    validators=[core_validators.NodeNameValidator()],
-  )
+class InfoCfg(NodeConfigRegistryItem):
+  name = CharField()
+  
+  class Meta:
+    registry_id = 'info'
 \end{minted}
 
 This base item does not provide any other fields besides the node name, leaving potential extensions to other modules.
-Let us now say that we would like to also add a choice field which would specify what device is in use on a specific node. We may do that in another module by saying:
+Let us now say that we would like to also add a simple text field which would specify what device is in use on a specific node (in reality, we would more likely use a choice field, but for our example a simple text field suffices). We may do that in another module by saying:
 \begin{minted}[fontsize=\small]{python}
-class ExtendedConfig(GeneralConfig):
-  device = registry_fields.RegistryChoiceField(
-    'node.config', 'core.general#device', blank=True)
+class ExtendedCfg(InfoCfg):
+  device = CharField()
 \end{minted}
 
-Imagine now a module that would like to perform a query listing only nodes that use a device called \texttt{tp-wr741ndv4}.
-As mentioned, these two classes actually represent ORM model definitions so a traditional query traversing these two relations would go something like:
-\begin{minted}[fontsize=\small]{python}
-Node.objects.filter(
-  generalconfig__extendedconfig__device='tp-wr741ndv4'
-)
+Imagine now another module that would like to perform a query listing only nodes that use a device called \texttt{tp-wr741ndv4}.
+As mentioned, these two classes actually represent ORM model definitions so a traditional query traversing these two relations would go something like this using the SQL-like relational query notation introduced in~\cite{ONeil_2008}:
+\begin{minted}[fontsize=\small]{sql}
+SELECT n FROM Node n
+WHERE n.infocfg.extendedcfg.device = 'tp-wr741ndv4'
 \end{minted}
 
-Here we make the assumption that there is a one-to-one relation between node and \texttt{GeneralConfig}.
+Here we make the assumption that there is a one-to-one relation between a \texttt{Node} and \texttt{InfoCfg}.
 While one-to-many relations are also supported (so each node can have multiple instances of a model), we limit ourselves to this simple case for ease of exposition.
-Note how even in this very simple example we had to explicitly specify the hierarchical path that is spanning these two relations.
+Note how even in this very simple example we had to explicitly specify the hierarchical path that is spanning these two relations to get to the wanted field.
 This makes such a method not very developer-friendly under the requirement of extensibility and even more complex schemas.
 One of the features that the registry enables, is that we can simplify the same query as:
-\begin{minted}[fontsize=\small]{python}
-Node.objects.registry_filter(
-  core_general__device='tp-wr741ndv4'
-)
+\begin{minted}[fontsize=\small]{sql}
+SELECT n FROM Node n
+WHERE REGISTRY info.device = 'tp-wr741ndv4'
 \end{minted}
 
-In this case, the \texttt{core.general} is the \textit{registry identifier} that is attached to the base model and represents itself or any of its subclasses at the same time.
+In this case, the \texttt{info} is the \textit{registry identifier} that we attached to the base model using its \texttt{Meta} data and represents itself or any of its subclasses at the same time.
 In the background, the proper relations are automatically deduced and the query executed.
 Similar extensions are also provided for simplified fetching of fields deeply nested in the schema by deducing and performing the required table join operations.
 
@@ -388,50 +379,27 @@ For example, some devices only support IEEE802.11a channels and if the configura
 \end{enumerate}
 
 These scenarios show that supporting informed decisions of the configuration transformation process requires the use of a device database component.
-Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device~-- example of a descriptor part for an actual device is as follows:
-\begin{minted}[fontsize=\small]{python}
-class TPLinkWR741NDv1(cgm_devices.DeviceBase):
-  identifier = 'tp-wr741ndv1'
-  name = "WR741ND (v1)"
-  manufacturer = "TP-Link"
-  url = 'http://www.tp-link.com/'
-  architecture = 'ar71xx'
-  radios = [
-    cgm_devices.IntegratedRadio('wifi0', "Wifi0", [
-      cgm_protocols.IEEE80211BGN()
-    ], [
-      cgm_devices.AntennaConnector('a1', "Antenna0")
-    ], [
-      cgm_devices.DeviceRadio.MultipleSSID,
-    ])
-  ]
-  switches = [
-    cgm_devices.Switch(
-      'sw0', "Switch0",
-      ports=5,
-      cpu_port=0,
-      vlans=16,
-    )
-  ]
-  ports = [
-    cgm_devices.EthernetPort('wan0', "Wan0"),
-    cgm_devices.SwitchedEthernetPort(
-      'lan0', "Lan0",
-      switch='sw0',
-      vlan=1,
-      ports=[0, 1, 2, 3, 4],
-    )
-  ]
-  antennas = [
-    cgm_devices.InternalAntenna(
-      identifier='a1',
-      polarization='horizontal',
-      angle_horizontal=360,
-      angle_vertical=75,
-      gain=2,
-    )
-  ]
-\end{minted}
+Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device.
+A declarative descriptor is composed from multiple fields as follows:
+\begin{itemize}
+\item A unique model identifier in the form of \texttt{tp-wr741ndv1} which identifies a specific version of a device model in the database.
+
+\item A name used for representation of the device in user interfaces together with the name of the manufacturer and a URL to its website.
+
+\item The hardware architecture (eg. \texttt{ar71xx}) used by the CPU of the device.
+
+\item A list of wireless radios embedded on the device.
+Each radio contains a unique identifier, a name and a list of supported IEEE802.11 protocols and features.
+It also contains a list of physical antenna connectors so that the configuration system may know to which port a specific antenna is attached in case there are multiple antenna ports.
+
+\item A list of ethernet switches connected to the CPU together with VLAN tag information and designation of the ports connected directly to the CPU.
+
+\item A list of ethernet interfaces and their connections to declared switches together with their VLAN tag definitions. 
+Different devices have different switch and ethernet port configurations and these two options abstract all of this into simpler identifiers like \texttt{lan0} and \texttt{wan0}.
+
+\item A list of antennas that are included in the device package.
+Each antenna contains radio propagation properties which characterize the antenna.
+\end{itemize}
 
 Device descriptors may be subclassed in order to simplify definitions of new devices with only slight variations.
 This feature greatly improves the time to fully support new devices which is important in the quickly evolving community networks.
@@ -508,11 +476,6 @@ A single version for all modules is not enough as modules may be developed by di
     
     "uuid": "64840ad9-aac1-4494-b4d1-9de5d8cbedd9",
     "hostname": "test-4",
-    "uptime": 4612,
-    "hardware": {
-      "board": "tl-wr741nd-v4",
-      "model": "TP-Link TL-WR740N/ND v4"
-    }
   },
   "core.resources": {
     "_meta": { "version": 2 },
@@ -524,7 +487,7 @@ A single version for all modules is not enough as modules may be developed by di
   }
 }
 \end{minted}
-\caption{Part of the JSON schema compiled by the nodewatcher monitoring agent, showing sample output for two monitoring modules.}
+\caption{Example part of the JSON schema compiled by the nodewatcher monitoring agent, showing sample output for two monitoring modules.}
 \label{fig:monitoring-json-schema}
 \end{figure}
 
