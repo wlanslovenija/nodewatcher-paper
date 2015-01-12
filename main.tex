@@ -133,17 +133,37 @@ A lot of research has been done into individual wireless mesh network building b
 But research into community network management solutions and best practices still remains scarce.
 This is why most of the related work in this area comes from the individual community networks which have each developed its own solutions, practices and philosophy.
 
-In this section we survey the most visible management solutions developed by community networks worldwide and compare them to the approach taken by nodewatcher.
+In this section we survey the most visible network management solutions, traditional ones and specialized solutions developed by community networks worldwide.
+We compare them to the approach taken by nodewatcher platform.
+
+\subsection{Traditional Network Management}
+
+There are many existing network management systems, suited for more traditional (non-community) networks~\cite{Cacti_2004,Nagios_1999,Zabbix_2004,Puppet_2005,Salt_2011}.
+By their management function, they can be segmented into two major classes as follows:
+\begin{description}
+\item[Monitoring systems] enable the operators to remotely monitor a set of devices to see whether they are reachable and to get some insights into their operation.
+Some of these systems can generate events and notify the operators when errors are detected, while others can only visualize the data without interpreting it.
+
+\item[Configuration management systems] enable the operators to maintain a central repository of device configurations that can be used to provision devices.
+In these systems, configuration is mostly input using a domain-specific or a scripting language and deployment is done using remote agents that interpret configuration scripts and apply configurations.
+\end{description}
+
+While these systems can be used in community networks, they are not tailored to their specific needs.
+First, some of the monitoring and configuration management systems require agents which consume too much resources to run on simple off-the-shelf network equipment commonly in use in community networks.
+They might be suitable to monitor some better-equipped network nodes, but would require different systems for managing other parts of the network, which increases the work load of volunteer participants.
+Additionally, these systems are independent solutions, requiring manual integration which needs to be performed by each community.
+This increases the chance that each community will pick different solutions and end up with systems which are not interoperable with other.
+
+But most importantly, since they have not been designed with community networks in mind, none of these systems provide community coordination capabilities.
 
 \subsection{Node Databases}
 
 Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the growing number of wireless mesh nodes.
-
-One of the oldest and largest mesh networks are Guifi.net \cite{Guifi_2003,Vega_2012} and the \textit{Athens Wireless Metropolitan Network} with its WiND \cite{AWMN_WIND_2002} (Wireless Node Database).
+One of the oldest and largest mesh networks are Guifi.net \cite{Guifi_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
 As the node database solutions evolved with the respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend templates and core functionalities.
-Additionally, network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
+Additionally, advanced network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
 
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
 Nodeshot is an extensible web application for management of community geographic data.
@@ -158,12 +178,12 @@ Similar to Nodeshot, there is no common approach to managing schema extensions a
 
 None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, reducing the required administration burden.
 
-\subsection{Traditional Network Management}
-
-- Traditional network management systems?
-
 \section{Platform}
 \label{sec:platform}
+
+The design and development of the nodewatcher platform comes from the needs and evolution of the \textit{wlan slovenija} community wireless network.
+We have come across the problems outlined above and the nodewatcher platform has been designed to be maximally extensible and reusable among different communities.
+This section describes all the components of the platform, beginning with a quick high-level overview of the architecture.
 
 \subsection{Overview}
 
