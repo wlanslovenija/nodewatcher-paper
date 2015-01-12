@@ -36,13 +36,15 @@
 \sloppy
 \flushbottom
 
+\newcommand{\nodewatcher}{\textit{nodewatcher}}
+
 \begin{document}
 
 \begin{frontmatter}
 % TODO: Do we want some "organic" title? Growing and stuff?
 % perhaps something like this:
 % TODO: We need better term than "platform"
-\title{Nodewatcher: A Substrate for Growing Your own Community Networks}
+\title{\nodewatcher{}: A Substrate for Growing Your own Community Networks}
 %\title{nodewatcher: enabling simple provisioning, deployment and monitoring of community networks}
 
 \author[fri,wlansi]{Jernej Kos\corref{cor}}
@@ -126,7 +128,7 @@ Because community networks are mostly volunteer run, such sustained participatio
 Additionally, it is practically impossible to involve all community networks in this process and there are always new networks with new differences.
 
 The other way is \textit{the extensible core approach} where the aim is to create a minimal core with highly modular and extensible design so that community networks can tailor it to their needs, whatever they might be.
-This is the approach that we are taking with the nodewatcher v3 platform.
+This is the approach that we are taking with the \nodewatcher{} v3 platform.
 We make the following novel contributions:
 \begin{itemize}
 \item A modular open platform that may be easily tailored to the needs of any community network.
@@ -136,7 +138,7 @@ We make the following novel contributions:
 
 The rest of this paper is organized as follows.
 Section~\ref{sec:related-work} presents related work done in the area of community network management tools.
-Section~\ref{sec:platform} presents the design and functioning of the nodewatcher platform.
+Section~\ref{sec:platform} presents the design and functioning of the \nodewatcher{} platform.
 Section~\ref{sec:evaluation} shows the results of platform evaluation in the wlan slovenija community wireless network.
 Section~\ref{sec:conclusion} presents conclusions and ideas for future work.
 
@@ -148,7 +150,7 @@ But research into community network management solutions and best practices stil
 This is why most of the related work in this area comes from the individual community networks which have each developed its own solutions, practices and philosophy.
 
 In this section we survey the most visible network management solutions, traditional ones and specialized solutions developed by community networks worldwide.
-We compare them to the approach taken by nodewatcher platform.
+We compare them to the approach taken by \nodewatcher{} platform.
 
 \subsection{Traditional Network Management}
 
@@ -182,7 +184,7 @@ Additionally, advanced network monitoring functionality is missing, requiring th
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
 Nodeshot is an extensible web application for management of community geographic data.
 It focuses on mapping features with a more modular approach where various functionalities are extracted into modules.
-The modular approach makes extending the application easier, but in contrast to nodewatcher, modularity ends there.
+The modular approach makes extending the application easier, but in contrast to \nodewatcher{}, modularity ends there.
 There is no common approach to managing schema extensions and interfaces between modules are still tightly coupled.
 There is some monitoring support, but it is mostly limited to device discovery in an existing network and is not meant for long-term monitoring and diagnostics.
 
@@ -195,8 +197,8 @@ None of the existing solutions support generating functional and pre-configured 
 \section{Platform}
 \label{sec:platform}
 
-The design and development of the nodewatcher platform comes from the needs and evolution of the \textit{wlan slovenija} community wireless network.
-We have come across the problems outlined above and the nodewatcher platform has been designed to be maximally extensible and reusable among different communities.
+The design and development of the \nodewatcher{} platform comes from the needs and evolution of the \textit{wlan slovenija} community wireless network.
+We have come across the problems outlined above and the \nodewatcher{} platform has been designed to be maximally extensible and reusable among different communities.
 This section describes all the components of the platform, beginning with a quick high-level overview of the architecture.
 
 \subsection{Overview}
@@ -205,13 +207,13 @@ This section describes all the components of the platform, beginning with a quic
   \centering
   \includegraphics[scale=0.4]{figures/device-mgmt-cycle.pdf}
   \caption{Device management cycle illustrating how devices are managed in a community network.
-Traditionally the configuration, generation and monitoring steps are performed manually, while the nodewatcher platform enables automation of these tasks, freeing up resources inside a community.}
+Traditionally the configuration, generation and monitoring steps are performed manually, while the \nodewatcher{} platform enables automation of these tasks, freeing up resources inside a community.}
   \label{fig:device-mgmt-cycle}
 \end{figure}
 
 % TODO: Po mojem bi morali tu dati nekje tudi cloveka v diagram. Ker sicer izgleda tako tehnicno. V smislu, ce je community network, kje je community v tem ciklu?
 
-The core idea behind the nodewatcher platform is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
+The core idea behind the \nodewatcher{} platform is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
 The cycle starts with the \textit{configuration stage} where devices are configured for use in a specific location in the network.
 At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device.
 The latter only happens in the next stage, the \textit{generation stage}, where platform-independent configuration is transformed to device- and platform-specific configuration.
@@ -221,14 +223,14 @@ As soon as the device is deployed and is able to join the network, it is monitor
 In the \textit{monitoring stage}, the device is actively validated for correct operation in context of the whole network.
 In case errors in configuration or other problems are detected, the device's maintainer is notified so the device may be fixed and/or reconfigured, repeating the cycle.
 
-The nodewatcher platform aims to provide components for all stages of the described device management cycle.
+The \nodewatcher{} platform aims to provide components for all stages of the described device management cycle.
 Each part is designed to be easily extensible to networks with various topologies, routing protocols, operating systems and hardware devices.
 In the next sections we will describe the network management platform components in detail.
 
 \subsection{Platform-independent Configuration}
 
 Community networks are usually built using a wide range of devices, containing everything from off-the-shelf home routers to specialized devices used for backbone links and regular servers used for core services.
-The nodewatcher platform uses a single platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
+The \nodewatcher{} platform uses a single platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
 One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do much re-configuration.
 It is a frequent occurrence that deployed devices need to be replaced when they stop functioning properly due to various hardware failures.
 
@@ -237,7 +239,7 @@ In such cases the user editing the platform-independent configuration may create
 This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
 This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
 Such validation must be based on the selected target device with all its hardware and software properties.
-The nodewatcher platform enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
+The \nodewatcher{} platform enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
 Communities will usually have some specifics regarding their operations~-- either because of different local regulations or differences in philosophy.
@@ -265,7 +267,7 @@ registration.point('node.config').register_subitem(
 \label{fig:schema-module-wifi}
 \end{figure}
 
-The nodewatcher platform avoids this problem by making the platform-independent schema itself completely extensible.
+The \nodewatcher{} platform avoids this problem by making the platform-independent schema itself completely extensible.
 It is the individual modules that may register schema items and the final schema is the union of all these items.
 An example of a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
@@ -275,11 +277,11 @@ An example of a schema item definition is shown in Figure~\ref{fig:schema-module
     \item Schema items may reference other items (in the example, \texttt{device} references the parent radio device that this virtual wireless network configuration is being configured on).
 \end{itemize}
 
-To construct the base schema that is available with the nodewatcher platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
+To construct the base schema that is available with the \nodewatcher{} platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
 The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
-The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like nodewatcher, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
+The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
 
 \begin{minted}[fontsize=\small]{python}
 class InfoCfg(NodeConfigRegistryItem):
@@ -343,7 +345,7 @@ There are two issues regarding user interaction with the configuration schema:
 \item there must be a way for the users to enter configuration values conforming to the specified schema;
 \item since the schema may be complex, there needs to be a way for project maintainers to be able to codify context-sensitive configuration defaults.
 \end{enumerate*}
-The first issue is addressed in nodewatcher by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
+The first issue is addressed in \nodewatcher{} by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
 Automatic form generation simplifies the module development process and reduces code duplication.
 The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.
 
@@ -353,7 +355,7 @@ A possible solution would be for network maintainers to provide pre-defined temp
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
-Nodewatcher takes a different approach, enabling codification of defaults in the form of simple declarative rules.
+\nodewatcher{} takes a different approach, enabling codification of defaults in the form of simple declarative rules.
 The example in Figure~\ref{fig:defaults-rules-example} shows context-sensitive default wireless ESSID configuration.
 Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
 In case the radio does not support configuring virtual interfaces, only one network may be set, and in this case a single mesh mode interface is configured.
@@ -368,7 +370,7 @@ In order to detect which rules have already been evaluated, forms generated by t
 As in any network, there is also a need to perform IP address resource allocation in community networks.
 This is especially the case in IPv4-based networks where it is hard to automatically generate node addresses without collisions due to the small available space.
 
-In order to support that, nodewatcher implements a hierarchical buddy allocation scheme~\cite{Peterson_1977} extended with support for hold down timers.
+In order to support that, \nodewatcher{} implements a hierarchical buddy allocation scheme~\cite{Peterson_1977} extended with support for hold down timers.
 At the top level IP space is split into multiple pools from which other objects (for example nodes) may request specific allocations.
 Hold down timers are necessary to avoid collisions with nodes that have been recently removed.
 When an allocation is freed, it is still marked as \textit{reserved} until the hold down timer expires.
@@ -384,7 +386,7 @@ In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
 In community wireless networks, devices are sometimes deployed in hard-to-reach locations like rooftops or high towers and fixing certain problems requires physical access to the device.
 
-As described, the nodewatcher platform can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
+As described, the \nodewatcher{} platform can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
 But this configuration cannot directly be used on devices.
 Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995} that are frequently used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
@@ -406,7 +408,7 @@ For example, some devices only support IEEE802.11a channels and if the configura
 \end{enumerate}
 
 These scenarios show that supporting informed decisions of the configuration transformation process requires the use of a device database component.
-Nodewatcher takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device.
+\nodewatcher{} takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device.
 A declarative descriptor is composed from multiple fields as follows:
 \begin{itemize}
 \item A unique model identifier in the form of \texttt{tp-wr741ndv1} which identifies a specific version of a device model in the database.
@@ -434,15 +436,15 @@ This feature greatly improves the time to fully support new devices which is imp
 \begin{figure*}
   \centering
   \includegraphics[scale=0.5]{figures/monitoring-pipeline.pdf}
-  \caption{An overview of the nodewatcher monitoring components. Telemetry data is collected on the devices by \texttt{nodewatcher-agent} modules and is then transported over HTTP to the monitoring pipeline. One of the modules in the pipeline is the datastream processor which stores all the historical data as time series, supporting later interactive visualization through time.}
+  \caption{An overview of the \nodewatcher{} monitoring components. Telemetry data is collected on the devices by \texttt{nodewatcher-agent} modules and is then transported over HTTP to the monitoring pipeline. One of the modules in the pipeline is the datastream processor which stores all the historical data as time series, supporting later interactive visualization through time.}
   \label{fig:monitoring-pipeline}
 \end{figure*}
 
-Using these device descriptors and the platform-independent configuration provided in the first stage, nodewatcher is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
+Using these device descriptors and the platform-independent configuration provided in the first stage, \nodewatcher{} is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
 The transformation step is built from a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
 Such a modular transformation step ensures that the pipeline can be adapted to a wide range of transformations (for example, supporting various routing protocols, sensor inputs, network configurations etc.), so everything that a target device and operating system support may be used.
 Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cycle}, the transformation module pipeline may also raise errors when parts of the input configuration could not be properly transformed.
-These errors are immediately propagated up to the user who is entering configuration via the nodewatcher's web interface, so that problems may be corrected as soon as possible.
+These errors are immediately propagated up to the user who is entering configuration via the \nodewatcher{}'s web interface, so that problems may be corrected as soon as possible.
 The validation system will not save a configuration which has outstanding errors, preventing invalid configurations from being used to deploy devices.
 
 In order to further ease deployment, the resulting device-specific configuration may be packaged together with a firmware image which may be then flashed directly onto the target device.
@@ -456,15 +458,15 @@ To achieve this, the build system is structured into multiple Docker containers~
 Docker containers are a lightweight wrapper around the Linux namespacing API and filesystem layers with a goal to enable an interface for packaging applications in a reusable and extensible way.
 Namespaces provide container isolation (the containers still share the host kernel), so that adjacent containers running on the same host are unable to see or influence each other's processes, network configuration, etc.
 Each container can be thought of as a very lightweight virtual instance, but without the overhead of running a full virtual machine with its own kernel.
-Nodewatcher uses the Docker container features in order to generate and run firmware image builders for multiple platforms.
+\nodewatcher{} uses the Docker container features in order to generate and run firmware image builders for multiple platforms.
 The build process is specific for each operating system and currently only OpenWrt is supported as it runs on the most devices that are in use in community networks.
 
 When the device-specific configuraion has been generated by the transformation step (see the central node in Figure~\ref{fig:firmware-build-system}), a suitable builder is selected based on the architecture and software platform specified in the device descriptor.
-After a builder is identified, the nodewatcher process establishes a secure shell (SSH) connection to the selected container, transfers the configuration there and starts the build process which completes in a matter of seconds.
+After a builder is identified, the \nodewatcher{} process establishes a secure shell (SSH) connection to the selected container, transfers the configuration there and starts the build process which completes in a matter of seconds.
 This decoupling of configuration and firmware builders enables the builder containers to be deployed on another machine with more resources.
 
-By packaging firmware builders as containers, nodewatcher enables simple reuse and sharing of ready-made builders between community networks.
-Compiling and preparing a range of firmware builder toolchains can be a lengthy process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their nodewatcher instances without compiling anything. The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
+By packaging firmware builders as containers, \nodewatcher{} enables simple reuse and sharing of ready-made builders between community networks.
+Compiling and preparing a range of firmware builder toolchains can be a lengthy process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their \nodewatcher{} instances without compiling anything. The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
 
 \subsection{Network Monitoring}
 \label{sec:network-monitoring}
@@ -508,11 +510,11 @@ Modules may independently fetch data from external sources providing state like 
   }
 }
 \end{minted}
-\caption{Example part of the JSON schema compiled by the nodewatcher monitoring agent, showing sample output for two monitoring modules.}
+\caption{Example part of the JSON schema compiled by the \nodewatcher{} monitoring agent, showing sample output for two monitoring modules.}
 \label{fig:monitoring-json-schema}
 \end{figure}
 
-As can be seen from its description, the monitoring agent is similar in design to other parts of nodewatcher, with a focus on modularity.
+As can be seen from its description, the monitoring agent is similar in design to other parts of \nodewatcher{}, with a focus on modularity.
 An important feature of a monitoring agent that runs on remote devices is the ability for modules to independently evolve their schema.
 In order to add features to existing modules there needs to be a way to version the state schema which is reported back to the monitoring pipeline.
 This is especially the case in community networks where there are many different devices with different firmware versions and also with different versions of the monitoring modules.
