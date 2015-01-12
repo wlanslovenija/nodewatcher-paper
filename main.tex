@@ -231,7 +231,6 @@ In case errors in configuration or other problems are detected, the device's mai
 
 The \nodewatcher{} platform aims to provide components for all stages of the described device management cycle.
 Each part is designed to be easily extensible to networks with various topologies, routing protocols, operating systems and hardware devices.
-In the next sections we will describe the network management platform components in detail.
 
 \subsection{Platform-independent Configuration}
 
@@ -249,11 +248,11 @@ The \nodewatcher{} platform enables instant validation which is handled by the f
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
 Communities will usually have some specifics regarding their operations~-- either because of different local regulations or differences in philosophy.
-Having a single unified schema can quickly become a limiting factor and things need to be worked around it in order to adapt the solution for the local community.
+Having a single unified schema can quickly become a limiting factor that prohibits straightforward adaptation of the system for the local community.
 
 \begin{figure}
 \centering
-\begin{minted}[fontsize=\small]{python}
+\begin{minted}[fontsize=\small,frame=single,framesep=2mm]{python}
 class VIFConfig(InterfaceConfig, RoutableInterface):
   device = IntraRegistryForeignKey(
     WifiRadioDeviceConfig,
@@ -264,8 +263,8 @@ class VIFConfig(InterfaceConfig, RoutableInterface):
   essid = CharField()
   bssid = MACAddressField()
 
-# Register schema item into the schema which makes it
-# available to any other module.
+# Register schema item into the schema which makes
+# it available to any other module.
 registration.point('node.config').register_subitem(
   WifiRadioDeviceConfig, VIFConfig)
 \end{minted}
@@ -498,7 +497,7 @@ Modules may independently fetch data from external sources providing state like 
 
 \begin{figure}[t]
 \centering
-\begin{minted}[fontsize=\small]{json}
+\begin{minted}[fontsize=\small,frame=single,framesep=2mm]{json}
 {
   "core.general": {
     "_meta": { "version": 4 },
