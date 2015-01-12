@@ -103,24 +103,29 @@ Volunteers are often motivated by the value they are contributing to the network
 \end{itemize}
 
 Various solutions have appeared in an attempt to address these challenges~-- as we will show, each community developed its own model of operation with its own accompanying set of tools.
-The problem with this approach is that work is being duplicated for every new community network and that these various solutions are mostly not interoperable between each other.
+The problem with this approach is that work is being duplicated between communities and that these various solutions are mostly not interoperable between each other.
 So why would new communities not reuse existing tools?
 The problem lies in the fact that these tools have not been built to be customized to the needs and operation of individual communities.
-Each community has at least slight differences in their vision and operation philosophy and this requires customization on several fronts, to only name a few:
+Each community has slight differences in their vision and operation philosophy, technological stack they are using and technical knowledge they have, or even legal requirements, and this requires customization on several fronts, to only name a few:
 \begin{enumerate*}[label=\itshape\alph*\upshape)]
 \item different routing protocols may be used;
-\item some communities use VPN tunnels to establish certain long-range links using different protocols;
+\item used WiFi equipment and its operating systems can vary widely between networks;
+\item some communities use VPN tunnels to establish certain long-range links using different VPN protocols;
 \item network topologies may differ among communities, some use central clusters of nodes as gateways to peer with other networks, some use a more distributed topology;
 \item some communities attach various sensors to nodes and would like to monitor their outputs through time;
+\item networks can decide to use a captive portal and/or choose to require users to pay to use the network;
 \item there may be differences in operation due to local regulations.
 \end{enumerate*}
 
 In order to address this, there are at least two approaches that can be taken.
 The first one is \textit{the large common base approach} which tries to create a common system that addresses the needs of as many of communities as possible by providing a large feature set and a large configuration schema encompassing all possible scenarios.
-This approach has been tried as part of an interoperability effort [?] established between community networks, to come up with a common schema upon which so called node databases could be built.
+This approach has been tried as part of an interoperability effort \cite{interop_2010, cnml_2007} established between community networks, to come up with a common schema upon which so called node databases could be built.
 The problem is that it is hard to come up with a one-fits-all solution and large monolithic schemas can quickly become unmanageable.
+Moreover, it requires sustained effort from participating community networks first to establish the standard and then to keep it updated as technologies and practices evolve.
+Because community networks are mostly volunteer run, such sustained participation is unattainable for many community networks.
+Additionally, it is practically impossible to involve all community networks in this process and there are always new networks with new differences.
 
-The other way is \textit{the extensible core approach} where the aim is to create a minimal core, but to make it completely modular and extensible at multiple points so that community networks can tailor it to their needs, whatever they might be.
+The other way is \textit{the extensible core approach} where the aim is to create a minimal core with highly modular and extensible design so that community networks can tailor it to their needs, whatever they might be.
 This is the approach that we are taking with the nodewatcher v3 platform.
 We make the following novel contributions:
 \begin{itemize}
