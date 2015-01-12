@@ -19,6 +19,7 @@
 \usepackage[labelformat=simple]{subcaption}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage[draft]{todonotes}
 
 \captionsetup[table]{format=plain,labelformat=simple,justification=centering, labelsep=newline, singlelinecheck=false, textfont={sc}}
 
@@ -83,10 +84,10 @@ Their common aim is to empower people with new ways of communication and access 
 Motivations for such networks are diverse and multiplex, but often networks are formed out of necessity \cite{WNDW_2013}.
 Even in developed countries many rural areas are underserved with Internet connectivity infrastructure built and offered by traditional Internet Service Providers, population density being too low for investments to be profitable enough, leaving to people themselves to build needed infrastructure to connect to the Internet.
 
-The common property of all community networks is that they grow organically~-- there is no central planning that would decide how the network is built, as is usually the case with proprietary networks.
+The common property of all community networks is that they grow organically~-- there is no central planning body that would decide how the network is built, as is usually the case with proprietary networks.
 Instead, the network grows in a bottom-up fashion as more people express interest in participating in the community and connect with their neighbours.
 
-Because of this growth pattern and community involvement, management of such networks presents some unique challenges:
+Because of this growth pattern and community involvement, management of such networks poses some unique challenges:
 
 \begin{itemize}
 \item In most of the community networks, people who maintain the network infrastructure are volunteers with limited free time that they can spend on network management.
@@ -100,11 +101,11 @@ Without a suitable overall management system, all these steps (programming and c
 In general it is not possible to anticipate how, when, and where a new participant will start participating by deploying one of network's nodes\footnote{Meaning of a ``network node'' is understood differently in different communities. For the purpose of this paper it is used as one routing network device, and as a basic unit of participation by participants.}.
 
 \item For volunteers it is important to have feedback on how they themselves are contributing to the network.
-Is the node they are maintaining highly used and critical for the part of the network and users?
+Is the node that they are maintaining highly used and crucial for the part of the network and users?
 Volunteers are often motivated by the value they are contributing to the network as a whole, but even when their node is not highly used at the moment, having an insight into operation of the node is important for them to understand that their contribution is something tangible and real, especially for less technically skilled volunteers who might otherwise perceive the node as a black box.
 \end{itemize}
 
-Various solutions have appeared in an attempt to address these challenges~-- as we will show, each community developed its own model of operation with its own accompanying set of tools.
+Various solutions have appeared in an attempt to address these challenges, each community developed its own model of operation with its own accompanying set of tools.
 The problem with this approach is that work is being duplicated between communities and that these various solutions are mostly not interoperable between each other.
 So why would new communities not reuse existing tools?
 The problem lies in the fact that these tools have not been built to be customized to the needs and operation of individual communities.
@@ -126,10 +127,10 @@ The problem is that it is hard to come up with a one-fits-all solution and large
 Moreover, it requires sustained effort from participating community networks first to establish the standard and then to keep it updated as technologies and practices evolve.
 Because community networks are mostly volunteer run, such sustained participation is unattainable for many community networks.
 Additionally, it is practically impossible to involve all community networks in this process and there are always new networks with new differences.
-This process favors large and established network communities.
+This process favours large and established network communities.
 
 The other way is \textit{the extensible core approach} where the aim is to create a minimal core with highly modular and extensible design so that community networks can tailor it to their needs, whatever they might be.
-This is the approach that we are taking with the \nodewatcher{} v3 platform.
+This is the approach that we are taking with the \nodewatcher{} v3\todo[inline]{Should we mention that this a rewrite of existing nodewatcher v2?} platform.
 We make the following novel contributions:
 \begin{itemize}
 \item A modular open platform that may be easily tailored to the needs of any community network.
@@ -184,14 +185,13 @@ Many wireless mesh network communities have quickly recognized the need for havi
 One of the oldest and largest mesh networks are Guifi.net \cite{Guifinode_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
 As the node database solutions evolved with the respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
-This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend templates and core functionalities.
+This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend interface and core functionalities.
 Additionally, advanced network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
 
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
 Nodeshot is an extensible web application for management of community geographic data.
 It focuses on mapping features with a more modular approach where various functionalities are extracted into modules.
-The modular approach makes extending the application easier, but in contrast to \nodewatcher{}, modularity ends there.
-There is no common approach to managing schema extensions and interfaces between modules are still tightly coupled.
+The modularity makes extending the application easier, but in contrast to \nodewatcher{}, there is no common approach to managing schema extensions and interfaces between modules are still tightly coupled.
 There is some monitoring support, but it is mostly limited to device discovery in an existing network and is not meant for long-term monitoring and diagnostics.
 
 Freifunk FFM/CNDB features an extensive database schema which models everything from devices to companies and people.
@@ -240,7 +240,7 @@ The \nodewatcher{} platform uses a single platform-independent schema to describ
 One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do much re-configuration.
 It is a frequent occurrence that deployed devices need to be replaced when they stop functioning properly due to various hardware failures.
 
-However, while having a platform-independent configuration is a noble goal, some configuration properties inherently depend on features which are inherently device-dependent (for example the number of ethernet ports, available wireless radios, supported protocols, etc.).
+However, while having a platform-independent configuration is a noble goal, some configuration properties inherently depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
 This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
 This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
