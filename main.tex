@@ -74,11 +74,14 @@ community networks \sep provisioning \sep monitoring \sep deployment \sep manage
 \section{Introduction}
 
 Community (wireless) networks \cite{Bruno_2005} provide independent, community-owned network infrastructure for user communication and data exchange.
-They are mostly built by using standard wireless (IEEE802.11) ad-hoc infrastructure \cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems \cite{Mustafa_2013}.
-Their common aim is to empower people with new ways of communication and access to the wider public networks like the Internet while preserving autonomy from large service providers and other parties.
-The importance of community networks has also been recognized for enabling large scale scientific experiments in real-world networks by project CONFINE~\cite{Braem_2013}.
+They are mostly built using standard wireless (IEEE802.11) infrastructure \cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems \cite{Mustafa_2013}.
+They use, reuse and repurpose existing communication technologies, like inexpensive off-the-shelf WiFi routers, to form a widespread network.
+These networks can cover all from local neighborhoods \cite{RedHook_2013}, to cities \cite{AWMN} and countries \cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
+Their common aim is to empower people with new ways of communication and access to the wider public networks like the Internet.
+Motivations for such networks are diverse and multiplex, but often networks are formed out of necessity \cite{WNDW_2013}.
+Even in developed countries many rural areas are underserved with Internet connectivity infrastructure built and offered by traditional Internet Service Providers, population density being too low for investments to be profitable enough, leaving to people themselves to build needed infrastructure to connect to the Internet.
 
-The common property of all community networks is that they grow organically~-- there is no central planning that would decide how the network is built, as is usually the case with commercial networks.
+The common property of all community networks is that they grow organically~-- there is no central planning that would decide how the network is built, as is usually the case with proprietary networks.
 Instead, the network grows in a bottom-up fashion as more people express interest in participating in the community and connect with their neighbours.
 Because of this growth pattern and community involvement, management of such networks presents some unique challenges:
 
@@ -159,7 +162,7 @@ But most importantly, since they have not been designed with community networks 
 \subsection{Node Databases}
 
 Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the growing number of wireless mesh nodes.
-One of the oldest and largest mesh networks are Guifi.net \cite{Guifi_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
+One of the oldest and largest mesh networks are Guifi.net \cite{Guifinode_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
 As the node database solutions evolved with the respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend templates and core functionalities.
