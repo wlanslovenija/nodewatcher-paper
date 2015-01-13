@@ -577,9 +577,49 @@ Since the base framework is common to all, modules from different community netw
 
 \subsubsection{Time-series Data Storage}
 
-- storing everything that is going on in a large community network represents a lot of data
-- downsampling, parallelization
-- support for later seamless interactive visualization
+The monitoring pipeline may generate large amounts of time-series data during its operation (for example wlan slovenija has accumulated over 200 GiB of data in the last few years, storing everything from network diagnostics to external sensor data).
+As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the pipeline can be a \textit{datastream} processor, storing time-series data.
+Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
+In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.4]{figures/datastream-storage.pdf}
+  \caption{Datastream stream storage organization. Tag based metadata store compact indices into the stream data, downsampled at different granularities.}
+  \label{fig:datastream-storage}
+\end{figure}
+
+The database is built around a concept of streams, each stream being an independent time series.
+In order to organize the streams, each stream may be tagged using arbitrary key-value pairs (see Figure~\ref{fig:datastream-storage}), which are indexed and can be used for fast lookup of streams matching specific tags.
+For stream storage to be efficient, datums are stored in separate collections, one for each time granularity, and connected with their metadata entries using compact indices.
+
+Each stream has some special tags which define its base operation.
+Streams are typed, meaning that they may be used for storage of different datapoint types.
+Supported types currently include numeric values (integers, floats, arbitrary precision numbers) and graph values (nodes and edges for storing how topologies evolve over time).
+Streams also define the highest granularity at which datapoints will be inserted.
+This setting is an optimization which allows the datastream storage backend to reduce the number of granularities when downsampling datapoints.
+Datapoints are inserted only at the highest granularity and are then automatically downsampled in the background, making them ready for efficient querying and visualization.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.4]{figures/datastream-counter-reset.pdf}
+  \caption{Correct rate computation example using the counter derivative operator, automatically derived from two streams.}
+  \label{fig:datastream-counter-reset}
+\end{figure}
+
+Streams may be automatically computed from other streams using different operators.
+The most prominent use of this feature in monitoring is to support correct rate computations under the possibility of counter wraps and resets which could otherwise cause apparent rate spikes when the counter is reset due to a reboot but the system incorrectly classifies it as a counter wrap.
+To illustrate why this can be a problem, imagine a simple 8-bit unsigned integer counter (its size is known to the monitoring platform), sampled every 10 seconds (see Figure~\ref{fig:datastream-counter-reset}).
+Focusing on the instance where counter value decreases from $212$ to $37$ this can be treated either as a counter wrap (as its maximum value is $255$) or as a counter reset due to device rebooting.
+Without additional information, such events must be classified uniformly: if they are classified as wraps, rates may incorrectly spike (in our example the rate would be computed as $(255 - 212 + 37) / 10s = 8.0s^{-1}$); if they are always classified as resets, data points may be lost.
+
+Using datastream, a \textit{counter derivative} operator accepts two streams, one containing raw counter data (for example the number of bytes transferred on a network interface) and one containing discrete events at which a device was rebooted (for example derived from its uptime).
+Using both pieces of information, the rate is computed as a derivative, but only when there was no reset event in the last time interval.
+In case of a reset, a \texttt{null} value is inserted instead.
+However, if there was no reset and the counter value decreased, the event is classified as a counter wrap and the rate is computed using the known maximum value of the counter.
+Additional operators include computing sums of multiple streams and automatically deriving reset streams from device uptimes.
+
+The design of datastream is modular, supporting implementations of additional storage backends while continuing to expose the same API.
 
 \subsection{Easy-to-use User Interface}
 
