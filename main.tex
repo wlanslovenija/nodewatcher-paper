@@ -95,7 +95,7 @@ This makes efficient management very important for network growth.
 Besides efficiency, an important factor in increasing growth is also the accessibility of network management functions to users who do not have deep technical knowledge of networking specific to mesh networks.
 
 \item There are many repetitive tasks in community network operation, especially related to configuration, deployment and monitoring of network equipment.
-Without a suitable overall management system, all these steps (programming and configuring devices, allocating resources, diagnosing problems) need to be done manually which is time-consuming and prone to errors.
+Without a suitable overall management system, all these steps (flashing\footnote{Flashing is the process of reprogramming the wireless network device with an unofficial firmware image, commonly Linux based.} and configuring devices, allocating resources, diagnosing problems) need to be done manually which is time-consuming and prone to errors.
 
 \item In addition to technical issues related to device deployment, there is also the need for community coordination so that people know what is going on in the network and can familiarize themselves better with its operation and what others are doing.
 In general it is not possible to anticipate how, when, and where a new participant will start participating by deploying one of network's nodes\footnote{Meaning of a ``network node'' is understood differently in different communities. For the purpose of this paper it is used as one routing network device, and as a basic unit of participation by participants.}.
@@ -176,6 +176,7 @@ Configuration management systems are not suitable for embedded systems, or if th
 
 But most importantly, since they have not been designed with community networks in mind, none of these systems provide community coordination capabilities.
 They are highly technical to setup and use, which makes it harder to properly configure by community without highly skilled members.
+They are designed for general networks and do not encode experiences and particularities of community networks in their source code, which would help new community networks to start with reasonable and tested defaults and configurations.
 Reading information from monitoring systems is designed for trained network operators and ways of entering configuration management systems requires high understanding of computer networks terminology and operation.
 They are often developed as an independent codebase which makes it much harder to integrate with other open source solutions used by a community network, like community management solutions, and they lack one unified interface, which further confuses novice users.
 
@@ -186,6 +187,7 @@ One of the oldest and largest mesh networks are Guifi.net \cite{Guifinode_2003,V
 As the node database solutions evolved with the respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend interface and core functionalities.
+The node database solutions are build on custom web frameworks, further limiting the ease of adoption by a new community network.
 Additionally, advanced network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
 
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
@@ -197,8 +199,11 @@ There is some monitoring support, but it is mostly limited to device discovery i
 Freifunk FFM/CNDB features an extensive database schema which models everything from devices to companies and people.
 With its very detailed modelling of individual objects it is an example of the large common base approach.
 Similar to Nodeshot, there is no common approach to managing schema extensions and there is also no monitoring support.
+It uses a custom web framework with almost nonexistent documentation, having a steep learning curve before extending and adapting the system to another community network is possible.
 
-None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, reducing the required administration burden.
+None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, reducing the required administration burden and making the whole process easier for novices.
+As a consequence, they do not support comparing running configuration with provisioned one and detecting misconfiguration and unwanted changes.
+This makes detecting possible issues in advance impossible, and debugging issues once they occur slower.
 
 \section{Platform}
 \label{sec:platform}
