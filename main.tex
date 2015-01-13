@@ -131,7 +131,7 @@ Additionally, it is practically impossible to involve all community networks in 
 This process favours large and established network communities.
 
 The other way is \textit{the extensible core approach} where the aim is to create a minimal core with highly modular and extensible design so that community networks can tailor it to their needs, whatever they might be.
-This is the approach that we are taking with the \nodewatcher{} v3\todo[inline]{Should we mention that this a rewrite of existing nodewatcher v2?} platform.
+This is the approach that we are taking with the \nodewatcher{} v3 platform.
 We make the following novel contributions:
 \begin{itemize}
 \item A modular open platform that may be easily tailored to the needs of any community network.
@@ -210,7 +210,12 @@ This makes detecting possible issues in advance impossible, and debugging issues
 \label{sec:platform}
 
 The design and development of the \nodewatcher{} platform comes from the needs and evolution of the \wlanslovenija{} community wireless network.
-We have come across the problems outlined above and the \nodewatcher{} platform has been designed to be maximally extensible and reusable among different communities.
+In \wlanslovenija{} community network we had similar needs and issues as other community networks and to address them we iteratively developed our own node database system, tailored to our needs and practices.
+That were versions v1 and v2 of the \nodewatcher{} platform.
+But as we started to collaborate more with international community of other community networks, we soon discovered many of more broader issues outlined above.
+We learned that if we want our development efforts to benefit also other community networks and help spawn new community networks, a different approach is needed.
+One where we do not focus development only on needs of our own community network, but think about other networks and their use of the platform from the very beginning.
+As a consequence, the \nodewatcher{} v3 platform has been designed to be maximally extensible and reusable among different communities.
 This section describes all the components of the platform, beginning with a quick high-level overview of the architecture.
 
 \subsection{Overview}
@@ -222,8 +227,6 @@ This section describes all the components of the platform, beginning with a quic
 Traditionally the configuration, generation and monitoring steps are performed manually, while the \nodewatcher{} platform enables automation of these tasks, freeing up resources inside a community.}
   \label{fig:device-mgmt-cycle}
 \end{figure}
-
-% TODO: Po mojem bi morali tu dati nekje tudi cloveka v diagram. Ker sicer izgleda tako tehnicno. V smislu, ce je community network, kje je community v tem ciklu?
 
 The core idea behind the \nodewatcher{} platform is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
 The cycle starts with the \textit{configuration stage} where devices are configured for use in a specific location in the network.
