@@ -38,6 +38,7 @@
 \flushbottom
 
 \newcommand{\nodewatcher}{\textit{nodewatcher}}
+\newcommand{\wlanslovenija}{\textit{wlan slovenija}}
 
 \begin{document}
 
@@ -63,7 +64,7 @@
 
 \address[berkeley]{University of California, Berkeley, USA}
 
-\address[wlansi]{wlan slovenija, Open wireless network of Slovenia, \url{https://wlan-si.net}}
+\address[wlansi]{\wlanslovenija{}, Open wireless network of Slovenia, \url{https://wlan-si.net}}
 
 \begin{abstract}
 TBD.
@@ -142,7 +143,7 @@ We make the following novel contributions:
 The rest of this paper is organized as follows.
 Section~\ref{sec:related-work} presents related work done in the area of community network management tools.
 Section~\ref{sec:platform} presents the design and functioning of the \nodewatcher{} platform.
-Section~\ref{sec:evaluation} shows the results of platform evaluation in the wlan slovenija community wireless network.
+Section~\ref{sec:evaluation} shows the results of platform evaluation in the \wlanslovenija{} community wireless network.
 Section~\ref{sec:conclusion} presents conclusions and ideas for future work.
 
 \section{Related Work}
@@ -208,7 +209,7 @@ This makes detecting possible issues in advance impossible, and debugging issues
 \section{Platform}
 \label{sec:platform}
 
-The design and development of the \nodewatcher{} platform comes from the needs and evolution of the \textit{wlan slovenija} community wireless network.
+The design and development of the \nodewatcher{} platform comes from the needs and evolution of the \wlanslovenija{} community wireless network.
 We have come across the problems outlined above and the \nodewatcher{} platform has been designed to be maximally extensible and reusable among different communities.
 This section describes all the components of the platform, beginning with a quick high-level overview of the architecture.
 
@@ -582,7 +583,7 @@ Since the base framework is common to all, modules from different community netw
 
 \subsubsection{Time-series Data Storage}
 
-The monitoring pipeline may generate large amounts of time-series data during its operation (for example wlan slovenija has accumulated over 200 GiB of data in the last few years, storing everything from network diagnostics to external sensor data).
+The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last few years, storing everything from network diagnostics to external sensor data).
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the pipeline can be a \textit{datastream} processor, storing time-series data.
 Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
 In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis.
