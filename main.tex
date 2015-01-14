@@ -212,7 +212,7 @@ This makes detecting possible issues in advance impossible, and debugging issues
 The design and development of the \nodewatcher{} platform comes from the needs and evolution of the \wlanslovenija{} community wireless network.
 In \wlanslovenija{} community network we had similar needs and issues as other community networks and to address them we iteratively developed our own node database system, tailored to our needs and practices.
 Those were versions v1 and v2 of the \nodewatcher{} platform.
-But as we started to collaborate more with international community of other community networks, we soon discovered many of more broader issues outlined above.
+But as we started to collaborate more with the international community of other community networks, we soon discovered many of more broader issues outlined above.
 We learned that if we want our development efforts to benefit also other community networks and help spawn new community networks, a different approach is needed.
 One where we do not focus development only on needs of our own community network, but think about other networks and their use of the platform from the very beginning.
 As a consequence, the \nodewatcher{} v3 platform has been designed to be maximally extensible and reusable among different communities.
@@ -299,26 +299,24 @@ An example of a schema item definition is shown in Figure~\ref{fig:schema-module
 To construct the base schema that is available with the \nodewatcher{} platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.47]{figures/registry-example-models.pdf}
+  \caption{A simple example of schema item definition, displayed using an entity relationship diagram.
+  The \textit{core} module only contains a minimal \texttt{Node} while any attributes are provided by attached schema items in other modules.}
+  \label{fig:registry-schema-example}
+\end{figure}
+
 The system that supports such schema item registrations is called the \textit{registry}.
 It is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
-It is implemented using a popular Django web framework ORM \cite{django_2005}.
-The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
+In the platform, it is implemented using a popular Django web framework ORM \cite{django_2005}.
+The problem that it aims to solve is the one of simplified model discovery.
 
-\begin{minted}[fontsize=\small]{python}
-class InfoCfg(NodeConfigRegistryItem):
-  name = CharField()
-  
-  class Meta:
-    registry_id = 'info'
-\end{minted}
-
+In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema.
+For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node (see Figure~\ref{fig:registry-schema-example}).
 This base item does not provide any other fields besides the node name, leaving potential extensions to other modules.
-Let us now say that we would like to also add a simple text field which would specify what device is in use on a specific node (in reality, we would more likely use a choice field, but for our example a simple text field suffices). We may do that in another module by saying:
-\begin{minted}[fontsize=\small]{python}
-class ExtendedCfg(InfoCfg):
-  device = CharField()
-\end{minted}
-
+Let us now say that we would like to also add a simple text field which would specify what device is in use on a specific node (in reality, we would more likely use a choice field, but for our example a simple text field suffices).
+We may do that in another module by defining \texttt{ExtendedCfg} as shown in Figure~\ref{fig:registry-schema-example}.
 Imagine now another module that would like to perform a query listing only nodes that use a device called \texttt{tp-wr741ndv4}.
 As mentioned, these two classes actually represent ORM model definitions so a traditional query traversing these two relations would go something like this using the SQL-like relational query notation introduced in~\cite{ONeil_2008}:
 \begin{minted}[fontsize=\small]{sql}
