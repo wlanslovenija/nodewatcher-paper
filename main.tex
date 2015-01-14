@@ -261,7 +261,7 @@ Such validation must be based on the selected target device with all its hardwar
 The \nodewatcher{} platform enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
-Communities will usually have some specifics regarding their operations~-- either because of different local regulations or differences in philosophy.
+Communities will usually have some specifics regarding their operations~-- for example, because of different local regulations, hardware availability, or differences in philosophy.
 Having a single unified schema can quickly become a limiting factor that prohibits straightforward adaptation of the system for the local community.
 
 \begin{figure}
@@ -282,7 +282,7 @@ class VIFConfig(InterfaceConfig, RoutableInterface):
 registration.point('node.config').register_subitem(
   WifiRadioDeviceConfig, VIFConfig)
 \end{minted}
-\caption{A simplified example of a platform-independent schema definition for a virtual wireless interface configuration extended from two base classes \texttt{InterfaceConfig} and \texttt{RoutableInterface}.}
+\caption{A simplified example of a platform-independent schema definition for a virtual wireless interface (VIF) configuration extended from two base classes \texttt{InterfaceConfig} and \texttt{RoutableInterface}.}
 \label{fig:schema-module-wifi}
 \end{figure}
 
@@ -300,6 +300,7 @@ To construct the base schema that is available with the \nodewatcher{} platform,
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
 The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
+It is implemented using a popular Django web framework ORM \cite{django_2005}.
 The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
 
 \begin{minted}[fontsize=\small]{python}
