@@ -244,9 +244,14 @@ Each part is designed to be easily extensible to networks with various topologie
 \subsection{Platform-independent Configuration}
 
 Community networks are built using a wide range of devices, containing everything from off-the-shelf home routers to specialized devices used for backbone links and regular servers used for core services.
-The \nodewatcher{} platform uses a single platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
+The \nodewatcher{} platform uses an extensible platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
 One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do much re-configuration.
 It is a frequent occurrence that deployed devices need to be replaced when they stop functioning properly due to various hardware failures.
+Instead of taking down the hardware device, spending time on the roof or in the lab to fix it, and then taking it back to install it, with extended downtime during that period, it is better that the device is immediately replaced with a new one, but with exactly the same configuration as the previous one had.
+The broken device can then be fixed without hurry and reused at some other location.
+Because community networks are mostly operated by volunteers, dealing with urgent matters adds extra pressure on volunteers for their scarce time.
+Additionally, replacement of a broken hardware device can be done easily by one volunteer, while fixing a device can be done at a later time by another, more skilled, volunteer.
+Obtaining exactly the same device for a replacement is hard in community networks which utilize diverse hardware devices, so having a way to apply the same configuration to a new and different hardware device is needed.
 
 However, while having a platform-independent configuration is a noble goal, some configuration properties inherently depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
