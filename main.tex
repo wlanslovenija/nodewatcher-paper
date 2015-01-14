@@ -375,6 +375,8 @@ A possible solution would be for network maintainers to provide pre-defined temp
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
+\todo[inline]{We should talk here also about possibility of generating different forms for same schema, making variations of forms which do not expose all features and not confuse novice users. Defaults are then applied in the background. Also, various levels of users might have different level of what can see and change.}
+
 \nodewatcher{} takes a different approach, enabling codification of defaults in the form of simple declarative rules.
 The example in Figure~\ref{fig:defaults-rules-example} shows context-sensitive default wireless ESSID configuration.
 Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
