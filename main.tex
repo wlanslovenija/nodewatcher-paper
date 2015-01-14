@@ -334,9 +334,9 @@ SELECT n FROM Node n
 WHERE REGISTRY info.device = 'tp-wr741ndv4'
 \end{minted}
 
-In this case, the \texttt{info} is the \textit{registry identifier} that we attached to the base model using its \texttt{Meta} data and represents itself or any of its subclasses at the same time.
+In this case, \texttt{info} is the \textit{registry identifier} that we attached to the base model using its meta \textit{Registry ID} attribute (see Figure~\ref{fig:registry-schema-example}) and represents itself or any of its subclasses at the same time.
 In the background, the proper relations are automatically deduced and the query executed.
-This abstracts away the subclass relations, enabling easier refactoring and improving code readability.
+This abstracts away the subclass relationships, enabling easier refactoring and improving code readability.
 Similar extensions are also provided for simplified fetching of fields deeply nested in the schema by deducing and performing the required table join operations.
 
 \subsection{Form Generation and Rule-based Defaults}
