@@ -67,7 +67,7 @@
 \address[wlansi]{\wlanslovenija{}, Open wireless network of Slovenia, \url{https://wlan-si.net}}
 
 \begin{abstract}
-TBD.
+\todo[inline]{Ideas: community networks are different than regular networks, require special tools for coordination and maintenance. because of specifics of individual networks most communities develop their own tools for this. we propose a new platform that is much more general ... }
 \end{abstract}
 
 \begin{keyword}
@@ -633,13 +633,13 @@ In case of a reset, a \texttt{null} value is inserted instead.
 However, if there was no reset and the counter value decreased, the event is classified as a counter wrap and the rate is computed using the known maximum value of the counter.
 Additional operators include computing sums of multiple streams and automatically deriving reset streams from device uptimes.
 
-The design of datastream is modular, supporting implementations of additional storage backends while continuing to expose the same API.
+The design of datastream is modular, supporting implementations of additional\todo[inline]{alternative?} storage backends while continuing to expose the same API.
 
-\subsection{Easy-to-use User Interface}
+\subsection{User Interface}
 
-TODO
+\todo[inline]{Should we mention that the interface hides defaults and is therefore more understandable for novice users?}
 
-notifications
+\todo[inline]{notifications
 easy to debug
 easy to share information about nodes
 information keept to date
@@ -648,25 +648,30 @@ strict-typing - compiling until there is no errors - you can start with basic ro
 
 but you can also install it through generator
 
-TODO
-
 should we extract some code into external packages like registry and then describe them (registry, datastream, template-overload)?
+}
 
 \section{Evaluation}
 \label{sec:evaluation}
 
-TODO
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.45]{figures/wlansi-nodes-up.pdf}
+  \caption{Number of online nodes in wlan slovenija community wireless network as reported by the monitoring system for the past few years.}
+  \label{fig:wlansi-nodes-up}
+\end{figure}
 
-- we should show how an actual deployment looks like in wlan slovenija (a nice schematic figure)
+\todo[inline]{Describe the figure. Actually, what is the purpose of this figure, what does it motivate?}
+
+\todo[inline]{- we should show how an actual deployment looks like in wlan slovenija (a nice schematic figure)
 - wlan slovenija, v2, experiences?
-- performance comparison, v2 vs. v3?
+- QUALITATIVE comparison, v2 vs. v3?, which problems do we address with the new system.
+}
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-TODO
-
-- radio planning features
+\todo[inline]{Summarize, highlight that this system will be deployed in wlan-si, perhaps even highlight that other communities have already expressed interest. radio planning features}
 
 \section*{Acknowledgement}
 
