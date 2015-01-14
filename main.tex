@@ -392,10 +392,11 @@ This is especially the case in IPv4-based networks where it is hard to automatic
 
 In order to support that, \nodewatcher{} implements a hierarchical buddy allocation scheme~\cite{Peterson_1977} extended with support for hold down timers.
 At the top level IP space is split into multiple pools from which other objects (for example nodes) may request specific allocations.
-Hold down timers are necessary to avoid collisions with nodes that have been recently removed.
+Hold down timers are necessary to avoid collisions with nodes that have been recently removed from the database.
 When an allocation is freed, it is still marked as \textit{reserved} until the hold down timer expires.
 
-This is required especially in community networks where nodes may not be completely removed and may actually reappear at a later time, causing routing conflicts.
+This is necessary especially in community networks where coordination between volunteers is lack.
+Nodes may be removed from the database, but not yet permanently from the network and may actually reappear at a later time, causing routing conflicts.
 
 \subsection{Firmware Generator}
 \label{sec:firmware-generator}
