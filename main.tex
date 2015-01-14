@@ -261,7 +261,7 @@ Such validation must be based on the selected target device with all its hardwar
 The \nodewatcher{} platform enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
-Communities will usually have some specifics regarding their operations~-- either because of different local regulations or differences in philosophy.
+Communities will usually have some specifics regarding their operations~-- for example, because of different local regulations, hardware availability, or differences in philosophy.
 Having a single unified schema can quickly become a limiting factor that prohibits straightforward adaptation of the system for the local community.
 
 \begin{figure}
@@ -282,7 +282,7 @@ class VIFConfig(InterfaceConfig, RoutableInterface):
 registration.point('node.config').register_subitem(
   WifiRadioDeviceConfig, VIFConfig)
 \end{minted}
-\caption{A simplified example of a platform-independent schema definition for a virtual wireless interface configuration extended from two base classes \texttt{InterfaceConfig} and \texttt{RoutableInterface}.}
+\caption{A simplified example of a platform-independent schema definition for a virtual wireless interface (VIF) configuration extended from two base classes \texttt{InterfaceConfig} and \texttt{RoutableInterface}.}
 \label{fig:schema-module-wifi}
 \end{figure}
 
@@ -299,7 +299,9 @@ An example of a schema item definition is shown in Figure~\ref{fig:schema-module
 To construct the base schema that is available with the \nodewatcher{} platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
-The system that supports such schema item registrations is called the \textit{registry}. It is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
+The system that supports such schema item registrations is called the \textit{registry}.
+It is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
+It is implemented using a popular Django web framework ORM \cite{django_2005}.
 The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
 
 \begin{minted}[fontsize=\small]{python}
@@ -375,6 +377,8 @@ A possible solution would be for network maintainers to provide pre-defined temp
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
+\todo[inline]{We should talk here also about possibility of generating different forms for same schema, making variations of forms which do not expose all features and not confuse novice users. Defaults are then applied in the background. Also, various levels of users might have different level of what can see and change.}
+
 \nodewatcher{} takes a different approach, enabling codification of defaults in the form of simple declarative rules.
 The example in Figure~\ref{fig:defaults-rules-example} shows context-sensitive default wireless ESSID configuration.
 Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
@@ -392,10 +396,11 @@ This is especially the case in IPv4-based networks where it is hard to automatic
 
 In order to support that, \nodewatcher{} implements a hierarchical buddy allocation scheme~\cite{Peterson_1977} extended with support for hold down timers.
 At the top level IP space is split into multiple pools from which other objects (for example nodes) may request specific allocations.
-Hold down timers are necessary to avoid collisions with nodes that have been recently removed.
+Hold down timers are necessary to avoid collisions with nodes that have been recently removed from the database.
 When an allocation is freed, it is still marked as \textit{reserved} until the hold down timer expires.
 
-This is required especially in community networks where nodes may not be completely removed and may actually reappear at a later time, causing routing conflicts if left unhandled.
+This is necessary especially in community networks where coordination between volunteers is lacking.
+Nodes may be removed from the database, but not yet permanently removed from the network and may actually reappear at a later time, causing routing conflicts.
 
 \subsection{Firmware Generator}
 \label{sec:firmware-generator}
@@ -658,13 +663,13 @@ should we extract some code into external packages like registry and then descri
 \begin{figure}
   \centering
   \includegraphics[scale=0.45]{figures/wlansi-nodes-up.pdf}
-  \caption{Number of online nodes in wlan slovenija community wireless network as reported by the monitoring system for the past few years.}
+  \caption{Number of online nodes in \wlanslovenija{} community wireless network as reported by the monitoring system for the past few years.}
   \label{fig:wlansi-nodes-up}
 \end{figure}
 
 \todo[inline]{Describe the figure. Actually, what is the purpose of this figure, what does it motivate?}
 
-\todo[inline]{- we should show how an actual deployment looks like in wlan slovenija (a nice schematic figure)
+\todo[inline]{- we should show how an actual deployment looks like in \wlanslovenija{} (a nice schematic figure)
 - wlan slovenija, v2, experiences?
 - QUALITATIVE comparison, v2 vs. v3?, which problems do we address with the new system.
 }
