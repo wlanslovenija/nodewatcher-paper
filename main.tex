@@ -77,12 +77,12 @@ community networks \sep management \sep provisioning \sep monitoring \sep wirele
 
 \section{Introduction}
 
-Community (wireless) networks \cite{Bruno_2005} provide independent, community-owned network infrastructure for user communication and data exchange.
-They are mostly built using standard wireless (IEEE802.11) infrastructure \cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems \cite{Mustafa_2013}.
+Community (wireless) networks~\cite{Bruno_2005} provide independent, community-owned network infrastructure for user communication and data exchange.
+They are mostly built using standard wireless (IEEE802.11) infrastructure~\cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems~\cite{Mustafa_2013}.
 They use, reuse and repurpose existing communication technologies, like inexpensive off-the-shelf WiFi routers, to form a widespread network.
-These networks can cover all from local neighborhoods \cite{RedHook_2013}, to cities \cite{AWMN} and countries \cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
+These networks can cover everything from local neighborhoods~\cite{RedHook_2013}, to cities~\cite{AWMN} and countries~\cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
 Their common aim is to empower people with new ways of communication and access to the wider public networks like the Internet.
-Motivations for such networks are diverse and multiplex, but often networks are formed out of necessity \cite{WNDW_2013}.
+Motivations for such networks are diverse and multiplex, but often networks are formed out of necessity~\cite{WNDW_2013}.
 Even in developed countries many rural areas are underserved with Internet connectivity infrastructure built and offered by traditional Internet Service Providers, population density being too low for investments to be profitable enough, leaving to people themselves to build needed infrastructure to connect to the Internet.
 
 The common property of all community networks is that they grow organically~-- there is no central planning body that would decide how the network is built, as is usually the case with proprietary networks.
@@ -99,7 +99,7 @@ Besides efficiency, an important factor in increasing growth is also the accessi
 Without a suitable overall management system, all these steps (flashing\footnote{Flashing is the process of reprogramming the wireless network device with an unofficial firmware image, commonly Linux based.} and configuring devices, allocating resources, diagnosing problems) need to be done manually which is time-consuming and prone to errors.
 
 \item In addition to technical issues related to device deployment, there is also the need for community coordination so that people know what is going on in the network and can familiarize themselves better with its operation and what others are doing.
-In general it is not possible to anticipate how, when, and where a new participant will start participating by deploying one of network's nodes\footnote{Meaning of a ``network node'' is understood differently in different communities. For the purpose of this paper it is used as one routing network device, and as a basic unit of participation by participants.}.
+In general it is not possible to anticipate how, when, and where a new participant will start participating by deploying one of the network's nodes\footnote{Meaning of a ``network node'' is understood differently in different communities. For the purpose of this paper it is used as one routing network device, and as a basic unit of participation by participants.}.
 
 \item For volunteers it is important to have feedback on how they themselves are contributing to the network.
 Is the node that they are maintaining highly used and crucial for the part of the network and users?
@@ -123,7 +123,7 @@ Each community has slight differences in their vision and operation philosophy, 
 
 In order to address this, there are at least two approaches that can be taken.
 The first one is \textit{the large common base approach} which tries to create a common system that addresses the needs of as many of communities as possible by providing a large feature set and a large configuration schema\todo[inline]{Is the term schema well understood in the community? Should we define it more?} encompassing all possible scenarios.
-This approach has been tried as part of an interoperability effort \cite{interop_2010, cnml_2007} established between community networks, to come up with a common schema upon which so called node databases could be built.
+This approach has been tried as part of an interoperability effort~\cite{interop_2010, cnml_2007} established between community networks, to come up with a common schema upon which so called node databases could be built.
 The problem is that it is hard to come up with a one-fits-all solution and large monolithic schemas can quickly become unmanageable.
 Moreover, it requires sustained effort from participating community networks first to establish the standard and then to keep it updated as technologies and practices evolve.
 Because community networks are mostly volunteer run, such sustained participation is unattainable for many community networks.
@@ -172,7 +172,7 @@ While these systems can be used in community networks, they are not tailored to 
 First, some of the monitoring and configuration management systems require agents which consume too much resources to run on simple off-the-shelf network equipment commonly in use in community networks.
 They might be suitable to monitor some better-equipped network nodes, but would require different systems for managing other parts of the network, which increases the work load of volunteer participants.
 Additionally, these systems are independent solutions, requiring manual integration which needs to be performed by each community.
-This increases the chance that each community will pick different solutions and end up with systems which are not interoperable with other.
+This increases the chance that each community will pick different solutions and end up with systems which are not interoperable with each other.
 Configuration management systems are not suitable for embedded systems, or if they are, they target devices of a particular manufacturer, and not a diverse range of often customized devices found in community networks.
 
 But most importantly, since they have not been designed with community networks in mind, none of these systems provide community coordination capabilities.
@@ -184,8 +184,8 @@ They are often developed as an independent codebase which makes it much harder t
 \subsection{Node Databases}
 
 Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the growing number of wireless mesh nodes.
-One of the oldest and largest mesh networks are Guifi.net \cite{Guifinode_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
-As the node database solutions evolved with the respective networks, both are tailored to specific structures of their networks and its management structure.
+One of the oldest and largest mesh networks are Guifi.net~\cite{Guifinode_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
+As the node database solutions evolved with their respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend interface and core functionalities.
 The node database solutions are built on custom web frameworks, further limiting the ease of adoption by a new community network.
@@ -253,7 +253,7 @@ Because community networks are mostly operated by volunteers, dealing with urgen
 Additionally, replacement of a broken hardware device can be done easily by one volunteer, while fixing a device can be done at a later time by another, more skilled, volunteer.
 Obtaining exactly the same device for a replacement is hard in community networks which utilize diverse hardware devices, so having a way to apply the same configuration to a new and different hardware device is needed.
 
-However, while having a platform-independent configuration is a noble goal, some configuration properties inherently depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
+However, while having a platform-independent configuration is a noble goal, some configuration properties depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
 This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
 This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
@@ -299,7 +299,7 @@ An example of a schema item definition is shown in Figure~\ref{fig:schema-module
 To construct the base schema that is available with the \nodewatcher{} platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
-The system that supports such schema item registrations is called the \textit{registry} and is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
+The system that supports such schema item registrations is called the \textit{registry}. It is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
 The problem that it aims to solve is the one of simplified model discovery. In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema. For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node:
 
 \begin{minted}[fontsize=\small]{python}
@@ -336,6 +336,7 @@ WHERE REGISTRY info.device = 'tp-wr741ndv4'
 
 In this case, the \texttt{info} is the \textit{registry identifier} that we attached to the base model using its \texttt{Meta} data and represents itself or any of its subclasses at the same time.
 In the background, the proper relations are automatically deduced and the query executed.
+This abstracts away the subclass relations, enabling easier refactoring and improving code readability.
 Similar extensions are also provided for simplified fetching of fields deeply nested in the schema by deducing and performing the required table join operations.
 
 \subsection{Form Generation and Rule-based Defaults}
@@ -369,7 +370,7 @@ Automatic form generation simplifies the module development process and reduces 
 The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.
 
 Addressing the second issue is especially important in order for community networks to be more accessible to people that do not have all the deep technical knowledge on how to configure devices.
-Having the ability to define sensible defaults for such users is a feature that enables the community to also include such users.
+Having the ability to define sensible defaults for such users is a feature that enables the community to grow by also including them.
 A possible solution would be for network maintainers to provide pre-defined templates of configuration defaults.
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
@@ -394,7 +395,7 @@ At the top level IP space is split into multiple pools from which other objects 
 Hold down timers are necessary to avoid collisions with nodes that have been recently removed.
 When an allocation is freed, it is still marked as \textit{reserved} until the hold down timer expires.
 
-This is required especially in community networks where nodes may not be completely removed and may actually reappear at a later time, causing routing conflicts.
+This is required especially in community networks where nodes may not be completely removed and may actually reappear at a later time, causing routing conflicts if left unhandled.
 
 \subsection{Firmware Generator}
 \label{sec:firmware-generator}
@@ -410,13 +411,13 @@ But this configuration cannot directly be used on devices.
 Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995} that are frequently used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
 
-However, such a step presents some additional challenges that prevent a straightforward transformation of any configuration based on the platform-independent schema to a device-specific one.
+However, such a step introduces some additional challenges that prevent a straightforward transformation of any configuration based on the platform-independent schema to a device-specific one.
 This is due to the fact that there are differences between operating systems which may prevent certain configurations from being properly instantiated on one operating system even when those same configurations work without issues on another one.
 Additionally even using the same operating system, devices have different capabilities due to differences in their hardware.
 Configuration which was platform-independent and unaware of the target device in the first stage can produce problems while being applied to a specific device and operating system.
 This conflict may result in some unpleasant, but realistic, scenarios:
 \begin{enumerate}[label=\roman*)]
-\item Devices have different default network switch layouts and VLAN tags.
+\item Devices have different default network switch layouts, VLAN tags and interface names.
 As usually nodes use the WAN-designated port for the internet uplink and the LAN-designated port for routing to nodes in the same location, such a misconfiguration will cause connectivity issues.
 
 \item Configuration of some wireless authentication mechanisms requires the installation of specialized packages on some operating systems.
@@ -438,12 +439,12 @@ A declarative descriptor is composed from multiple fields as follows:
 
 \item A list of wireless radios embedded on the device.
 Each radio contains a unique identifier, a name and a list of supported IEEE802.11 protocols and features.
-It also contains a list of physical antenna connectors so that the configuration system may know to which port a specific antenna is attached in case there are multiple antenna ports.
+It also contains a list of physical antenna connectors so that the configuration system may know to which port a specific antenna is attached in case there are multiple antenna ports available on the device.
 
-\item A list of ethernet switches connected to the CPU together with VLAN tag information and designation of the ports connected directly to the CPU.
+\item A list of Ethernet switches connected to the CPU together with VLAN tag information and designation of the ports connected directly to the CPU.
 
-\item A list of ethernet interfaces and their connections to declared switches together with their VLAN tag definitions. 
-Different devices have different switch and ethernet port configurations and these two options abstract all of this into simpler identifiers like \texttt{lan0} and \texttt{wan0}.
+\item A list of Ethernet interfaces and their connections to declared switches together with their VLAN tag definitions. 
+Different devices have different switch and Ethernet port configurations and these two options abstract all of this into simpler identifiers like \texttt{lan0} and \texttt{wan0}.
 
 \item A list of antennas that are included in the device package.
 Each antenna contains radio propagation properties which characterize the antenna.
@@ -466,11 +467,11 @@ Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cy
 These errors are immediately propagated up to the user who is entering configuration via the \nodewatcher{}'s web interface, so that problems may be corrected as soon as possible.
 The validation system will not save a configuration which has outstanding errors, preventing invalid configurations from being used to deploy devices.
 
-In order to further ease deployment, the resulting device-specific configuration may be packaged together with a firmware image which may be then flashed directly onto the target device.
+In order to further ease deployment, the resulting device-specific configuration may be packaged together with a firmware image which may then be flashed directly onto the target device.
 Such pre-generated firmware images further reduce the room for errors as no configuration needs to be transferred separately or entered manually.
 Besides reducing errors, packaging software (firmware) together with its configuration is also beneficial for ensuring that the configuration really is applicable to the used software versions as both can be tested together.
 Otherwise, using a stale configuration on a newer operating system or newer versions of some packages may result in failing devices.
-Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks  that would be beneficial to existing and emerging networks alike.
+Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks  that is beneficial to existing and emerging networks alike.
 
 The underlying firmware build system has been designed in such a way that it is extensible to different operating systems and platforms.
 To achieve this, the build system is structured into multiple Docker containers~\cite{Docker_2013}.
@@ -580,19 +581,19 @@ There are two basic types of processors:
 
 Algorithm~\ref{alg:monitoring-pipeline} shows a simplified version of the processing run execution.
 As can be seen from the algorithm, the pipeline is completely generic and its content depends entirely on the processor implementations which are provided by modules.
-However, the pipeline implementation actually performs some optimizations that cannot be observed in the above pseudocode.
+In order to increase performance, the pipeline implementation actually performs some optimizations that cannot be observed in the above pseudocode.
 Network processors must be executed serially as each may modify the working set which is part of the state for downstream processors.
 But there is no reason why execution of node processors cannot be done in parallel for each node.
 Additionally, if there are multiple consecutive node processors which will run on the same working set (note that only network processors may change the working set), they can all be executed inside the same thread, one after the other.
 This greatly reduces the amount of context transfer between processes and speeds up the monitoring run execution.
 
 The modular nature of the monitoring pipeline enables different communities to completely adapt it to their own network.
-Since the base framework is common to all, modules from different community networks may interoperate inside the same pipeline, increasing code reuse possibilities.
+Since the base framework is common to all, modules from different community networks may interoperate inside the same pipeline, passing data through the context in a loosely coupled manner and increasing code reuse possibilities.
 
 \subsubsection{Time-series Data Storage}
 
 The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last few years, storing everything from network diagnostics to external sensor data).
-As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the pipeline can be a \textit{datastream} processor, storing time-series data.
+As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
 Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
 In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis.
 
@@ -625,7 +626,7 @@ Streams may be automatically computed from other streams using different operato
 The most prominent use of this feature in monitoring is to support correct rate computations under the possibility of counter wraps and resets which could otherwise cause apparent rate spikes when the counter is reset due to a reboot but the system incorrectly classifies it as a counter wrap.
 To illustrate why this can be a problem, imagine a simple 8-bit unsigned integer counter (its size is known to the monitoring platform), sampled every 10 seconds (see Figure~\ref{fig:datastream-counter-reset}).
 Focusing on the instance where counter value decreases from $212$ to $37$ this can be treated either as a counter wrap (as its maximum value is $255$) or as a counter reset due to device rebooting.
-Without additional information, such events must be classified uniformly: if they are classified as wraps, rates may incorrectly spike (in our example the rate would be computed as $(255 - 212 + 37) / 10s = 8.0s^{-1}$); if they are always classified as resets, data points may be lost.
+Without additional information, such events must be classified uniformly: if they are all classified as wraps, rates may incorrectly spike (in our example the rate would be computed as $(255 - 212 + 37) / 10s = 8.0s^{-1}$); if they are always classified as resets, data points may be lost.
 
 Using datastream, a \textit{counter derivative} operator accepts two streams, one containing raw counter data (for example the number of bytes transferred on a network interface) and one containing discrete events at which a device was rebooted (for example derived from its uptime).
 Using both pieces of information, the rate is computed as a derivative, but only when there was no reset event in the last time interval.
