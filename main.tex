@@ -647,7 +647,7 @@ Additional operators include computing sums of multiple streams and automaticall
 
 The design of datastream is modular, supporting implementations of alternative storage backends while continuing to expose the same API.
 
-\section{Evaluation}
+\section{Evaluation and Discussion}
 \label{sec:evaluation}
 
 \begin{figure}
@@ -657,7 +657,12 @@ The design of datastream is modular, supporting implementations of alternative s
   \label{fig:wlansi-nodes-up}
 \end{figure}
 
-\todo[inline]{Describe the figure. Actually, what is the purpose of this figure, what does it motivate?}
+In this section we evaluate \nodewatcher{} in the context of \wlanslovenija{} wireless community network.
+\wlanslovenija{} has been an active network since the year 2009.
+It is a medium-sized network with around $400$ online nodes at the moment (the growth of the number of online nodes since 2010 may be seen in Figure~\ref{fig:wlansi-nodes-up}).
+
+Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new platform presented in this paper is being run in parallel in order to enable a smooth transition.
+Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management.
 
 \todo[inline]{- we should show how an actual deployment looks like in \wlanslovenija{} (a nice schematic figure)
 - wlan slovenija, v2, experiences?
