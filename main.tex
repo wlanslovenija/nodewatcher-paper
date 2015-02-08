@@ -88,7 +88,7 @@ community networks \sep management \sep provisioning \sep monitoring \sep wirele
 Community (wireless) networks~\cite{Bruno_2005,Frangoudis_2011} provide independent, community-owned network infrastructure for user communication and data exchange.
 They are mostly built using standard wireless (IEEE802.11) infrastructure~\cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems~\cite{Mustafa_2013}.
 They use, reuse and repurpose existing communication technologies, like inexpensive off-the-shelf WiFi routers, to form a widespread network.
-These networks can cover everything from local neighborhoods~\cite{RedHook_2013}, to cities~\cite{AWMN} and countries~\cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
+These networks can cover everything from local neighbourhoods~\cite{RedHook_2013}, to cities~\cite{AWMN} and countries~\cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
 Their common aim is to empower people with new ways of communication and access to the wider public networks like the Internet.
 Motivations for such networks are diverse and multiplex, but often networks are formed out of necessity~\cite{WNDW_2013}.
 Even in developed countries many rural areas are underserved with Internet connectivity infrastructure built and offered by traditional Internet Service Providers, population density being too low for investments to be profitable enough, leaving to people themselves to build needed infrastructure to connect to the Internet.
@@ -669,12 +669,22 @@ In this section we evaluate \nodewatcher{} in the context of \wlanslovenija{} wi
 It is a medium-sized network with around $400$ online nodes at the moment (the growth of the number of online nodes since 2010 may be seen in Figure~\ref{fig:wlansi-nodes-up}).
 
 Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new platform presented in this paper is being run in parallel in order to enable a smooth transition.
-Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management.
+Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management by addressing the exposed problems.
 
-\todo[inline]{- we should show how an actual deployment looks like in \wlanslovenija{} (a nice schematic figure)
-- wlan slovenija, v2, experiences?
-- QUALITATIVE comparison, v2 vs. v3?, which problems do we address with the new system.
-}
+\subsection{Device Support}
+
+It is much easier to support new devices and keep up with the pace of requirements from other communities in the new platform.
+Currently, our platform is also being used by the neighbouring community network in Croatia where they use some unique devices due to their cheap local availability.
+In old version of the platform, every new device was hard to support properly as it required substantial changes to the provisioning system code.
+Additionally, it did not have advanced validation capabilities, resulting several times in erroneous configurations which required re-flashing to fix.
+In contrast, the new platform enabled us to quickly support the new device, simply by writing a new device descriptor for it (see Section~\ref{sec:firmware-generator}).
+
+\subsection{Monitoring}
+
+The old version used a round-robin database for time series data storage.
+\todo[inline]{compare RRD to the new system, processing time delays, static vs. interactive visualization (see Figure~\ref{fig:interactive-visualization})}
+
+\todo[inline]{- further qualitative comparison v2 vs. v3}
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
