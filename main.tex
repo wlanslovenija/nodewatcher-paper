@@ -571,6 +571,8 @@ Each module element may provide whatever elements it wants to report for the cur
 The agent will automatically create a special \texttt{\_meta} element containing the module metadata~-- currently a module version number.
 By inspecting the metadata, the processing pipeline is able to handle multiple versions of the schema for different modules.
 
+\todo[inline]{Agent is only one implementation. Otherwise a simple HTTP protocol. But we can also extend this to other protocols which nodes can support, like SNMP. From this we can then nicely transition to modular backend.}
+
 \begin{algorithm}[t]
 \begin{algorithmic}
 \Procedure{MonitoringRun}{$P$}
@@ -663,6 +665,10 @@ The design of datastream is modular, supporting implementations of alternative s
 
 \todo[inline]{I think we should expand on granularities. I think this idea that we do not just compute average values when downsampling, but also other statistical moments, max, min, standard deviation, which we can then use to visualize data much better, is an important on. We can also move Figure~\ref{fig:interactive-visualization} here and describe it visually.}
 
+\subsection{Modular user interface}
+
+\todo[inline]{Extendable menus and templates. Server-side templates. REST APIs for all data + JavaScript. Modular, interchangeable, exportable. Community can prototype faster new solutions over existing base through or modules for the platform, or just using REST API. We already mentioned extendable forms (and possibly REST), reference that.}
+
 \section{Evaluation and Discussion}
 \label{sec:evaluation}
 
@@ -691,21 +697,35 @@ Due to this state we have a unique opportunity to qualitatively compare the work
 
 It is much easier to support new devices and keep up with the pace of requirements from other communities in the new platform.
 Currently, our platform is also being used by the neighbouring community network in Croatia where they use some unique devices due to their cheap local availability.
-In old version of the platform, every new device was hard to support properly as it required substantial changes to the provisioning system code.
-Additionally, it did not have advanced validation capabilities, resulting several times in erroneous configurations which required re-flashing to fix.
+In old version of the platform, every new device required substantial effort to support it properly as \nodewatcher{} required substantial changes to the provisioning system code.
+Additionally, \nodewatcher{} did not have advanced validation capabilities, resulting several times in erroneous configurations which required re-flashing to fix.
 In contrast, the new platform enabled us to quickly support the new device, simply by writing a new device descriptor for it (see Section~\ref{sec:firmware-generator}).
 
 \subsection{Monitoring}
 
-The old version used a round-robin database for time series data storage.
-\todo[inline]{compare RRD to the new system, processing time delays, static vs. interactive visualization (see Figure~\ref{fig:interactive-visualization})}
+\todo[inline]{Faster measurements. Parallel. Distributed load. Multiple/various cycles at various intervals so that some cheap things can be more frequently measured, other who make more load on the network or server, less often. All stored forever so that we can learn, analyze, and share. Open data. Events, alarms, various types, more customizable. Notifications.}
 
-\todo[inline]{- further qualitative comparison v2 vs. v3}
+\subsection{Interactivity}
+
+The old version used a round-robin database for time series data storage.
+\todo[inline]{Compare RRD to the new system, processing time delays, static vs. interactive visualization (see Figure~\ref{fig:interactive-visualization}).}
+
+\todo[inline]{Interactive visualisations. Interactive forms. All of this modular. And with adaptive interfaces for various levels of users (beginners, experts; more or less permissions). Roles, permissions for various types of networks, some are more open than others about who can control the nodes. We can support of all that through modularity.}
+
+\subsection{Modularity and interoperability}
+
+\todo[inline]{Trac as an example of a modular system for managing open source projects. Success of Trac Hacks (some numbers of packages). We are doing something similar for managing the community networks. We are using Django, not custom framework, modules are standard Django packages, we can reuse package repositories and tools Django ecosystem provides. Like Django Packages (some numbers of packages) website, which is similar to Trac Hacks. Together with Django, also Python and their repository (some numbers of packages).}
+
+\todo[inline]{Revived interoperability efforts~\cite{interop_2010} in the past half of year, communities discuss various data schemas, etc. We are taking part and discovering that nodewatcher can support all of that with little efforts. Victory.}
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-\todo[inline]{Summarize, highlight that this system will be deployed in wlan-si, perhaps even highlight that other communities have already expressed interest. radio planning features}
+\todo[inline]{We conclude that we achieved our goal of creating a modular platform with guiding thought of being useful also to other communities (while other software was often made for only a particular community), by being modular and addressing all other shortcomings we have realized through all this years. Now the real work start, working with other communities. Do we menton that we are organizing Battlemesh which is a great place to launch this?}
+
+\todo[inline]{Radio planning features. Multiple routing protocols. But mostly in the future working with other communities to start developing customized modules. So we do not want to be developing everything, now others can start picking up.}
+
+\todo[inline]{Explain how our data can be used in research to learn more about community collaboration and real-world networks. Example of such research is CONFINE. We are doing something similar for our KORUZA project where we will be using nodewatcher to monitor deployments all around the world.}
 
 \section*{Acknowledgement}
 
