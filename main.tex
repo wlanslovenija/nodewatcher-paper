@@ -516,7 +516,7 @@ Containers provide here an easy way for existing communities to evaluate and fol
 \subsection{Network Monitoring}
 \label{sec:network-monitoring}
 
-After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for compliance.
+After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for status, performance, and compliance.
 In the same way as the configuration transformation step performs static validation of device configuration before it is deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
 While validation is common to both, the scope of the latter is much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
 Besides performing configuration compliance validation, monitoring may also be used to collect various sensor data through time.
@@ -524,12 +524,12 @@ This is useful for diagnostics under changing network conditions and can also be
 
 One may ask why should monitoring be integrated into the provisioning platform?
 It is true that existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
-This enables the system to quickly detect configuration errors (for example after someone manually edited configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
+This enables the system to quickly detect configuration errors (for example after someone manually edits configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
 Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or specific import scripts for the target monitoring system (which is usually not very portable among different communities).
 Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks.
 An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
 
-Data collection starts on the devices and is implemented by the \texttt{nodewatcher-agent} process.
+Data collection starts on a node and is implemented by the \texttt{nodewatcher-agent} process.
 It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
 Each module is a shared library which is loaded when the agent process starts.
 Having modules as shared libraries enables simple extension of the monitoring agent by third-party packages.
@@ -617,7 +617,7 @@ Since the base framework is common to all, modules from different community netw
 
 \subsubsection{Time-series Data Storage}
 
-The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last few years, storing everything from network diagnostics to external sensor data).
+The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last few years, storing everything from network diagnostics to external sensor data).\todo[inline]{Let's be precise here. In how many years?}
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
 Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
 In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis.
@@ -649,7 +649,7 @@ Datapoints are inserted only at the highest granularity and are then automatical
 
 Streams may be automatically computed from other streams using different operators.
 The most prominent use of this feature in monitoring is to support correct rate computations under the possibility of counter wraps and resets which could otherwise cause apparent rate spikes when the counter is reset due to a reboot but the system incorrectly classifies it as a counter wrap.
-To illustrate why this can be a problem, imagine a simple 8-bit unsigned integer counter (its size is known to the monitoring platform), sampled every 10 seconds (see Figure~\ref{fig:datastream-counter-reset}).
+To illustrate why this can be a problem, imagine a simple 8-bit unsigned integer counter (its size is known to the monitoring platform), sampled every 10 seconds (see Figure~\ref{fig:datastream-counter-reset}).\todo[inline]{I would add also reset stream derivation to show that derivation can be chained. Also, reset stream does not really have 0 when there is no reset?}
 Focusing on the instance where counter value decreases from $212$ to $37$ this can be treated either as a counter wrap (as its maximum value is $255$) or as a counter reset due to device rebooting.
 Without additional information, such events must be classified uniformly: if they are all classified as wraps, rates may incorrectly spike (in our example the rate would be computed as $(255 - 212 + 37) / 10s = 8.0s^{-1}$); if they are always classified as resets, data points may be lost.
 
@@ -660,6 +660,8 @@ However, if there was no reset and the counter value decreased, the event is cla
 Additional operators include computing sums of multiple streams and automatically deriving reset streams from device uptimes.
 
 The design of datastream is modular, supporting implementations of alternative storage backends while continuing to expose the same API.
+
+\todo[inline]{I think we should expand on granularities. I think this idea that we do not just compute average values when downsampling, but also other statistical moments, max, min, standard deviation, which we can then use to visualize data much better, is an important on. We can also move Figure~\ref{fig:interactive-visualization} here and describe it visually.}
 
 \section{Evaluation and Discussion}
 \label{sec:evaluation}
