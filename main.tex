@@ -86,7 +86,7 @@ community networks \sep management \sep provisioning \sep monitoring \sep wirele
 \section{Introduction}
 
 Community (wireless) networks~\cite{Bruno_2005,Frangoudis_2011} provide independent, community-owned network infrastructure for user communication and data exchange.
-They are mostly built using standard wireless (IEEE802.11) infrastructure~\cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems~\cite{Mustafa_2013}.
+They are mostly built using standard wireless (IEEE802.11) infrastructure~\cite{Akyildiz_2005} by laying own optical fiber and, more recently, by the use of free-space optical systems~\cite{Mustafa_2013}.
 They use, reuse and repurpose existing communication technologies, like inexpensive off-the-shelf WiFi routers, to form a widespread network.
 These networks can cover everything from local neighbourhoods~\cite{RedHook_2013}, to cities~\cite{AWMN} and countries~\cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
 Their common aim is to empower people with new ways of communication and access to the wider public networks like the Internet.
@@ -101,7 +101,7 @@ Because of this growth pattern and community involvement, management of such net
 \begin{itemize}
 \item In most of the community networks, people who maintain the network infrastructure are volunteers with limited free time that they can spend on network management.
 This makes efficient management very important for network growth.
-Besides efficiency, an important factor in increasing growth is also the accessibility of network management functions to users who do not have deep technical knowledge of networking specific to mesh networks.
+Besides efficiency, an important factor in increasing growth is also the accessibility of network management functions to users who do not have deep technical knowledge of computer networks and especially mesh networks.
 
 \item There are many repetitive tasks in community network operation, especially related to configuration, deployment and monitoring of network equipment.
 Without a suitable overall management system, all these steps (flashing\footnote{Flashing is the process of reprogramming the wireless network device with an unofficial firmware image, commonly Linux based.} and configuring devices, allocating resources, diagnosing problems) need to be done manually which is time-consuming and prone to errors.
@@ -130,8 +130,8 @@ Each community has slight differences in their vision and operation philosophy, 
 \end{enumerate*}
 
 In order to address this, there are at least two approaches that can be taken.
-The first one is \textit{the large common base approach} which tries to create a common system that addresses the needs of as many of communities as possible by providing a large feature set and a large configuration schema\todo[inline]{Is the term schema well understood in the community? Should we define it more?} encompassing all possible scenarios.
-This approach has been tried as part of an interoperability effort~\cite{interop_2010, cnml_2007} established between community networks, to come up with a common schema upon which so called node databases could be built.
+The first one is \textit{the large common base approach} which tries to create a common system that addresses the needs of as many of communities as possible by providing a large feature set and a large configuration schema (database model) encompassing all possible scenarios.
+This approach has been tried as part of an interoperability effort~\cite{interop_2010, cnml_2007} established between community networks, to come up with a common schema upon which node databases\footnote{``Node databases'' is a generic term communities use for their network management needs. They can be all from a simple wiki page with a list of nodes to a full-fletched and specialized software solutions.} could be built.
 The problem is that it is hard to come up with a one-fits-all solution and large monolithic schemas can quickly become unmanageable.
 Moreover, it requires sustained effort from participating community networks first to establish the standard and then to keep it updated as technologies and practices evolve.
 Because community networks are mostly volunteer run, such sustained participation is unattainable for many community networks.
@@ -202,7 +202,7 @@ Additionally, advanced network monitoring functionality is missing, requiring th
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
 Nodeshot is an extensible web application for management of community geographic data.
 It focuses on mapping features with a more modular approach where various functionalities are extracted into modules.
-The modularity makes extending the application easier, but in contrast to \nodewatcher{}, there is no common approach to managing schema extensions and interfaces between modules are still tightly coupled.
+The modularity makes extending the application easier, but in contrast to \nodewatcher{}, there is no common approach to managing schema extensions and interfaces between modules are still tightly coupled.\todo[inline]{This reads strange. How can interfaces be coupled? Modules are coupled, no?}
 There is some monitoring support, but it is mostly limited to device discovery in an existing network and is not meant for long-term monitoring and diagnostics.
 
 Freifunk FFM/CNDB features an extensive database schema which models everything from devices to companies and people.
@@ -232,11 +232,11 @@ This section describes all the components of the platform, beginning with a quic
   \centering
   \includegraphics[scale=0.4]{figures/device-mgmt-cycle.pdf}
   \caption{Device management cycle illustrating how devices are managed in a community network.
-Traditionally the configuration, generation and monitoring steps are performed manually, while the \nodewatcher{} platform enables automation of these tasks, freeing up resources inside a community.}
+Traditionally the configuration, generation and monitoring steps are performed manually, while the \nodewatcher{} enables automation of these tasks, freeing up resources inside a community.}
   \label{fig:device-mgmt-cycle}
 \end{figure}
 
-The core idea behind the \nodewatcher{} platform is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
+The core idea behind the \nodewatcher{} is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
 The cycle starts with the \textit{configuration stage} where devices are configured for use in a specific location in the network.
 At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device.
 The latter only happens in the next stage, the \textit{generation stage}, where platform-independent configuration is transformed to device- and platform-specific configuration.
@@ -250,15 +250,16 @@ The \nodewatcher{} platform aims to provide components for all stages of the des
 Each part is designed to be easily extensible to networks with various topologies, routing protocols, operating systems and hardware devices.
 
 \subsection{Platform-independent Configuration}
+\label{sec:platform-independent-configuration}
 
 Community networks are built using a wide range of devices, containing everything from off-the-shelf home routers to specialized devices used for backbone links and regular servers used for core services.
-The \nodewatcher{} platform uses an extensible platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
-One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do much re-configuration.
+The \nodewatcher{} uses an extensible platform-independent schema to describe configuration for all these types of nodes, regardless of their hardware and/or operating system.
+One of the motivations behind this choice is that platform-independent configuration enables replacement of devices without the need to do re-configuration even when a replacement device is of a different model or even manufacturer.
 It is a frequent occurrence that deployed devices need to be replaced when they stop functioning properly due to various hardware failures.
 Instead of taking down the hardware device, spending time on the roof or in the lab to fix it, and then taking it back to install it, with extended downtime during that period, it is better that the device is immediately replaced with a new one, but with exactly the same configuration as the previous one had.
 The broken device can then be fixed without hurry and reused at some other location.
 Because community networks are mostly operated by volunteers, dealing with urgent matters adds extra pressure on volunteers for their scarce time.
-Additionally, replacement of a broken hardware device can be done easily by one volunteer, while fixing a device can be done at a later time by another, more skilled, volunteer.
+Additionally, replacement of a broken hardware device can be done easily by one volunteer, while fixing a device can be done at a later time by another volunteer.
 Obtaining exactly the same device for a replacement is hard in community networks which utilize diverse hardware devices, so having a way to apply the same configuration to a new and different hardware device is needed.
 
 However, while having a platform-independent configuration is a noble goal, some configuration properties depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
@@ -266,7 +267,7 @@ In such cases the user editing the platform-independent configuration may create
 This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
 This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
 Such validation must be based on the selected target device with all its hardware and software properties.
-The \nodewatcher{} platform enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
+The \nodewatcher{} enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
 In the introduction we mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
 Communities will usually have some specifics regarding their operations~-- for example, because of different local regulations, hardware availability, or differences in philosophy.
@@ -294,7 +295,7 @@ registration.point('node.config').register_subitem(
 \label{fig:schema-module-wifi}
 \end{figure}
 
-The \nodewatcher{} platform avoids this problem by making the platform-independent schema itself completely extensible.
+The \nodewatcher{} avoids this problem by making the platform-independent schema itself completely extensible.
 It is the individual modules that may register schema items and the final schema is the union of all these items.
 An example of a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
@@ -304,7 +305,7 @@ An example of a schema item definition is shown in Figure~\ref{fig:schema-module
     \item Schema items may reference other items (in the example, \texttt{device} references the parent radio device that this virtual wireless network configuration is being configured on).
 \end{itemize}
 
-To construct the base schema that is available with the \nodewatcher{} platform, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
+To construct the base schema that is available with the \nodewatcher{}, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
 But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
 \begin{figure}
@@ -321,7 +322,7 @@ In the platform, it is implemented using a popular Django web framework ORM \cit
 The problem that it aims to solve is the one of simplified model discovery.
 
 In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema.
-For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node (see Figure~\ref{fig:registry-schema-example}).
+For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node (see Figure~\ref{fig:registry-schema-example}).\todo[inline]{Why a different example? Could not this be done through same example as in Figure~\ref{fig:schema-module-wifi}, just an entity relationship diagram? Also a concrete example than a dummy example is better.}
 This base item does not provide any other fields besides the node name, leaving potential extensions to other modules.
 Let us now say that we would like to also add a simple text field which would specify what device is in use on a specific node (in reality, we would more likely use a choice field, but for our example a simple text field suffices).
 We may do that in another module by defining \texttt{ExtendedCfg} as shown in Figure~\ref{fig:registry-schema-example}.
@@ -375,7 +376,7 @@ There are two issues regarding user interaction with the configuration schema:
 \end{enumerate*}
 The first issue is addressed in \nodewatcher{} by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
 Automatic form generation simplifies the module development process and reduces code duplication.
-The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.
+The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.\todo[inline]{Should we also mention automatically generated REST endpoints?}
 
 Addressing the second issue is especially important in order for community networks to be more accessible to people that do not have all the deep technical knowledge on how to configure devices.
 Having the ability to define sensible defaults for such users is a feature that enables the community to grow by also including them.
@@ -412,12 +413,12 @@ Nodes may be removed from the database, but not yet permanently removed from the
 \label{sec:firmware-generator}
 
 Traditionally, devices may be configured manually before they are deployed.
-This is usually done either through a command-line interface via secure shell (SSH) or a graphical user interface via HTTP, depending on the firmware running on the device.
+This is usually done either through a command-line interface via telnet or secure shell (SSH) or a web based user interface running on the device, depending on the firmware running on the device.
 In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
 In community wireless networks, devices are sometimes deployed in hard-to-reach locations like rooftops or high towers and fixing certain problems requires physical access to the device.
 
-As described, the \nodewatcher{} platform can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
+As described in Section~\ref{sec:platform-independent-configuration}, the \nodewatcher{} can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
 But this configuration cannot directly be used on devices.
 Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995} that are frequently used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
@@ -478,11 +479,19 @@ Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cy
 These errors are immediately propagated up to the user who is entering configuration via the \nodewatcher{}'s web interface, so that problems may be corrected as soon as possible.
 The validation system will not save a configuration which has outstanding errors, preventing invalid configurations from being used to deploy devices.
 
-In order to further ease deployment, the resulting device-specific configuration may be packaged together with a firmware image which may then be flashed directly onto the target device.
+In order to further ease deployment the resulting device-specific configuration can be automatically packaged together with a firmware image which can then be flashed directly onto the target device.
 Such pre-generated firmware images further reduce the room for errors as no configuration needs to be transferred separately or entered manually.
+After flashing devices boot directly into the configured and known state, ready to be used and deployed.
 Besides reducing errors, packaging software (firmware) together with its configuration is also beneficial for ensuring that the configuration really is applicable to the used software versions as both can be tested together.
 Otherwise, using a stale configuration on a newer operating system or newer versions of some packages may result in failing devices.
-Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks  that is beneficial to existing and emerging networks alike.
+
+Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks that is beneficial to existing and emerging networks alike.
+It makes the whole device preparation process fast which allows volunteers to focus their time on deployment of the device on the location.
+Moreover, while experienced volunteers who often help maintaining multiple nodes gain the benefit of this streamlined node preparation process which minimizes time spend and possible errors, the important advantage is that the whole process becomes accessible also to the novice volunteers who are preparing their device for the first time.
+They can register a new node, use provided defaults, select the hardware target, generate the image, flash it onto the device, reboot, and the device is ready to be used.
+
+Moreover, the process of node preparation is repeatable and can be easily duplicated which helps debugging any potential issues.
+If issues with a deployed node are observed, instead of having to retrieve the device and debug it, a new device with exactly the same configuration and firmware can be recreated in the lab environment.
 
 The underlying firmware build system has been designed in such a way that it is extensible to different operating systems and platforms.
 To achieve this, the build system is structured into multiple Docker containers~\cite{Docker_2013}.
@@ -494,10 +503,15 @@ The build process is specific for each operating system and currently only OpenW
 
 When the device-specific configuraion has been generated by the transformation step (see the central node in Figure~\ref{fig:firmware-build-system}), a suitable builder is selected based on the architecture and software platform specified in the device descriptor.
 After a builder is identified, the \nodewatcher{} process establishes a secure shell (SSH) connection to the selected container, transfers the configuration there and starts the build process which completes in a matter of seconds.
-This decoupling of configuration and firmware builders enables the builder containers to be deployed on another machine with more resources.
+This decoupling of configuration and firmware builders enables the builder containers to be distributed and deployed on a cluster of machines to better handle the load and resources availability and utilization.
+The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
 
 By packaging firmware builders as containers, \nodewatcher{} enables simple reuse and sharing of ready-made builders between community networks.
-Compiling and preparing a range of firmware builder toolchains can be a lengthy process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their \nodewatcher{} instances without compiling anything. The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
+Compiling and preparing a range of firmware builder toolchains can be a lengthy and resource intensive process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their \nodewatcher{} installations or \nodewatcher{}-compatible systems without compiling anything.
+This further simplifies the bootstrapping of new community networks which can simply reuse firmware builders from existing community networks.
+On the other hand existing communities are often unfamiliar with firmware developments in other networks because preparing a foreign and unknown firmware is often challenging.
+Community networks open source their firmwares with a goal to improve collaboration between networks, but without an easy way of ``running'' it, code and ideas sharing and reuse and thus innovation is slow.
+Containers provide here an easy way for existing communities to evaluate and follow the firmware development progress done in other communities.
 
 \subsection{Network Monitoring}
 \label{sec:network-monitoring}
@@ -694,6 +708,8 @@ The old version used a round-robin database for time series data storage.
 \section*{Acknowledgement}
 
 The authors have been supported by the following institutions: Jernej Kos by the Slovenian Research Agency (Grant 1000-11-310153), by the Shuttleworth Foundation Flash Grant and by the NLnet Foundation (Grant 2014-05-015).
+
+\todo[inline]{I think we should also thank the Slovenian community, and wider global community networks community. Do we want to thank any particular individuals or organisations?}
 
 \section*{References}
 \bibliography{bibliography/references.bib}
