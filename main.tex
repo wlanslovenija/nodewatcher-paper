@@ -764,7 +764,8 @@ In this section we evaluate \nodewatcher{} in the context of \wlanslovenija{} wi
 \wlanslovenija{} has been an active network since the year 2009.
 It is a medium-sized network with around $400$ online nodes at the moment (the growth of the number of online nodes since 2010 may be seen in Figure~\ref{fig:wlansi-nodes-up}).
 
-Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new platform presented in this paper is being run in parallel in order to enable a smooth transition.
+Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new version presented in this paper is being run in parallel in order to enable a smooth transition.
+The old version is designed similarly to other existing community network platforms that we surveyed in Section~\ref{sec:related-work} and shares many of the same problems.
 Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management by addressing the exposed problems.
 
 \subsection{Device Support}
@@ -777,29 +778,43 @@ In contrast, the new platform enabled us to quickly support the new device, simp
 
 \subsection{Monitoring}
 
-\todo[inline]{Faster measurements. Parallel. Distributed load. Multiple/various cycles at various intervals so that some cheap things can be more frequently measured, other who make more load on the network or server, less often. All stored forever so that we can learn, analyze, and share. Open data. Events, alarms, various types, more customizable. Notifications. We have both configuration data and measured data and we can compare.}
+The new modular monitoring pipeline brings multiple improvements over the old monolithic version.
+Measurements are performed faster and are easily parallelized over multiple cores due to node/network processor separation, as described in Section~\ref{sec:network-monitoring}.
+A side effect of enabling parallel execution of processors is also support for performing monitoring runs at different intervals.
+For example, topology information may be updated more quickly as it is readily available from the OLSR routing protocol and does not require polling of all the nodes.
+On the other side, device telemetry measurements require data requests over a wide network which may consume more time.
+Even slower are the measurements of node reachability and packet loss using ICMP ECHO requests under varying packet sizes to check for MTU issues.
+Previously, the slowest measurement affected the execution time of the whole monitoring run.
+The new modular design enables such runs to be isolated so some may execute entirely in parallel and with higher frequency than other, slower, measurements.
+
+Due to our new time-series data storage system, we are able to store a complete set of monitoring data, forever.
+Not being limited by the fixed size of round-robin databases enables later analysis of network events over long periods of time.
+Such analysis may enable new insights into how certain network problems are correlated~\cite{Steinder_2004}.
+As we store both, configuration and latest monitoring data, we are able to perform comparisons and validate that the monitored operation matches exactly with what is configured for specific nodes.
 
 \subsection{Interactivity}
 
-The old version used a round-robin database for time series data storage.
-\todo[inline]{Compare RRD to the new system, processing time delays, static vs. interactive visualization (see Figure~\ref{fig:interactive-visualization}).}
+The old version used a round-robin database for time-series data storage together with its visualization module which generated static images.
+Static visualizations are limiting when it comes to having a good overview over multiple measurements.
+Combining measurements over arbitrary time spans at arbitrary resolution greatly enhances the ability to diagnose problems.
+Additionally, generating a large set of static images is very resource-intensive for the server.
+Interactive visualizations, like the one seen in Figure~\ref{fig:interactive-visualization}, transfer only data points to the client machine and the web browser then performs all the rendering.
+This naturally distributes the required computations and reduces strain on the central server.
 
-\todo[inline]{Interactive visualisations. Interactive forms. All of this modular. And with adaptive interfaces for various levels of users (beginners, experts; more or less permissions). Roles, permissions for various types of networks, some are more open than others about who can control the nodes. We can support of all that through modularity.}
-
-\subsection{Modularity and interoperability}
+\subsection{Modularity and Interoperability}
 
 The Trac Project~\cite{Trac_2003} is an example of a modular system for managing open source projects.
-Very early on in its development, a plugin system has been developed and hundreds of community-made plugins have been made since then, many available through their Trac Hacks repository.~\cite{TracHacks_2004}
-We were inspired by it and decided to do something similar for managing the community networks.
-We build the \nodewatcher{} using Django framework~\cite{django_2005} and not a custom framework to leverage standard Django packages and modularity.
-We can reuse package repositories and tools Django ecosystem provides.
-For example, Django Packages~\cite{DjangoPackages_2010} repository with more than 2600 packages available.
+Very early on in its development, a plugin system has been developed and hundreds of community-made plugins have been made since then, many available through their Trac Hacks~\cite{TracHacks_2004} repository.
+We were inspired by it and decided to do something similar for managing community networks.
+We built \nodewatcher{} using the Django framework~\cite{django_2005} and not a custom framework to leverage standard Django packages and modularity.
+We can reuse package repositories and tools that the Django ecosystem provides.
+For example, the Django Packages~\cite{DjangoPackages_2010} repository with more than 2600 packages available.
 
 In 2014 interoperability efforts between community networks have been revived~\cite{interop_2010}.
-Quite some active communities starting discussing and comparing data schemas used for configuration and monitoring.
-During this ongoing process we have been again evaluating schemas used by other communities and resulted compromises and merged schemas.
-Again and again we have been reaffirmed that we achieved our design goal because we are discovering that \nodewatcher{} can support all of proposed schemas with little effort.
-Allowing it to be used in any of participating community networks, or even to migrate between used data schemas.
+Some very active communities started discussing and comparing data schemas used for configuration and monitoring.
+During this ongoing process we have been re-evaluating schemas used by other communities and the resulting compromises stemming from the discussions.
+Again and again we have been reaffirmed that we achieved our design goal because we are discovering that \nodewatcher{} can support all of the proposed schemas with little effort and are actually able to quickly provide working implementations of the proposed ideas.
+This strengthens the case for its use in any of the participating community networks, or even to migrate between used data schemas.
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
@@ -813,14 +828,14 @@ Support for more routing protocols.
 But instead of us developing all these new features ourselves, the main next step is to engage other network communities to develop features specific to their networks.
 We have already established partnerships with other community networks who are starting to work in this direction.
 
-But we expect to see also completely new features.
+But we expect to also see completely new features.
 For example, a warehouse module to help organize the inventory of equipment in community networks, a store module helping users order preconfigured devices, and local community and services modules to help people who are using the community networks to form better communities.
 Using a strong but modular base is opening doors to innovation.
 
 Data collected through \nodewatcher{} can be used in future research~\cite{Confine_2011}.
-Researchers could use analyze how community, wireless, or mesh networks operate over larger time spans.
+Researchers could analyze how community, wireless, or mesh networks operate over larger time spans.
 Both on a technical level and also community and societal levels.
-Researchers are already using it to monitor KORUZA~\cite{Mustafa_2013} deployments around the world and use it to further guide development and research in DIY free-space optics connectivity.
+Researchers are already using the platform to monitor KORUZA~\cite{Mustafa_2013} deployments around the world and use it to further guide development and research in DIY free-space optics connectivity.
 
 \section*{Acknowledgement}
 
