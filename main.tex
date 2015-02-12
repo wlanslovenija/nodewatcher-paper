@@ -610,6 +610,13 @@ This co-existence of data sources is enabled by the modular design of the monito
 \label{alg:monitoring-pipeline}
 \end{algorithm}
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.4]{figures/storage-relationships.pdf}
+  \caption{Overview of relationship between the configuration and monitoring data schemas and the flow of monitoring data from the pipeline to the historical time-series data storage.}
+  \label{fig:storage-relationships}
+\end{figure}
+
 On the backend, the processing of all operations related to monitoring is handled by the monitoring pipeline.
 Conforming to the modular philosophy, the pipeline consists of processors which are implemented by modules.
 Throughout the execution of the pipeline two pieces of state are maintained: a working set of node instances and a context.
@@ -636,9 +643,32 @@ Since the base framework is common to all, modules from different community netw
 
 \subsection{Storing Monitored Data}
 
-\todo[inline]{We explained the extensible configuration schema in XY section. But how we are storing monitored data? Sensors and all this? We have this in two layers. We store latests data into a registry monitoring schema. So that it is available to modules though a relational database. But then we also store all historic data into a time-series data storage. We should have here a diagram, how we have extensible configuration, monitoring, and then from monitoring historical data.}
+In Section~\ref{sec:platform-independent-configuration} we described how \nodewatcher{} uses the registry to store nodes' platform-independent configuration, described by the configuration schema.
+For storing monitoring data we use two different approaches that serve slightly different goals:
+\begin{itemize}
+\item Latest data obtained by the monitoring pipeline, describing the current network state, is stored in a similar form as configuration for each node.
+In addition to a configuration schema also a monitoring schema is defined and data is stored into a relational database in the form of schema items.
+This design automatically brings the same schema item extensibility that we described for platform-independent configuration also to monitoring data.
+Data stored in this way may be queried by value and is thus used for performing the mentioned configuration validation against monitoring data.
+
+\item In addition to the above, we also want to keep historical data of how the network operated through time.
+The storage and query requirements for historical data are completely different as these data are represented as time-series, indexed by time, not value.
+We describe the time-series data store in Section~\ref{sec:time-series-data-storage}.
+\end{itemize}
+
+Being a modular platform, the historical data storage is implemented as a module which may be added or removed as needed by the community.
+An overview of the relationships between these storage components is shown in Figure~\ref{fig:storage-relationships}.
+Latest monitoring data are sampled on every monitoring run and stored into the time-series data store.
 
 \subsection{Time-series Data Storage}
+\label{sec:time-series-data-storage}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.4]{figures/datastream-storage.pdf}
+  \caption{Datastream stream storage organization. Tag based metadata store compact indices into the stream data, downsampled at different granularities.}
+  \label{fig:datastream-storage}
+\end{figure}
 
 The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last five years, storing everything from network diagnostics to external sensor data).
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
@@ -647,9 +677,9 @@ In contrast to round-robin databases~\cite{Oetiker_1999}, where the database siz
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.4]{figures/datastream-storage.pdf}
-  \caption{Datastream stream storage organization. Tag based metadata store compact indices into the stream data, downsampled at different granularities.}
-  \label{fig:datastream-storage}
+  \includegraphics[scale=0.4]{figures/datastream-counter-reset.pdf}
+  \caption{Correct rate computation example using the counter derivative operator, automatically derived from two streams.}
+  \label{fig:datastream-counter-reset}
 \end{figure}
 
 The database is built around a concept of append-only streams, each stream being an independent time series.
@@ -666,6 +696,13 @@ Streams also define the highest granularity at which data points will be inserte
 This setting is an optimization which allows the datastream storage backend to reduce the number of granularities when downsampling data points.
 Datapoints are inserted only at the highest granularity and are then automatically downsampled in the background, making them ready for efficient querying and visualization.
 
+\begin{figure*}
+  \centering
+  \includegraphics[scale=0.45]{figures/implementation-interactive-visualization.png}
+  \caption{Interactive visualization frontend module in \nodewatcher{} for visualizing collected monitoring data from datastream storage allows various combinations of metrics to be visualized, enabling introspection into the functioning of the network.}
+  \label{fig:interactive-visualization}
+\end{figure*}
+
 Downsampling is a crucial component for ensuring that the system maintains good performance as the number of data points grows.
 The motivation for downsampling comes from interactive time-series data visualizations which enable one to see the data at various zoom levels and for different time intervals.
 For example, there is usually no need to display data points for every minute when looking at data in the interval of several months.
@@ -675,13 +712,6 @@ By design, any downsampling will cause loss of certain information in lower gran
 In order to reduce the effect of information loss, datastream supports multiple aggregation functions that determine what data is preserved in downsampled versions of data points.
 Aggregation functions include the point count, sum, sum of squares, mean, minimum, maximum and standard deviation, all computed over the data points allocated to the same time bucket.
 Storing different statistical moments enables a better understanding of aggregated data and also enables improved visualizations where not only the average is shown (see Figure~\ref{fig:interactive-visualization}).
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.4]{figures/datastream-counter-reset.pdf}
-  \caption{Correct rate computation example using the counter derivative operator, automatically derived from two streams.}
-  \label{fig:datastream-counter-reset}
-\end{figure}
 
 Streams may be automatically computed from other streams using different operators.
 The most prominent use of this feature in monitoring is to support correct rate computations under the possibility of counter wraps and resets which could otherwise cause apparent rate spikes when the counter is reset due to a reboot but the system incorrectly classifies it as a counter wrap.
@@ -720,13 +750,6 @@ As a consequence of all this, community can prototype faster new solutions over 
 
 \section{Evaluation and Discussion}
 \label{sec:evaluation}
-
-\begin{figure*}
-  \centering
-  \includegraphics[scale=0.45]{figures/implementation-interactive-visualization.png}
-  \caption{Interactive visualization frontend module in \nodewatcher{} for visualizing collected monitoring data from datastream storage allows various combinations of metrics to be visualized, enabling introspection into the functioning of the network.}
-  \label{fig:interactive-visualization}
-\end{figure*}
 
 \begin{figure}
   \centering
