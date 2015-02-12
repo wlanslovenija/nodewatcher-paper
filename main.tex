@@ -86,12 +86,12 @@ community networks \sep management \sep provisioning \sep monitoring \sep wirele
 \section{Introduction}
 
 Community (wireless) networks~\cite{Bruno_2005,Frangoudis_2011} provide independent, community-owned network infrastructure for user communication and data exchange.
-They are mostly built using standard wireless (IEEE802.11) infrastructure~\cite{Akyildiz_2005} by laying own optical fiber and, more recently, by the use of free-space optical systems~\cite{Mustafa_2013}.
+They are mostly built using standard wireless (IEEE802.11) infrastructure~\cite{Akyildiz_2005}, by laying own optical fiber and, more recently, by the use of free-space optical systems~\cite{Mustafa_2013}.
 They use, reuse and repurpose existing communication technologies, like inexpensive off-the-shelf WiFi routers, to form a widespread network.
 These networks can cover everything from local neighbourhoods~\cite{RedHook_2013}, to cities~\cite{AWMN} and countries~\cite{wlanslovenija_2009, guifi_2003, Funkfeuer_2003, Freifunk_2003}.
 Their common aim is to empower people with new ways of communication and access to the wider public networks like the Internet.
 Motivations for such networks are diverse and multiplex, but often networks are formed out of necessity~\cite{WNDW_2013}.
-Even in developed countries many rural areas are underserved with Internet connectivity infrastructure built and offered by traditional Internet Service Providers, population density being too low for investments to be profitable enough, leaving to people themselves to build needed infrastructure to connect to the Internet.
+Even in developed countries many rural areas are underserved with Internet connectivity infrastructure built and offered by traditional Internet service providers, population density being too low for investments to be profitable enough, leaving to people themselves to build needed infrastructure to connect to the Internet.
 
 The common property of all community networks is that they grow organically~-- there is no central planning body that would decide how the network is built, as is usually the case with proprietary networks.
 Instead, the network grows in a bottom-up fashion as more people express interest in participating in the community and connect with their neighbours.
@@ -99,12 +99,12 @@ Instead, the network grows in a bottom-up fashion as more people express interes
 Because of this growth pattern and community involvement, management of such networks poses some unique challenges:
 
 \begin{itemize}
-\item In most of the community networks, people who maintain the network infrastructure are volunteers with limited free time that they can spend on network management.
+\item In most community networks, people who maintain the network infrastructure are volunteers with limited free time that they can spend on network management.
 This makes efficient management very important for network growth.
 Besides efficiency, an important factor in increasing growth is also the accessibility of network management functions to users who do not have deep technical knowledge of computer networks and especially mesh networks.
 
-\item There are many repetitive tasks in community network operation, especially related to configuration, deployment and monitoring of network equipment.
-Without a suitable overall management system, all these steps (flashing\footnote{Flashing is the process of reprogramming the wireless network device with an unofficial firmware image, commonly Linux based.} and configuring devices, allocating resources, diagnosing problems) need to be done manually which is time-consuming and prone to errors.
+\item There are many repetitive tasks in community network operation, mostly related to configuration, deployment and monitoring of network equipment.
+Without a suitable overall management system, all these steps (flashing\footnote{Flashing is the process of reprogramming the wireless network device with an unofficial firmware image, commonly Linux based.} and configuring devices, allocating resources, diagnosing problems) need to be done manually which is both time-consuming and prone to errors.
 
 \item In addition to technical issues related to device deployment, there is also the need for community coordination so that people know what is going on in the network and can familiarize themselves better with its operation and what others are doing.
 In general it is not possible to anticipate how, when, and where a new participant will start participating by deploying one of the network's nodes\footnote{Meaning of a ``network node'' is understood differently in different communities. For the purpose of this paper it is used as one routing network device, and as a basic unit of participation by participants.}.
@@ -114,11 +114,11 @@ Is the node that they are maintaining highly used and crucial for the part of th
 Volunteers are often motivated by the value they are contributing to the network as a whole, but even when their node is not highly used at the moment, having an insight into operation of the node is important for them to understand that their contribution is something tangible and real, especially for less technically skilled volunteers who might otherwise perceive the node as a black box.
 \end{itemize}
 
-Various solutions have appeared in an attempt to address these challenges, each community developed its own model of operation with its own accompanying set of tools.
+Various solutions have appeared in an attempt to address these challenges. Each community developed its own model of operation with its own accompanying set of tools.
 The problem with this approach is that work is being duplicated between communities and that these various solutions are mostly not interoperable between each other.
 So why would new communities not reuse existing tools?
 The problem lies in the fact that these tools have not been built to be customized to the needs and operation of individual communities.
-Each community has slight differences in their vision and operation philosophy, technological stack they are using and technical knowledge they have, or even legal requirements, and this requires customization on several fronts, to only name a few:
+Each community has slight differences in their vision and operation philosophy, technological stack they are using and technical knowledge they have, or the local environment they are in, and this requires customization on several fronts, to only name a few:
 \begin{enumerate*}[label=\itshape\alph*\upshape)]
 \item different routing protocols may be used;
 \item used WiFi equipment and its operating systems can vary widely between networks;
@@ -157,7 +157,7 @@ Section~\ref{sec:conclusion} presents conclusions and ideas for future work.
 \section{Related Work}
 \label{sec:related-work}
 
-A lot of research has been done into individual wireless mesh network building blocks. Among them are routing~\cite{Murray_2010,Neumann_2012}, security~\cite{Siddiqui_2007}, and analysis of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008}.
+A lot of research has been done into individual wireless mesh network building blocks. Among them are routing~\cite{Murray_2010,Neumann_2012}, security~\cite{Siddiqui_2007}, and analyses of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008}.
 But research into community network management solutions and best practices still remains scarce.
 This is why most of the related work in this area comes from the individual community networks which have each developed its own solutions, practices and philosophy.
 
@@ -184,9 +184,9 @@ This increases the chance that each community will pick different solutions and 
 Configuration management systems are not suitable for embedded systems, or if they are, they target devices of a particular manufacturer, and not a diverse range of often customized devices found in community networks.
 
 But most importantly, since they have not been designed with community networks in mind, none of these systems provide community coordination capabilities.
-They are highly technical to setup and use, which makes it harder to properly configure by community without highly skilled members.
+They are highly technical to setup and use, which makes it harder to properly configure by communities without highly skilled members.
 They are designed for general networks and do not encode experiences and particularities of community networks in their source code, which would help new community networks to start with reasonable and tested defaults and configurations.
-Reading information from monitoring systems is designed for trained network operators and ways of entering configuration management systems requires high understanding of computer networks terminology and operation.
+Reading information from monitoring systems is designed for trained network operators and entering configuration into management systems requires good understanding of computer networks terminology and operation.
 They are often developed as an independent codebase which makes it much harder to integrate with other open source solutions used by a community network, like community management solutions, and they lack one unified interface, which further confuses novice users.
 
 \subsection{Node Databases}
@@ -196,7 +196,7 @@ One of the oldest and largest mesh networks are Guifi.net~\cite{Guifinode_2003,V
 As the node database solutions evolved with their respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend interface and core functionalities.
-The node database solutions are built on custom web frameworks, further limiting the ease of adoption by a new community network.
+Both node database solutions are built on custom web frameworks, further limiting the ease of adoption by a new community network.
 Additionally, advanced network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
 
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
@@ -211,18 +211,18 @@ Similar to Nodeshot, there is no common approach to managing schema extensions a
 It uses a custom web framework with almost nonexistent documentation, having a steep learning curve before extending and adapting the system to another community network is possible.
 
 None of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices, reducing the required administration burden and making the whole process easier for novices.
-As a consequence, they do not support comparing running configuration with provisioned one and detecting misconfiguration and unwanted changes.
+As a consequence, they also do not support comparing running configuration with provisioned one and detecting misconfiguration and unwanted changes.
 This makes detecting possible issues in advance impossible, and debugging issues once they occur slower.
 
 \section{Platform}
 \label{sec:platform}
 
 The design and development of the \nodewatcher{} platform comes from the needs and evolution of the \wlanslovenija{} community wireless network.
-In \wlanslovenija{} community network we had similar needs and issues as other community networks and to address them we iteratively developed our own node database system, tailored to our needs and practices.
+In \wlanslovenija{} we had similar needs and issues as other community networks and to address them we iteratively developed our own node database system, tailored to our needs and practices.
 Those were versions v1 and v2 of the \nodewatcher{} platform.
 But as we started to collaborate more with the international community of other community networks, we soon discovered many of more broader issues outlined above.
-We learned that if we want our development efforts to benefit also other community networks and help spawn new community networks, a different approach is needed.
-One where we do not focus development only on needs of our own community network, but think about other networks and their use of the platform from the very beginning.
+We learned that if we want our development efforts to benefit also other community networks and help spawn new ones, a different approach is needed.
+One where we do not focus development only on the needs of our own network, but think about other networks and their use of the platform from the very beginning.
 As a consequence, the \nodewatcher{} v3 platform has been designed to be maximally extensible and reusable among different communities.
 This section describes all the components of the platform, beginning with a quick high-level overview of the architecture.
 
@@ -236,7 +236,7 @@ Traditionally the configuration, generation and monitoring steps are performed m
   \label{fig:device-mgmt-cycle}
 \end{figure}
 
-The core idea behind the \nodewatcher{} is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
+The core idea behind \nodewatcher{} is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
 The cycle starts with the \textit{configuration stage} where devices are configured for use in a specific location in the network.
 At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device.
 The latter only happens in the next stage, the \textit{generation stage}, where platform-independent configuration is transformed to device- and platform-specific configuration.
@@ -296,10 +296,10 @@ registration.point('node.config').register_subitem(
 \end{figure}
 
 The \nodewatcher{} avoids this problem by making the platform-independent schema itself completely extensible.
-It is the individual modules that may register schema items and the final schema is the union of all these items.
+Individual modules may register schema items and the final schema is the union of all these items.
 An example of a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
-    \item The schema items are class-based, which means they can be extended later on by other modules (in the example the \texttt{VIFConfig} extends a more generic \texttt{InterfaceConfig} which may be provided by another module).
+    \item The schema items are class-based, which means they can be extended later on by other modules (in the example \texttt{VIFConfig} extends a more generic \texttt{InterfaceConfig} which may be provided by another module).
     \item Fields that represent enumerations (in the example \texttt{mode} is such a field) do not hardcode the possible options, but only provide an \textit{extension point} where additional choices can later be registered by other modules.
     Each such extension point is attached to a unique name (e.g. \texttt{core.interfaces\#wifi\_mode}) that may be referenced later when extending it.
     \item Schema items may reference other items (in the example, \texttt{device} references the parent radio device that this virtual wireless network configuration is being configured on).
