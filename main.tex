@@ -373,7 +373,7 @@ For platform users, the frontend (web interface) is even more important.
 There are two issues regarding user interaction with the configuration schema:
 \begin{enumerate*}[label=\itshape\alph*\upshape)]
 \item there must be a way for the users to enter configuration values conforming to the specified schema;
-\item since the schema may be complex, there needs to be a way for project maintainers to be able to codify context-sensitive configuration defaults.
+\item since the schema may be complex, there needs to be a way for project maintainers to be able to specify context-sensitive configuration defaults.
 \end{enumerate*}
 The first issue is addressed in \nodewatcher{} by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
 Automatic form generation simplifies the module development process and reduces code duplication.
@@ -384,7 +384,7 @@ A possible solution would be for network maintainers to provide pre-defined temp
 The problem with static templates is that defaults may differ when applied to devices with different capabilities or a different project, in other words the defaults may be context-sensitive.
 One would then be required to create static templates for all combinations, which quickly becomes unmanageable due to a combinatorial explosion in the number of required templates.
 
-\nodewatcher{} takes a different approach, enabling codification of defaults in the form of simple declarative rules.
+\nodewatcher{} takes a different approach, enabling specification of defaults in the form of simple declarative rules.
 The example in Figure~\ref{fig:defaults-rules-example} shows context-sensitive default wireless ESSID configuration.
 Rules in this example only apply to a specific project and configure two virtual interfaces (VIFs), one in mesh mode and the other in access point mode, in case the radio supports them.
 In case the radio does not support configuring virtual interfaces, only one network may be set, and in this case a single mesh mode interface is configured.
@@ -526,7 +526,7 @@ One may ask why should monitoring be integrated into the provisioning platform?
 It is true that existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
 This enables the system to quickly detect configuration errors (for example after someone manually edits configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
 Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or specific import scripts for the target monitoring system (which is usually not very portable among different communities).
-Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks.
+Thus, an integrated monitoring component is key in ensuring ease of deployment and transfer of good practices between community networks in the form of modules implementing the validation procedures.
 
 In traditional computer networks, especially of such scale, provisioning of network devices would be done automatically and centrally.
 There would be little reason to assume misconfiguration of nodes.
