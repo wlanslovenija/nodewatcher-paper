@@ -635,7 +635,7 @@ In contrast to round-robin databases~\cite{Oetiker_1999}, where the database siz
   \label{fig:datastream-storage}
 \end{figure}
 
-The database is built around a concept of streams, each stream being an independent time series.
+The database is built around a concept of append-only streams, each stream being an independent time series.
 In order to organize the streams, each stream may be tagged using arbitrary key-value pairs (see Figure~\ref{fig:datastream-storage}), which are indexed and can be used for fast lookup of streams matching specific tags.
 For stream storage to be efficient, datums are stored in separate collections, one for each time granularity, and connected with their metadata entries using compact indices.
 The storage backend used by datastream is TokuMX~\cite{TokuMX_2007}, a scalable document database based on MongoDB~\cite{MongoDB_2007}, which implements data compression and uses the fractal tree index~\cite{Brodal_2003,Bender_2007} data structure for indices, both of which greatly improve performance.
@@ -647,7 +647,7 @@ Streams also define the highest granularity at which datapoints will be inserted
 This setting is an optimization which allows the datastream storage backend to reduce the number of granularities when downsampling datapoints.
 Datapoints are inserted only at the highest granularity and are then automatically downsampled in the background, making them ready for efficient querying and visualization.
 
-\todo[inline]{I think we should expand on granularities. I think this idea that we do not just compute average values when downsampling, but also other statistical moments, max, min, standard deviation, which we can then use to visualize data much better, is an important on. We can also move Figure~\ref{fig:interactive-visualization} here and describe it visually.}
+\todo[inline]{I think we should expand on granularities. I think this idea that we do not just compute average values when downsampling, but also other statistical moments, max, min, standard deviation, which we can then use to visualize data much better, is an important on. We can also move Figure~\ref{fig:interactive-visualization} here and describe it visually. We should also explain that derived values are also downsampled. So this two things work together. So not sure about the order in which we should present this.}
 
 \begin{figure}
   \centering
@@ -667,7 +667,7 @@ Using both pieces of information, the rate is computed as a derivative, but only
 In case of a reset, a \texttt{null} value is inserted instead.
 However, if there was no reset and the counter value decreased, the event is classified as a counter wrap and the rate is computed using the known maximum value of the counter.
 Computing streams from other streams may be chained as shown in the example in Figure~\ref{fig:datastream-counter-reset}.
-Device uptime, counting seconds from when the device has first booted, is received as raw measurements which the \textit{reset} operator then transforms into a stream suitable for use in the counter derivative operator.
+Device uptime, counting seconds from when the device's boot time, is received as raw measurements which the \textit{reset} operator then transforms into a stream suitable for use in the counter derivative operator.
 Such chaining naturally describes data transformations which happen while the data is streamed.
 Additional operators include computing sums of multiple streams which is useful to compile aggregate traffic rates.
 
