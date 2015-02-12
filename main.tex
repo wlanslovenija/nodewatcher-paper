@@ -349,6 +349,7 @@ This abstracts away the subclass relationships, enabling easier refactoring and 
 Similar extensions are also provided for simplified fetching of fields deeply nested in the schema by deducing and performing the required table join operations.
 
 \subsection{Form Generation and Rule-based Defaults}
+\label{sec:form-generation}
 
 \begin{figure}[t]
   \centering
@@ -699,7 +700,23 @@ Additional operators include computing sums of multiple streams which is useful 
 
 \subsection{Modular user interface}
 
-\todo[inline]{We explained ways to get data into the platform. But there are also needs to get data out. In general we have three ways: Static reading, REST API, historic/time-series data reading through datastream. All of that is modular. Similarly to how we are generating automatically forms in XY section, we can also generate APIs and datastreams, and static pages. Forms are just a special case of this. More: extendable menus and templates. Server-side templates. Automatically generated REST endpoints/APIs for all data + JavaScript. Modular, interchangeable, exportable. Community can prototype faster new solutions over existing base through or modules for the platform, or just using REST API. We already mentioned extendable forms (and possibly REST), reference that. Not forget about partials.}
+We presented multiple ways how data is collected and stored in extensible ways, from configuration and monitoring data, from current values to historic data.
+Developers can extend schemas used to store data and define new ways to collect and process data.
+But as already mentioned, for platform users, the user interface is the most important.
+We presented an automatic configuration input form generation in Secton~\ref{sec:form-generation} and we similarly developed interfaces which allow developers to build upon modularity when they are reading, displaying and/or visualizing data for the user.
+
+\begin{itemize}
+\item We extended official Django templating engine to allow modules to override or extend existing templates in a cascading way. \cite{Overextend_2013}
+By structuring templates appropriately this enables developers to augment or change any server-side rendered content.
+They can modify and define new menus, add new partials, or wrap or change existing.
+\item In a similar way how we can automatically render forms based on the registry ORM we can provide an automatically generated REST endpoints/APIs for all data.
+\item Datastream REST API provides a way to access current and historical time-series data with all the benefits of datastream data storage: quick access to datapoints at various granularities, diverse data types (numeric and graphs), easy navigation and searching for streams using custom tags which can also serve to guide visualization.
+\end{itemize}
+
+Using all this ways and general \nodewatcher{} modularity allows various ways of providing user interfaces to the data.
+From server-side rendered templates, to dynamic JavaScript based visualizations like one seen in Figure~\ref{fig:interactive-visualization}.
+Because any data is provided through REST APIs as well it can be made easily exportable and shared with others.
+As a consequence of all this, community can prototype faster new solutions over existing base through or modules for the platform, or just using REST APIs and their own custom solutions or frameworks.
 
 \section{Evaluation and Discussion}
 \label{sec:evaluation}
