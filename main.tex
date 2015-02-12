@@ -70,7 +70,7 @@
 Community networks differ from regular networks by their organic growth patterns -- there is no central planning body that would decide how the network is built.
 Instead, the network grows in a bottom-up fashion as more people express interest in participating in the community and connect with their neighbours.
 People who participate in community networks are usually volunteers with limited free time.
-Due to these factors, making the management of community networks easier for all participants is key in boosting their growth.
+Due to these factors, making the management of community networks simpler and easier for all participants is key in boosting their growth.
 Specifics of individual networks often force most communities to develop their own sets of tools and best practices which are hard to share and do not interoperate well with others.
 We propose a new general community network management platform \nodewatcher{} that is built around the core principle of modularity and extensibility, making it suitable for reuse by different community networks.
 Devices are configured using platform-independent configuration which \nodewatcher{} can transform into deployable firmware images, eliminating any manual device configuration and reducing errors.
@@ -781,7 +781,7 @@ In contrast, the new platform enabled us to quickly support the new device, simp
 The new modular monitoring pipeline brings multiple improvements over the old monolithic version.
 Measurements are performed faster and are easily parallelized over multiple cores due to node/network processor separation, as described in Section~\ref{sec:network-monitoring}.
 A side effect of enabling parallel execution of processors is also support for performing monitoring runs at different intervals.
-For example, topology information may be updated more quickly as it is readily available from the OLSR routing protocol and does not require polling of all the nodes.
+For example, topology information may be updated more quickly as it is readily and locally available from the OLSR routing protocol and does not require polling of all the nodes.
 On the other side, device telemetry measurements require data requests over a wide network which may consume more time.
 Even slower are the measurements of node reachability and packet loss using ICMP ECHO requests under varying packet sizes to check for MTU issues.
 Previously, the slowest measurement affected the execution time of the whole monitoring run.
