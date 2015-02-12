@@ -632,7 +632,7 @@ Since the base framework is common to all, modules from different community netw
 The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last five years, storing everything from network diagnostics to external sensor data).
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
 Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
-In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis.
+In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis, enabling future research on improving automatic network diagnostics.
 
 \begin{figure}
   \centering
@@ -646,17 +646,24 @@ In order to organize the streams, each stream may be tagged using arbitrary key-
 For stream storage to be efficient, datums are stored in separate collections, one for each time granularity, and connected with their metadata entries using compact indices.
 The default storage backend used by datastream is TokuMX~\cite{TokuMX_2007}, a scalable document database based on MongoDB~\cite{MongoDB_2007}, which implements data compression and uses the fractal tree index~\cite{Brodal_2003,Bender_2007} data structure for indices, both of which greatly improve performance.
 The design of datastream is modular, supporting implementations of alternative storage backends while continuing to expose the same API.
-\todo[inline]{I think we should also talk how we are storing data in each granularity collection in MongoDB. So the thing about \_id manipulation. Just so that it is documented so that we can reference other people to this when they will want to learn more about datastream. Or should we simply leave this to the datastream documentation?}
-\todo[inline]{We should cite datastream and make a link to its website.}
+As other \nodewatcher{} components, it is available as an open source project~\cite{Datastream_2012}.
 
 Each stream has some special tags which define its base operation.
-Streams are typed, meaning that they may be used for storage of different datapoint types.
+Streams are typed, meaning that they may be used for storage of different data point types.
 Supported types currently include numeric values (integers, floats, arbitrary precision numbers) and graph values (nodes and edges for storing how topologies evolve over time).
-Streams also define the highest granularity at which datapoints will be inserted.
-This setting is an optimization which allows the datastream storage backend to reduce the number of granularities when downsampling datapoints.
+Streams also define the highest granularity at which data points will be inserted.
+This setting is an optimization which allows the datastream storage backend to reduce the number of granularities when downsampling data points.
 Datapoints are inserted only at the highest granularity and are then automatically downsampled in the background, making them ready for efficient querying and visualization.
 
-\todo[inline]{I think we should expand on granularities. I think this idea that we do not just compute average values when downsampling, but also other statistical moments, max, min, standard deviation, which we can then use to visualize data much better, is an important on. We can also move Figure~\ref{fig:interactive-visualization} here and describe it visually. We should also explain that derived values are also downsampled. So this two things work together. So not sure about the order in which we should present this.}
+Downsampling is a crucial component for ensuring that the system maintains good performance as the number of data points grows.
+The motivation for downsampling comes from interactive time-series data visualizations which enable one to see the data at various zoom levels and for different time intervals.
+For example, there is usually no need to display data points for every minute when looking at data in the interval of several months.
+Even fetching this many data points from the database and sending it to the user's web browser may be overwhelming.
+Downsampling aggregates higher-frequency data into buckets covering larger time intervals.
+By design, any downsampling will cause loss of certain information in lower granularities.
+In order to reduce the effect of information loss, datastream supports multiple aggregation functions that determine what data is preserved in downsampled versions of data points.
+Aggregation functions include the point count, sum, sum of squares, mean, minimum, maximum and standard deviation, all computed over the data points allocated to the same time bucket.
+Storing different statistical moments enables a better understanding of aggregated data and also enables improved visualizations where not only the average is shown (see Figure~\ref{fig:interactive-visualization}).
 
 \begin{figure}
   \centering
