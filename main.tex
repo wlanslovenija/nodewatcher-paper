@@ -365,7 +365,7 @@ The firmware builders are Docker containers with pre-built firmware build toolch
   \label{fig:firmware-build-system}
 \end{figure*}
 
-Having an extensible schema is a nice step towards reusable modules shared between community networks.
+Having an extensible configuration schema is a nice step towards reusable modules shared between community networks.
 But a schema is useful just for module developers so that they have a place to store various configuration values.
 For platform users, the frontend (web interface) is even more important.
 
@@ -376,8 +376,7 @@ There are two issues regarding user interaction with the configuration schema:
 \end{enumerate*}
 The first issue is addressed in \nodewatcher{} by the registry API's ability to automatically generate a user interface (forms) conforming to the schema.
 Automatic form generation simplifies the module development process and reduces code duplication.
-The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.\todo[inline]{Should we also mention automatically generated REST endpoints?}
-
+The automatically generated forms may be customized by the module developers where needed, but even defaults are immediately usable for simple schema items.
 Addressing the second issue is especially important in order for community networks to be more accessible to people that do not have all the deep technical knowledge on how to configure devices.
 Having the ability to define sensible defaults for such users is a feature that enables the community to grow by also including them.
 A possible solution would be for network maintainers to provide pre-defined templates of configuration defaults.
@@ -527,6 +526,9 @@ It is true that existing network monitoring tools could easily be used instead, 
 This enables the system to quickly detect configuration errors (for example after someone manually edits configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
 Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or specific import scripts for the target monitoring system (which is usually not very portable among different communities).
 Thus, an integrated monitoring component is key in ensuring ease of deployment and codified transfer of good practices between community networks.
+
+\todo[inline]{Why it comes to differences, various reasons, but again, network is deployed and maintained by community, so this brings a special set of challenges, for example, one cannot provision all devices automatically, but people keep the control of their devices. They experiment. Change things. Some keep old versions, do not upgrade. Maybe the example of compiler. Warnings until it is good. A way to configure the node from scratch.}
+
 An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
 
 Data collection starts on a node and is implemented by the \texttt{nodewatcher-agent} process.
@@ -621,7 +623,11 @@ This greatly reduces the amount of context transfer between processes and speeds
 The modular nature of the monitoring pipeline enables different communities to completely adapt it to their own network.
 Since the base framework is common to all, modules from different community networks may interoperate inside the same pipeline, passing data through the context in a loosely coupled manner and increasing code reuse possibilities.
 
-\subsubsection{Time-series Data Storage}
+\subsection{Storing Monitored Data}
+
+\todo[inline]{We explained the extensible configuration schema in XY section. But how we are storing monitored data? Sensors and all this? We have this in two layers. We store latests data into a registry monitoring schema. So that it is available to modules though a relational database. But then we also store all historic data into a time-series data storage. We should have here a diagram, how we have extensible configuration, monitoring, and then from monitoring historical data.}
+
+\subsection{Time-series Data Storage}
 
 The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last five years, storing everything from network diagnostics to external sensor data).
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
@@ -676,7 +682,7 @@ Additional operators include computing sums of multiple streams which is useful 
 
 \subsection{Modular user interface}
 
-\todo[inline]{Extendable menus and templates. Server-side templates. REST APIs for all data + JavaScript. Modular, interchangeable, exportable. Community can prototype faster new solutions over existing base through or modules for the platform, or just using REST API. We already mentioned extendable forms (and possibly REST), reference that.}
+\todo[inline]{We explained ways to get data into the platform. But there are also needs to get data out. In general we have three ways: Static reading, REST API, historic/time-series data reading through datastream. All of that is modular. Similarly to how we are generating automatically forms in XY section, we can also generate APIs and datastreams, and static pages. Forms are just a special case of this. More: extendable menus and templates. Server-side templates. Automatically generated REST endpoints/APIs for all data + JavaScript. Modular, interchangeable, exportable. Community can prototype faster new solutions over existing base through or modules for the platform, or just using REST API. We already mentioned extendable forms (and possibly REST), reference that. Not forget about partials.}
 
 \section{Evaluation and Discussion}
 \label{sec:evaluation}
@@ -712,7 +718,7 @@ In contrast, the new platform enabled us to quickly support the new device, simp
 
 \subsection{Monitoring}
 
-\todo[inline]{Faster measurements. Parallel. Distributed load. Multiple/various cycles at various intervals so that some cheap things can be more frequently measured, other who make more load on the network or server, less often. All stored forever so that we can learn, analyze, and share. Open data. Events, alarms, various types, more customizable. Notifications.}
+\todo[inline]{Faster measurements. Parallel. Distributed load. Multiple/various cycles at various intervals so that some cheap things can be more frequently measured, other who make more load on the network or server, less often. All stored forever so that we can learn, analyze, and share. Open data. Events, alarms, various types, more customizable. Notifications. We have both configuration data and measured data and we can compare.}
 
 \subsection{Interactivity}
 
