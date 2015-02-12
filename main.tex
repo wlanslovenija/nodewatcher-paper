@@ -638,7 +638,10 @@ In contrast to round-robin databases~\cite{Oetiker_1999}, where the database siz
 The database is built around a concept of append-only streams, each stream being an independent time series.
 In order to organize the streams, each stream may be tagged using arbitrary key-value pairs (see Figure~\ref{fig:datastream-storage}), which are indexed and can be used for fast lookup of streams matching specific tags.
 For stream storage to be efficient, datums are stored in separate collections, one for each time granularity, and connected with their metadata entries using compact indices.
-The storage backend used by datastream is TokuMX~\cite{TokuMX_2007}, a scalable document database based on MongoDB~\cite{MongoDB_2007}, which implements data compression and uses the fractal tree index~\cite{Brodal_2003,Bender_2007} data structure for indices, both of which greatly improve performance.
+The default storage backend used by datastream is TokuMX~\cite{TokuMX_2007}, a scalable document database based on MongoDB~\cite{MongoDB_2007}, which implements data compression and uses the fractal tree index~\cite{Brodal_2003,Bender_2007} data structure for indices, both of which greatly improve performance.
+The design of datastream is modular, supporting implementations of alternative storage backends while continuing to expose the same API.
+\todo[inline]{I think we should also talk how we are storing data in each granularity collection in MongoDB. So the thing about \_id manipulation. Just so that it is documented so that we can reference other people to this when they will want to learn more about datastream. Or should we simply leave this to the datastream documentation?}
+\todo[inline]{We should cite datastream and make a link to its website.}
 
 Each stream has some special tags which define its base operation.
 Streams are typed, meaning that they may be used for storage of different datapoint types.
@@ -670,8 +673,6 @@ Computing streams from other streams may be chained as shown in the example in F
 Device uptime, counting seconds from when the device's boot time, is received as raw measurements which the \textit{reset} operator then transforms into a stream suitable for use in the counter derivative operator.
 Such chaining naturally describes data transformations which happen while the data is streamed.
 Additional operators include computing sums of multiple streams which is useful to compile aggregate traffic rates.
-
-The design of datastream is modular, supporting implementations of alternative storage backends while continuing to expose the same API.
 
 \subsection{Modular user interface}
 
