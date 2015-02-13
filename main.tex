@@ -232,7 +232,7 @@ This section describes all the components of the platform, beginning with a quic
   \centering
   \includegraphics[scale=0.4]{figures/device-mgmt-cycle.pdf}
   \caption{Device management cycle illustrating how devices are managed in a community network.
-Traditionally the configuration, generation and monitoring steps are performed manually, while the \nodewatcher{} enables automation of these tasks, freeing up resources inside a community.}
+Traditionally the configuration, generation and monitoring steps are performed manually, while \nodewatcher{} enables automation of these tasks, freeing up resources inside a community.}
   \label{fig:device-mgmt-cycle}
 \end{figure}
 
@@ -276,56 +276,57 @@ Having a single unified schema can quickly become a limiting factor that prohibi
 \begin{figure}
 \centering
 \begin{minted}[fontsize=\small,frame=single,framesep=2mm]{python}
-class VIFConfig(InterfaceConfig, RoutableInterface):
-  device = IntraRegistryForeignKey(
-    WifiRadioDeviceConfig,
-    related_name='interfaces'
-  )
-
-  mode = ChoiceField('core.interfaces#wifi_mode')
-  essid = CharField()
-  bssid = MACAddressField()
+# Module A
+class InfoCfg(RegistryItem):
+  name = CharField()
 
 # Register schema item into the schema which makes
 # it available to any other module.
-registration.point('node.config').register_subitem(
-  WifiRadioDeviceConfig, VIFConfig)
+registration.point('node.config').register_item(
+  InfoCfg
+)
+
+# Module B
+class ExtendedCfg(module_a.InfoCfg):
+  device = ChoiceField('core.general#device')
+  version = IntegerField()
+
+registration.point('node.config').register_item(
+  ExtendedCfg
+)
 \end{minted}
-\caption{A simplified example of a platform-independent schema definition for a virtual wireless interface (VIF) configuration extended from two base classes \texttt{InterfaceConfig} and \texttt{RoutableInterface}.}
-\label{fig:schema-module-wifi}
+\caption{A simplified example of a schema definition for a node's name and used device hardware, split over two modules to show extension capabilities.}
+\label{fig:schema-node-general}
 \end{figure}
 
 The \nodewatcher{} avoids this problem by making the platform-independent schema itself completely extensible.
 Individual modules may register schema items and the final schema is the union of all these items.
-An example of a schema item definition is shown in Figure~\ref{fig:schema-module-wifi}, where several properties of the schema extension mechanism can be shown:
+An example of a schema item definition is shown in Figure~\ref{fig:schema-node-general}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
-    \item The schema items are class-based, which means they can be extended later on by other modules (in the example \texttt{VIFConfig} extends a more generic \texttt{InterfaceConfig} which may be provided by another module).
-    \item Fields that represent enumerations (in the example \texttt{mode} is such a field) do not hardcode the possible options, but only provide an \textit{extension point} where additional choices can later be registered by other modules.
-    Each such extension point is attached to a unique name (e.g. \texttt{core.interfaces\#wifi\_mode}) that may be referenced later when extending it.
-    \item Schema items may reference other items (in the example, \texttt{device} references the parent radio device that this virtual wireless network configuration is being configured on).
+    \item The schema items are class-based, which means they can be extended later on by other modules (in the example, \texttt{ExtendedCfg} from module B augments a simpler \texttt{InfoCfg} provided by module A to insert additional fields).
+    \item Fields that represent enumerations (in the example \texttt{device} is such a field) do not hard-code the possible options, but only provide an \textit{extension point} where additional choices can later be registered by other modules.
+    Each such extension point is attached to a unique name (e.g. \texttt{core.general\#device}) that may be referenced later when extending it.
+    \item Schema items may also reference other items in order to build hierarchical configuration trees. This functionality may be used to define relationships, for example when a single wireless radio, defined by a schema item, may contain multiple virtual network interfaces with their own ESSID configurations, defined by other schema items (not shown in the example due to limited space).
 \end{itemize}
-
-To construct the base schema that is available with the \nodewatcher{}, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
-But even these base schema items are just module registrations which makes them removable in case some community needs to really change how things work.
 
 \begin{figure}
   \centering
   \includegraphics[scale=0.47]{figures/registry-example-models.pdf}
-  \caption{A simple example of schema item definition, displayed using an entity relationship diagram.
+  \caption{Schema item definition from Figure~\ref{fig:schema-node-general}, displayed using an entity relationship diagram.
   The \textit{core} module only contains a minimal \texttt{Node} while any attributes are provided by attached schema items in other modules.}
   \label{fig:registry-schema-example}
 \end{figure}
 
 The system that supports such schema item registrations is called the \textit{registry}.
-It is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually models.
+It is essentially a lightweight extension of the standard object-relational mapper (ORM) concept~\cite{Bernstein_2007,ONeil_2008} as the mentioned schema items are actually database models.
 In the platform, it is implemented using a popular Django web framework ORM \cite{django_2005}.
 The problem that it aims to solve is the one of simplified model discovery.
 
 In an extensible platform like \nodewatcher{}, modules may want to query on fields defined by other modules somewhere in the schema.
-For example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node (see Figure~\ref{fig:registry-schema-example}).\todo[inline]{Why a different example? Could not this be done through same example as in Figure~\ref{fig:schema-module-wifi}, just an entity relationship diagram? Also a concrete example than a dummy example is better.}
+Reusing the previous example, there may be a schema item called \texttt{InfoCfg} in the base schema, enabling users to configure a \texttt{name} for a node (an entity relationship diagram corresponding to schema definition from Figure~\ref{fig:schema-node-general} is shown in Figure~\ref{fig:registry-schema-example}).
 This base item does not provide any other fields besides the node name, leaving potential extensions to other modules.
-Let us now say that we would like to also add a simple text field which would specify what device is in use on a specific node (in reality, we would more likely use a choice field, but for our example a simple text field suffices).
-We may do that in another module by defining \texttt{ExtendedCfg} as shown in Figure~\ref{fig:registry-schema-example}.
+Let us now say that we would like to also add two more fields which would specify what device is in use on a specific node using an extensible choice field and some version information (in reality, version specification is more complex than a single integer, but we simplify things for our example).
+We may do that in another module by defining \texttt{ExtendedCfg} as shown in Figure~\ref{fig:schema-node-general}.
 Imagine now another module that would like to perform a query listing only nodes that use a device called \texttt{tp-wr741ndv4}.
 As mentioned, these two classes actually represent ORM model definitions so a traditional query traversing these two relations would go something like this using the SQL-like relational query notation introduced in~\cite{ONeil_2008}:
 \begin{minted}[fontsize=\small]{sql}
@@ -334,7 +335,7 @@ WHERE n.infocfg.extendedcfg.device = 'tp-wr741ndv4'
 \end{minted}
 
 Here we make the assumption that there is a one-to-one relation between a \texttt{Node} and \texttt{InfoCfg}.
-While one-to-many relations are also supported (so each node can have multiple instances of a model), we limit ourselves to this simple case for ease of exposition.
+While one-to-many relations are also supported (so each node can have multiple instances of a model, for example multiple network interfaces), we limit ourselves to this simple case for ease of exposition.
 Note how even in this very simple example we had to explicitly specify the hierarchical path that is spanning these two relations to get to the wanted field.
 This makes such a method not very developer-friendly under the requirement of extensibility and even more complex schemas.
 One of the features that the registry enables, is that we can simplify the same query as:
@@ -347,6 +348,13 @@ In this case, \texttt{info} is the \textit{registry identifier} that we attached
 In the background, the proper relations are automatically deduced and the query executed.
 This abstracts away the subclass relationships, enabling easier refactoring and improving code readability.
 Similar extensions are also provided for simplified fetching of fields deeply nested in the schema by deducing and performing the required table join operations.
+
+In order to bootstrap module development, \nodewatcher{} already provides a minimal base schema for platform-independent node configuration.
+To construct it, we have surveyed all the different solutions mentioned in Section~\ref{sec:related-work} and included a small amount of items common to most of the communities.
+But even these base schema items are just module registrations which makes them removable in case some community needs to really change the baseline of how configuration is organized.
+Using such an approach means that communities are not forced to adapt to a specific platform.
+Instead, it empowers them to adapt the platform for their own use cases.
+In case such modifications show themselves to also benefit other communities, they may also be more easily reused due to their modular nature.
 
 \subsection{Form Generation and Rule-based Defaults}
 \label{sec:form-generation}
@@ -730,23 +738,23 @@ Device uptime, counting seconds from when the device's boot time, is received as
 Such chaining naturally describes data transformations which happen while the data is streamed.
 Additional operators include computing sums of multiple streams which is useful to compile aggregate traffic rates.
 
-\subsection{Modular user interface}
+\subsection{Modular User Interface}
 
 We presented multiple ways how data is collected and stored in extensible ways, from configuration and monitoring data, from current values to historic data.
 Developers can extend schemas used to store data and define new ways to collect and process data.
 But as already mentioned, for platform users, the user interface is the most important.
-We presented an automatic configuration input form generation in Secton~\ref{sec:form-generation} and we similarly developed interfaces which allow developers to build upon modularity when they are reading, displaying and/or visualizing data for the user.
+We presented an automatic configuration input form generation in Secton~\ref{sec:form-generation} and we similarly developed interfaces which allow developers to build upon modularity when they are reading, displaying and/or visualizing data for the user:
 
 \begin{itemize}
 \item We extended official Django templating engine to allow modules to override or extend existing templates in a cascading way~\cite{Overextend_2013}.
 By structuring templates appropriately this enables developers to augment or change any server-side rendered content.
-They can modify and define new menus, add new partials, or wrap or change existing.
+They can modify and define new menus, add new partials, or wrap or change existing ones.
 \item In a similar way how we can automatically render forms based on the registry ORM we can provide an automatically generated REST endpoints/APIs for all data.
 \item Datastream REST API provides a way to access current and historical time-series data with all the benefits of datastream data storage: quick access to datapoints at various granularities, diverse data types (numeric and graphs), easy navigation and searching for streams using custom tags which can also serve to guide visualization.
 \end{itemize}
 
-Using all this ways and general \nodewatcher{} modularity allows various ways of providing user interfaces to the data.
-From server-side rendered templates, to dynamic JavaScript based visualizations like one seen in Figure~\ref{fig:interactive-visualization}.
+Using all these ways and general \nodewatcher{} modularity allows various ways of providing user interfaces to the data.
+From server-side rendered templates, to dynamic JavaScript based visualizations like the one seen in Figure~\ref{fig:interactive-visualization}.
 Because any data is provided through REST APIs as well it can be made easily exportable and shared with others.
 As a consequence of all this, the community can quickly prototype new solutions over the existing base, or just use the exposed REST APIs in their own custom solutions or frameworks.
 
