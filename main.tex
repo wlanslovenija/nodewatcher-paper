@@ -299,7 +299,7 @@ registration.point('node.config').register_item(
 \label{fig:schema-node-general}
 \end{figure}
 
-The \nodewatcher{} avoids this problem by making the platform-independent schema itself completely extensible.
+\nodewatcher{} avoids this problem by making the platform-independent schema itself completely extensible.
 Individual modules may register schema items and the final schema is the union of all these items.
 An example of a schema item definition is shown in Figure~\ref{fig:schema-node-general}, where several properties of the schema extension mechanism can be shown:
 \begin{itemize}
@@ -421,14 +421,14 @@ Nodes may be removed from the database, but not yet permanently removed from the
 \label{sec:firmware-generator}
 
 Traditionally, devices may be configured manually before they are deployed.
-This is usually done either through a command-line interface via telnet or secure shell (SSH) or a web based user interface running on the device, depending on the firmware running on the device.
+This is usually done either through a command-line interface via telnet or secure shell (SSH) or a web-based user interface running on the device, depending on the device's firmware.
 In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
 In community wireless networks, devices are sometimes deployed in hard-to-reach locations like rooftops or high towers and fixing certain problems requires physical access to the device.
 
-As described in Section~\ref{sec:platform-independent-configuration}, the \nodewatcher{} can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
+As described in Section~\ref{sec:platform-independent-configuration}, \nodewatcher{} can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
 But this configuration cannot directly be used on devices.
-Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995} that are frequently used on devices in community networks, have completely different ways of being configured.
+Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995}, that are frequently used on devices in community networks, have completely different ways of being configured.
 This is why an additional platform-dependent transformation step is needed.
 
 However, such a step introduces some additional challenges that prevent a straightforward transformation of any configuration based on the platform-independent schema to a device-specific one.
@@ -451,7 +451,7 @@ These scenarios show that supporting informed decisions of the configuration tra
 \nodewatcher{} takes a declarative approach to device descriptors which enumerate all the hardware and software properties of a given device.
 A declarative descriptor is composed from multiple fields as follows:
 \begin{itemize}
-\item A unique model identifier in the form of \texttt{tp-wr741ndv1} which identifies a specific version of a device model in the database.
+\item A unique model identifier in the form of \texttt{tp-wr741ndv1} which identifies a specific version of a device model in the database. The version is part of the identifier because there may be multiple hardware revisions of the same model, often with substantial differences.
 
 \item A name used for representation of the device in user interfaces together with the name of the manufacturer and a URL to its website.
 
@@ -487,12 +487,12 @@ Besides reducing errors, packaging software (firmware) together with its configu
 Otherwise, using a stale configuration on a newer operating system or newer versions of some packages may result in failing devices.
 
 Bundling firmware together with node-specific configuration is a novel way of provisioning devices in community networks that is beneficial to existing and emerging networks alike.
-It makes the whole device preparation process fast which allows volunteers to focus their time on deployment of the device on the location.
-Moreover, while experienced volunteers who often help maintaining multiple nodes gain the benefit of this streamlined node preparation process which minimizes time spend and possible errors, the important advantage is that the whole process becomes accessible also to the novice volunteers who are preparing their device for the first time.
+It makes the whole device preparation process fast which allows volunteers to focus their time on deployment of the device on location.
+Moreover, while experienced volunteers who often help maintaining multiple nodes gain the benefit of this streamlined node preparation process which minimizes time spent and possible errors, the important advantage is that the whole process becomes accessible also to the novice volunteers who are preparing their device for the first time.
 They can register a new node, use provided defaults, select the hardware target, generate the image, flash it onto the device, reboot, and the device is ready to be used.
 
 Moreover, the process of node preparation is repeatable and can be easily duplicated which helps debugging any potential issues.
-If issues with a deployed node are observed, instead of having to retrieve the device and debug it, a new device with exactly the same configuration and firmware can be recreated in the lab environment.
+If issues with a deployed node are observed, instead of having to retrieve the device and debug it, a new device with exactly the same configuration and firmware can be recreated in a lab environment.
 
 \begin{figure*}
   \centering
@@ -511,7 +511,7 @@ The build process is specific for each operating system and currently only OpenW
 
 When the device-specific configuraion has been generated by the transformation step (see the central node in Figure~\ref{fig:firmware-build-system}), a suitable builder is selected based on the architecture and software platform specified in the device descriptor.
 After a builder is identified, the \nodewatcher{} process establishes a secure shell (SSH) connection to the selected container, transfers the configuration there and starts the build process which completes in a matter of seconds.
-This decoupling of configuration and firmware builders enables the builder containers to be distributed and deployed on a cluster of machines to better handle the load and resources availability and utilization.
+This decoupling of configuration and firmware builders enables the builder containers to be distributed and deployed on a cluster of machines to better handle the load, resource availability and utilization.
 The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
 
 By packaging firmware builders as containers, \nodewatcher{} enables simple reuse and sharing of ready-made builders between community networks.
@@ -519,12 +519,12 @@ Compiling and preparing a range of firmware builder toolchains can be a lengthy 
 This further simplifies the bootstrapping of new community networks which can simply reuse firmware builders from existing community networks.
 On the other hand existing communities are often unfamiliar with firmware developments in other networks because preparing a foreign and unknown firmware is often challenging.
 Community networks open source their firmwares with a goal to improve collaboration between networks, but without an easy way of ``running'' it, code and ideas sharing and reuse and thus innovation is slow.
-Containers provide here an easy way for existing communities to evaluate and follow the firmware development progress done in other communities.
+Containers provide an easy way for existing communities to evaluate and follow the firmware development progress done in other communities.
 
 \subsection{Network Monitoring}
 \label{sec:network-monitoring}
 
-After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for status, performance, and compliance.
+After the firmware images are prepared and devices are deployed in the field, there is a need to constantly monitor the devices for status, performance and compliance.
 In the same way as the configuration transformation step performs static validation of device configuration before it is deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
 While validation is common to both, the scope of the latter is much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
 Besides performing configuration compliance validation, monitoring may also be used to collect various sensor data through time.
@@ -535,26 +535,6 @@ It is true that existing network monitoring tools could easily be used instead, 
 This enables the system to quickly detect configuration errors (for example after someone manually edits configuration on a device) or failure modes (loss of a redundant VPN link only when such a redundant link has been previously configured).
 Such capabilities could be replicated using existing systems, but this would require either manual duplication of configuration (an error-prone process) or specific import scripts for the target monitoring system (which is usually not very portable among different communities).
 Thus, an integrated monitoring component is key in ensuring ease of deployment and transfer of good practices between community networks in the form of modules implementing the validation procedures.
-
-In traditional computer networks, especially of such scale, provisioning of network devices would be done automatically and centrally.
-There would be little reason to assume misconfiguration of nodes.
-Most issues with operation would be because of software or hardware bugs, hardware failure, or human error from operations control.
-In any case, the misconfiguration would be easy to address: simply provision the node again.
-On the other hand, most community networks see decentralized nature of their networks an important aspect of their networks and do not want a centralized and automatic control of nodes.
-Nodes are often maintained by individuals who might use tools like \nodewatcher{} to streamline the process of maintenance, but they still want to retain the sole control of and access to the device.
-This can lead to potentially many issues, from having devices with old and potentially obsolete firmware versions in the network, to experimentation going berserk, to simply misconfigured nodes.
-Such nature of community networks has to be taken in the account and \nodewatcher{} helps detect any issues and guide maintainers towards resolving them.
-They can use provided firmware image, or can be guided through detected issues and suggested steps to resolve them manually.
-For example, in \wlanslovenija{} network we had cases where maintainers connected to the network vanilla OpenWrt installed devices, \nodewatcher{} detected invalid or missing configuration, provided instructions to resolve them, and maintainers manually vetted and followed them one by one until the node was brought into the compliance with the rest of the network.
-Such approach is of course time-consuming, but it is an important part of community networks spirit to be able to retain complete control over the node and all aspects of its operation and configuration.
-
-An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
-
-Data collection starts on a node and is implemented by the \texttt{nodewatcher-agent} process.
-It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
-Each module is a shared library which is loaded when the agent process starts.
-Having modules as shared libraries enables simple extension of the monitoring agent by third-party packages.
-Modules may independently fetch data from external sources providing state like current resource usage reported by the Linux kernel, status of various interfaces, wireless configuration and site survey, connected clients, external sensor input, etc.
 
 \begin{figure}[t]
 \centering
@@ -580,8 +560,28 @@ Modules may independently fetch data from external sources providing state like 
 \label{fig:monitoring-json-schema}
 \end{figure}
 
+In traditional computer networks, especially of such scale, provisioning of network devices would be done automatically and centrally.
+There would be little reason to assume misconfiguration of nodes.
+Most issues with operation would be because of software or hardware bugs, hardware failure, or human error from operations control.
+In any case, the misconfiguration would be easy to address: simply provision the node again.
+On the other hand, most community networks see decentralized nature of their networks as an important aspect of their networks and do not want a centralized and automatic control of nodes.
+Nodes are often maintained by individuals who might use tools like \nodewatcher{} to streamline the process of maintenance, but they still want to retain the sole control of and access to the device.
+This can lead to potentially many issues, from having devices with old and potentially obsolete firmware versions in the network, to experimentation going berserk, to simply misconfigured nodes.
+Such nature of community networks has to be taken into account and \nodewatcher{} helps detect any issues and guide maintainers towards resolving them.
+They can use the provided firmware image, or can be guided through detected issues and suggested steps to resolve them manually.
+For example, in \wlanslovenija{} network we had cases where maintainers connected devices with vanilla OpenWrt installed to the network.
+\nodewatcher{} then detected invalid or missing configuration, provided instructions to resolve them, and maintainers manually vetted and followed them one by one until the node was brought into the compliance with the rest of the network.
+Such approach is of course time-consuming, but it is an important part of community networks spirit to be able to retain complete control over the node and all aspects of its operation and configuration.
+
+An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
+Data collection starts on a node and is implemented by the \texttt{nodewatcher-agent} process.
+It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
+Each module is a shared library which is loaded when the agent process starts.
+Having modules as shared libraries enables simple extension of the monitoring agent by third-party packages.
+Modules may independently fetch data from external sources providing state like current resource usage reported by the Linux kernel, status of various interfaces, wireless configuration and site survey, connected clients, external sensor input, etc.
+
 As can be seen from its description, the monitoring agent is similar in design to other parts of \nodewatcher{}, with a focus on modularity.
-An important feature of a monitoring agent that runs on remote devices is the ability for modules to independently evolve their schema.
+An important feature of a monitoring agent that runs on remote devices in a community network is the ability for modules to independently evolve their schema.
 In order to add features to existing modules there needs to be a way to version the state schema which is reported back to the monitoring pipeline.
 This is especially the case in community networks where there are many different devices with different firmware versions and also with different versions of the monitoring modules.
 A single version for all modules is not enough as modules may be developed by different developers, possibly from different community networks and independent schema evolution is required.
@@ -594,7 +594,7 @@ By inspecting the metadata, the processing pipeline is able to handle multiple v
 
 But still, the implemented agent that uses JSON over HTTP is just one of the possible monitoring data source implementations.
 The architecture enables other data collection protocols to be used side-by-side.
-One possible such protocol that many existing device operating systems already support is SNMP.
+One possible such protocol, that many existing device operating systems already support, is SNMP.
 While our custom protocol enables easier schema evolution through per-module versions, SNMP may be used in cases where custom monitoring agents cannot be installed on target devices.
 This co-existence of data sources is enabled by the modular design of the monitoring backend.
 
@@ -690,6 +690,15 @@ In contrast to round-robin databases~\cite{Oetiker_1999}, where the database siz
   \label{fig:datastream-counter-reset}
 \end{figure}
 
+\begin{figure*}
+  \centering
+  \includegraphics[scale=0.45]{figures/implementation-interactive-visualization.png}
+  \caption{Interactive visualization frontend module in \nodewatcher{} for visualizing collected monitoring data from datastream storage allows various combinations of metrics to be visualized, enabling introspection into the functioning of the network.
+  The visualization shows a plot of link quality, averaged over all links to neighbouring nodes, for a node in the mesh network as reported by the routing protocol over the course of five days.
+  It displays the mean value together with minimum and maximum in the reported time interval which are all easily available due to downsampling.}
+  \label{fig:interactive-visualization}
+\end{figure*}
+
 The database is built around a concept of append-only streams, each stream being an independent time series.
 In order to organize the streams, each stream may be tagged using arbitrary key-value pairs (see Figure~\ref{fig:datastream-storage}), which are indexed and can be used for fast lookup of streams matching specific tags.
 For stream storage to be efficient, datums are stored in separate collections, one for each time granularity, and connected with their metadata entries using compact indices.
@@ -703,15 +712,6 @@ Supported types currently include numeric values (integers, floats, arbitrary pr
 Streams also define the highest granularity at which data points will be inserted.
 This setting is an optimization which allows the datastream storage backend to reduce the number of granularities when downsampling data points.
 Datapoints are inserted only at the highest granularity and are then automatically downsampled in the background, making them ready for efficient querying and visualization.
-
-\begin{figure*}
-  \centering
-  \includegraphics[scale=0.45]{figures/implementation-interactive-visualization.png}
-  \caption{Interactive visualization frontend module in \nodewatcher{} for visualizing collected monitoring data from datastream storage allows various combinations of metrics to be visualized, enabling introspection into the functioning of the network.
-  The visualization shows a plot of link quality, averaged over all links to neighbouring nodes, for a node in the mesh network as reported by the routing protocol over the course of five days.
-  It displays the mean value together with minimum and maximum in the reported time interval which are all easily available due to downsampling.}
-  \label{fig:interactive-visualization}
-\end{figure*}
 
 Downsampling is a crucial component for ensuring that the system maintains good performance as the number of data points grows.
 The motivation for downsampling comes from interactive time-series data visualizations which enable one to see the data at various zoom levels and for different time intervals.
@@ -734,7 +734,7 @@ Using both pieces of information, the rate is computed as a derivative, but only
 In case of a reset, a \texttt{null} value is inserted instead.
 However, if there was no reset and the counter value decreased, the event is classified as a counter wrap and the rate is computed using the known maximum value of the counter.
 Computing streams from other streams may be chained as shown in the example in Figure~\ref{fig:datastream-counter-reset}.
-Device uptime, counting seconds from when the device's boot time, is received as raw measurements which the \textit{reset} operator then transforms into a stream suitable for use in the counter derivative operator.
+Device uptime, counting seconds from the device's boot time, is received as raw measurements which the \textit{reset} operator then transforms into a stream suitable for use in the counter derivative operator.
 Such chaining naturally describes data transformations which happen while the data is streamed.
 Additional operators include computing sums of multiple streams which is useful to compile aggregate traffic rates.
 
