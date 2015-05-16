@@ -426,6 +426,8 @@ In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
 In community wireless networks, devices are sometimes deployed in hard-to-reach locations like rooftops or high towers and fixing certain problems requires physical access to the device.
 
+\subsubsection{Transforming Configuration}
+
 As described in Section~\ref{sec:platform-independent-configuration}, \nodewatcher{} can be used to store device configurations in a platform-independent way using the schema items exposed by the registry.
 But this configuration cannot directly be used on devices.
 Different operating systems like the open source OpenWrt~\cite{OpenWrt_2004} or the proprietary RouterOS~\cite{RouterOS_1995}, that are frequently used on devices in community networks, have completely different ways of being configured.
@@ -473,7 +475,7 @@ Each antenna contains radio propagation properties which characterize the antenn
 Device descriptors may be subclassed in order to simplify definitions of new devices with only slight variations.
 This feature greatly improves the time to fully support new devices which is important in the quickly evolving community networks.
 
-Using these device descriptors and the platform-independent configuration provided in the first stage, \nodewatcher{} is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
+Using device descriptors and the platform-independent configuration provided in the first stage, \nodewatcher{} is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
 The transformation step is built from a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
 Such a modular transformation step ensures that the pipeline can be adapted to a wide range of transformations (for example, supporting various routing protocols, sensor inputs, network configurations etc.), so everything that a target device and operating system support may be used.
 Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cycle}, the transformation module pipeline may also raise errors when parts of the input configuration could not be properly transformed.
@@ -501,25 +503,59 @@ If issues with a deployed node are observed, instead of having to retrieve the d
   \label{fig:monitoring-pipeline}
 \end{figure*}
 
-The underlying firmware build system has been designed in such a way that it is extensible to different operating systems and platforms.
+\subsubsection{Supporting Hardware Diversity}
+
+Hardware device use may vary a lot between different community networks.
+Additionally, new hardware is being developed all the time.
+Therefore in order for the platform to really be useful, it must make it really easy to support new devices and even whole new operating systems.
+To enable this, \nodewatcher{} splits hardware support into different components, which may be provided by independent modules:
+
+\begin{description}
+    \item[Runtime platform.] The runtime platform is dependent upon the operating system that runs on the target device.
+    As mentioned, \nodewatcher{} supports OpenWrt out of the box.
+    But there is no hardcoded concept of how a platform should behave.
+    What defines the runtime platform are the transformation modules, which contain the logic of converting the platform-independent configuration into something that can be understood by the target device.
+
+    \item[Firmware builders.] Separate from the runtime platform are the firmware builders.
+    They contain toolchains, which are able to generate firmware images that may be copied directly onto the target device.
+    In case the devices are using proprietary operating systems, these may not even exist.
+    Decoupling the builders from the runtime platform means that proprietary runtime platforms can also be supported.
+    In such cases, configuration will still need to be applied manually.
+
+    \item[Hardware device descriptors.] These are the device descriptors that we have already defined.
+    They provide to the transformation modules the knowledge required to correctly adapt the platform-dependent configuration to the target device.
+    Since a device may in theory support different runtime platforms (eg. some Mikrotik devices may use either OpenWrt or RouterOS), the same device descriptor can be reused by multiple runtime platforms.
+    In this case, the platform-specific properties are specified for each platform, while the common ones are specified only once for each device.
+\end{description}
+
+The only component that we have not yet described are the firmware builders.
+As said, they are kept separate from the runtime platform, so that proprietary systems may be supported.
+The link between the runtime platform and the firmware builders is the platform-specific configuration.
+This configuration is the output of the transformation modules defined for the target runtime platform.
+
+The toolchains used to build firmware images for embedded devices can be complex and may vary wildly between the runtime platforms.
+This is why the firmware build system in \nodewatcher{} has been designed in such a way that it can be used by completely different toolchains in a modular fashion.
 To achieve this, the build system is structured into multiple Docker containers~\cite{Docker_2013}.
 Docker containers are a lightweight wrapper around the Linux namespacing API and filesystem layers with a goal to enable an interface for packaging applications in a reusable and extensible way.
 Namespaces provide container isolation (the containers still share the host kernel), so that adjacent containers running on the same host are unable to see or influence each other's processes, network configuration, etc.
 Each container can be thought of as a very lightweight virtual instance, but without the overhead of running a full virtual machine with its own kernel.
-\nodewatcher{} uses the Docker container features in order to generate and run firmware image builders for multiple platforms.
-The build process is specific for each operating system and currently only OpenWrt is supported as it runs on the most devices that are in use in community networks.
+\nodewatcher{} uses the Docker container features in order to generate and run firmware image builders for multiple runtime platforms.
 
-When the device-specific configuraion has been generated by the transformation step (see the central node in Figure~\ref{fig:firmware-build-system}), a suitable builder is selected based on the architecture and software platform specified in the device descriptor.
-After a builder is identified, the \nodewatcher{} process establishes a secure shell (SSH) connection to the selected container, transfers the configuration there and starts the build process which completes in a matter of seconds.
-This decoupling of configuration and firmware builders enables the builder containers to be distributed and deployed on a cluster of machines to better handle the load, resource availability and utilization.
-The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new operating systems also requires an extension of the configuration transformation pipeline.
+After the platform-specific configuration has been generated by the transformation step of the given runtime platform (see the node \textit{Device and OS Specific Config.} in Figure~\ref{fig:firmware-build-system}), a suitable builder is selected based on the hardware architecture specified in the device descriptor.
+The \nodewatcher{} platform connects to the firmware builder containers using secure shell (SSH) connections.
+After a connection is established, the platform-specific configuration is transferred and the build process is started.
+When the process completes (for OpenWrt, this is a matter of seconds), the generated firmware images are transferred back so they can be made available to the user.
+This decoupling of platform-specific configuration and firmware builders enables the builder containers to be distributed and deployed on a cluster of machines to better handle the load, resource availability and utilization.
+The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new runtime platforms also requires an extension of the configuration transformation pipeline.
 
 By packaging firmware builders as containers, \nodewatcher{} enables simple reuse and sharing of ready-made builders between community networks.
-Compiling and preparing a range of firmware builder toolchains can be a lengthy and resource intensive process requiring manual configuration, but such containerized organization enables communities to simply download pre-built toolchains and use them in their \nodewatcher{} installations or \nodewatcher{}-compatible systems without compiling anything.
+Compiling and preparing a range of firmware builder toolchains can be a lengthy and resource-intensive process, requiring manual configuration.
+Containerized organization enables communities to simply download pre-built toolchains and use them in their \nodewatcher{} installations or \nodewatcher{}-compatible systems without needing to compile anything.
 This further simplifies the bootstrapping of new community networks which can simply reuse firmware builders from existing community networks.
-On the other hand existing communities are often unfamiliar with firmware developments in other networks because preparing a foreign and unknown firmware is often challenging.
-Community networks open source their firmwares with a goal to improve collaboration between networks, but without an easy way of ``running'' it, code and ideas sharing and reuse and thus innovation is slow.
-Containers provide an easy way for existing communities to evaluate and follow the firmware development progress done in other communities.
+On the other hand, existing communities are often unfamiliar with firmware developments in other networks because preparing a foreign and unknown firmware is often challenging.
+Community networks often open-source their firmwares with a goal to improve collaboration between networks.
+But without an easy way of ``running'' the firmware, sharing of code and reuse of ideas is slow, which stifles innovation.
+On the other hand, containers provide an easy way for existing communities to evaluate and follow the firmware development progress done in other communities.
 
 \subsection{Network Monitoring}
 \label{sec:network-monitoring}
