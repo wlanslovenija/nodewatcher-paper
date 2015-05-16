@@ -1,0 +1,169 @@
+\documentclass[12pt,twoside,a4paper]{report}
+
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.7in]{geometry}
+\usepackage[normalem]{ulem}
+\usepackage[sc]{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+\usepackage{multirow}
+\usepackage{ctable}
+\usepackage{colortbl}
+\usepackage{subfig}
+\usepackage{dcolumn}
+\usepackage{url}
+
+
+\newcommand{\myspace}{5cm}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{url}
+
+% ADDED
+\usepackage{ctable}
+\usepackage{subfig}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage[shortcuts]{extdash}
+
+% nested calls
+\renewcommand*\Call[2]{\textproc{#1}(#2)}
+
+% NEW COMMANDS
+\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+% Function names
+\DeclareMathOperator{\Trust}{Trust}
+\DeclareMathOperator{\Aggregate}{Aggregate}
+\DeclareMathOperator{\Median}{Median}
+\DeclareMathOperator{\mor}{mor}
+\DeclareMathOperator{\MOR}{MOR}
+\DeclareMathOperator{\Rank}{\textsc{Rank}}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+% elements
+\newcommand{\D}{\mathit{D}}
+\newcommand{\PD}{\mathit{PD}}
+\newcommand{\I}{\mathit{I}}
+\newcommand{\PT}{\mathit{PT}}
+\newcommand{\T}{\mathit{T}}
+
+% algs
+\floatname{algorithm}{Listing}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newcommand{\pushcode}[1][1]{\hskip\dimexpr#1\algorithmicindent\relax} % for condition over two lines
+
+\frenchspacing
+\begin{document}%\maketitle
+\pagestyle{empty}
+\begin{center} {\Large{Authors' response to the review of the paper COMNET-D-15-148}}\\
+    ``\emph{nodewatcher: A Substrate for Growing Your own Community Network}''\\
+    submitted to Computer Networks
+\end{center}
+
+\noindent We would like to thank the Editor and the reviewers for their comments. We have found them to be very constructive and they have helped us greatly to improve the manuscript. On the subsequent pages we provide detailed responses to the reviewers' comments and we indicate the modifications that we made in the text. The following list represents the major changes.
+\begin{itemize}
+\item TBD
+\end{itemize}
+
+\noindent In addition to these major changes (which are in detail explained in the subsequent pages as responses to concrete comments from the reviewers), we have also made several minor changes (corrected spelling mistakes, shortened some paragraphs, ...) that we do not highlight in this revision letter.
+
+\noindent When providing responses (and marking corresponding changes in the manuscript), we denote existing references with numbers in square brackets, for instance [1], while we denote newly added references in full by inlining them.\\
+\\
+\noindent Sincerely,\\
+Jernej Kos, Mitar Milutinović and Luka Čehovin
+
+\newpage
+
+\section*{Response to Reviewer \#1}
+
+\vspace{0.5cm}\noindent\textsc{General}\\
+\noindent The paper presents  the design choices of nodewatcher, a community network management system. The design is valuable. The idea of starting from a platform independent configuration and then of producing a device dependent firmware to easy the configuration, monitoring and maintenance procedures sounds very good. Also to include the monitoring in the platform itself to validate presumed configurations with actual ones is a nice idea.
+Overall the "work" is valuable and it is extremely relevant with the call for paper.
+
+\vspace{0.5cm}\noindent\textsc{Comment 1}\\
+However the paper is a little bit boring. The authors  have difficulty in simply explaining at higher level the system architecture and get the discussion in too much details, in order to motivate any choice. It would be better to introduce an overview section with highlights all the user/administrator steps from the user decision to participate to the community network up to the time when her node is operational. By sequentially of describing each piece of the (good) system, the reader have a complete view only at the end. And this discourage the reading. In would be better to provide a bird-eye-view at the start of the paper. 
+
+\vspace{0.2cm}\noindent\textsc{Response}\\
+TODO
+
+\newpage
+
+\section*{Response to Reviewer \#2}
+
+\vspace{0.5cm}\noindent\textsc{General}\\
+The authors present the v3 of "nodewatcher" a new community network management platform built around the core principle of modularity and extensibility and discuss its implementation in wlan slovenija, a CN in Slovenia, and claim to be a general solution for CNs. The paper is well written and the authors show a wide theoretical and practical knowledge on the topic. The design of nodewatcer v3 takes into account the learning from its previous versions as well as from the results of the analysis of other CNs management platforms. Nodewatcher integrates the "device manage cycle" to automate the configuration and monitoring tasks, which is a good idea but which implementation raises doubts due to the inherent challenges and the expected assumptions required to put into practice. The modular design of the data base is a good solution to the limitations of the implementations of other CNs.
+
+The platform uses up to date technologies (json, etc.), is well documented (although there are still some "TODO" sections) and includes nice features such as a real-life demo or a Docker development environment. Although the work presented is a good contribution towards the noble and (utopian?) "CN-independent" solution objective, in this author opinion, despite the authors claim, the solution is still tight to some of the developers' CN traits.
+
+\vspace{0.5cm}\noindent\textsc{Comment 1}\\
+Please discuss: 1) how nodewatcher with hardware diversity and novelty. Which are the constrains (e.g. OpenWRT like firmwares required? Implications of requirement of having to install a daemon in each node). Recommendations for new adopters and specially for (massive) migrations.
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\vspace{0.5cm}\noindent\textsc{Comment 2}\\
+Please clarify (and discuss the consequences if appropriated): 1) if all nodes need to see each other. I.e. how isolated clouds are handled, does each need a nodewatcher? if so, what if two nodes merge. Federation. if it splits?
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\vspace{0.5cm}\noindent\textsc{Comment 3}\\
+  2) if how to develop "monitor pipelines" presented Fig.6 is well documented, e.g. to develop one for BGP
+  
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\newpage
+
+\section*{Response to Reviewer \#3}
+
+\vspace{0.5cm}\noindent\textsc{General}\\
+The paper briefly reviews existing traditional and specialized monitoring and management solutions for wireless community networks and then presents detailed design concepts and example use cases of the novel nodewatcher v3 platform that focuses on modularity and extensibility with the objective of being adapted by many communities and finally break the circle of letting each community reinvent the wheel and produce their own proprietary and incompatible solutions again and again.
+
+The issue of network management represents an indeed major aspect of the daily and long-term life-cycle of community networks as well as their propagation and growth around the world and certainly deserves a (i) fundamental review of common practices, existing solutions, and open issues and (ii) the fundamental rethinking of tools and approaches.
+
+\vspace{0.5cm}\noindent\textsc{Comment 1}\\
+Particularly in the former aspect, the review given by the paper could be significantly enhanced. The paper covers in too great detail technical engineering decisions to achieve the somehow common objectives of modularity and extensibility, which are of course noble goals. But it reads a lot like a white paper or technical report that praises a bit too much its own achievements without providing sufficient quantitative or qualitative comparison or overview of existing solutions, weaknesses, unaddressed aspects or yet achieved disseminations and impacts.
+
+A table summarizing characteristics of existing management solutions would be desirable, (e.g. showing features, addressed issues, concerns, openness, usage, age, developer community size, ...).
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\vspace{0.5cm}\noindent\textsc{Comment 2}\\
+For example the guifi.net management system is able to generate firmware configurations (building of the entire firmware is due to the closed-source policy of Mikrotik, a different issue than for openWRT based systems) from a web-user interface for many different devices. But the paper claims this as a somehow unique feature of the nodewatcher platform. 
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\vspace{0.5cm}\noindent\textsc{Comment 3}\\
+Another interesting comparison would be on the implications of different designs approaches. One examples is the issue of centrality, single-point of failure, and security which seems pretty neglected in the whole discussion but, to the best of my knowledge, plays a very important role in community networks.
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\vspace{0.5cm}\noindent\textsc{Comment 4}\\
+Another critical implication seems that the proposed system mandates exclusive configuration rights as any manual parameter change by a node-admin would violate the foreseen approach. This could also be considered a real burden when trying for example to test different parameters (eg when looking for link channels with least interference and highest TP in a given environment).
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\vspace{0.5cm}\noindent\textsc{Comment 5}\\
+It remains unclear to what extend the proposed system can indeed achieve its promises. An overview of successful adoptions by other communities or completely different (unforeseen by the original developers) scenarios would be interesting. The authors could describe in more detail since how long and with which acceptance and experience the new system (nodewatcher v3) has been used in their own community.
+
+\vspace{0.5cm}\noindent\textsc{Response}\\
+TODO
+
+\end{document}
