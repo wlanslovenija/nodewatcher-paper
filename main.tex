@@ -609,6 +609,8 @@ For example, in \wlanslovenija{} network we had cases where maintainers connecte
 \nodewatcher{} then detected invalid or missing configuration, provided instructions to resolve them, and maintainers manually vetted and followed them one by one until the node was brought into the compliance with the rest of the network.
 Such approach is of course time-consuming, but it is an important part of community networks spirit to be able to retain complete control over the node and all aspects of its operation and configuration.
 
+\subsubsection{Obtaining Telemetry Data}
+
 An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
 Data collection starts on a node and is implemented by the \texttt{nodewatcher-agent} process.
 It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form.
@@ -639,7 +641,7 @@ Each module element may provide whatever elements it wants to report for the cur
 The agent will automatically create a special \texttt{\_meta} element containing the module metadata~-- currently a module version number.
 By inspecting the metadata, the processing pipeline is able to handle multiple versions of the schema for different modules.
 
-But still, the implemented agent that uses JSON over HTTP is just one of the possible monitoring data source implementations.
+But still, the implemented agent that uses JSON over HTTP(S) is just one of the possible monitoring data source implementations.
 The architecture enables other data collection protocols to be used side-by-side.
 One possible such protocol, that many existing device operating systems already support, is SNMP.
 While our custom protocol enables easier schema evolution through per-module versions, SNMP may be used in cases where custom monitoring agents cannot be installed on target devices.
@@ -672,7 +674,8 @@ This co-existence of data sources is enabled by the modular design of the monito
   \label{fig:storage-relationships}
 \end{figure}
 
-On the backend, the processing of all operations related to monitoring is handled by the monitoring pipeline.
+\subsubsection{Monitoring Pipelines}
+On the backend, the processing of all operations related to monitoring is handled by the monitoring pipelines.
 Conforming to the modular philosophy, the pipeline consists of processors which are implemented by modules.
 Throughout the execution of the pipeline two pieces of state are maintained: a working set of node instances and a context.
 The context can contain arbitrary structured data which is communicated between the different processors.
