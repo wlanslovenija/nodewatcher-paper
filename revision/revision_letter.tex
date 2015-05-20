@@ -199,18 +199,8 @@ With push support, nodes may provide telemetry data even in this case, by pushin
 
 By isolated clouds, we assume you mean different subcommunities, for example in large community networks that need to segment things into multiple independent routing domains.
 There is currently no explicit support for federation in \nodewatcher{}.
-In general, such deployments may be handled in the following ways:
-\begin{itemize}
-    \item Each independent routing domain would have its own \nodewatcher{} installation which performs registration and monitoring for its own nodes.
-    If one then wants to have an overall picture of the whole network, another \nodewatcher{} instance may be deployed which will use pull and/or push from all the other \nodewatcher{} installations in order to generate an aggregated picture.
-    Note that there is currently no support for this, but a module for aggregation of data from multiple \nodewatcher{} installations could be easily added.
-
-    \item The problem with having multiple instances is that it may be hard to handle merge/split scenarios.
-    So instead of having multiple instances, one could also use just a single instance.
-    Since there is no need for the nodes to see each other (only \nodewatcher{} needs to be able to communicate with them), this is already possible using the current technology.
-    One thing that would still need to be developed is a module that would enable nicer (visual) grouping of nodes.
-    As far as topology visualizations go, they would already (so with the current implementation) show multiple disconnected islands.
-\end{itemize}
+We have added a discussion subsection which describes federation possibilities.
+It is listed in full under our response to Comment 3 of Reviewer 3.
 
 \vspace{0.5cm}\noindent\textsc{Comment 3}\\
   2) if how to develop "monitor pipelines" presented Fig.6 is well documented, e.g. to develop one for BGP
@@ -248,7 +238,50 @@ TODO
 Another interesting comparison would be on the implications of different designs approaches. One examples is the issue of centrality, single-point of failure, and security which seems pretty neglected in the whole discussion but, to the best of my knowledge, plays a very important role in community networks.
 
 \vspace{0.5cm}\noindent\textsc{Response}\\
-TODO
+We have now added a discussion subsection dealing with the raised concerns.
+It now contains the following paragraphs.
+
+\begin{quote}
+Community networks are by their nature decentralized networks which grow in an ad-hoc fashion.
+Some community networks may be concerned that having a centralized management system presents a single point of failure for the network, compromise its security or centralize the community too much.
+In this section we analyse these concerns and argue that this may not be the case.
+
+The server where the \nodewatcher{} installation is running may indeed fail.
+In order to support high availability scenarios, standard approaches like using multiple redundant servers and performing database replication, should be considered.
+But even in case all redundancy fails, this will not affect the functioning of the actual community network, as operation of the nodes and routing protocols does not in any way rely on there being a \nodewatcher{} server.
+Therefore, in the worst case, the only process that will be interrupted is network monitoring and support for managing nodes.
+
+The issue of centralization can be addressed by federation. 
+While \nodewatcher{} at the moment does not explicitly support federated deployments, we will show how easily they can be achieved.
+Assuming that there are multiple independent subcommunities within one larger community, there are two basic approaches in making \nodewatcher{} federated.
+
+\begin{description}
+    \item[Independent installations.] Each independent subcommunity or routing domain would have its own \nodewatcher{} installation which performs registration and monitoring for its own nodes.
+    In this way, it would be completely independent from the centralized instance.
+    If the community then wants to have an aggregated picture of the whole network, another top-level \nodewatcher{} instance may be deployed which will use pull and/or push from all the other subcommunity \nodewatcher{} installations.
+    In this manner, the top-level installation would not support registration of nodes and would not monitor the nodes directly.
+    Since in \nodewatcher{} these are all modules, they can be easily removed.
+    Instead, the top-level instance would just get the data from subcommunity installations and use it as is.
+    Because of the modular design, one would only need to develop a module that knows how to aggregate this data from multiple subcommunities and store it using the existing schema.
+
+    \item[Single installation.] The problem with having multiple installations is that it may be hard to handle merge/split scenarios.
+    So instead of having multiple installations, one could also use just a single \nodewatcher{} installation and just structure the nodes and permissions in such a way that each subcommunity has their space.
+    This is similar to how the Guifi.net~\cite{Guifinode_2003,Vega_2012} dashboard splits nodes into zones.
+    In this case, the server infrastructure would still be shared, but control would be distributed over multiple communities.
+    Since there is no need for all the nodes to see each other (only \nodewatcher{} needs to be able to communicate with them), this is already possible using the current implementation.
+    The only thing that would still need to be developed is a module that would enable nicer (visual) grouping of nodes, using a parent-child concept similar to the Guifi.net zones.
+    Currently, there is a module that supports \textit{projects}, but these have a completely flat structure.
+    As far as topology and map visualizations go, they would already show multiple disconnected islands with the current implementation.
+\end{description}
+
+The last concern regards security.
+A centralized network management installation might be an attractive target for attackers.
+Since \nodewatcher{} holds node configurations, those might contain sensitive information like passwords.
+In order to minimize this exposure, public key authentication is supported and should be used instead of passwords whenever possible.
+In this case only the public keys are stored by \nodewatcher{} and access to them does not grant access to the nodes themselves.
+An additional security concern is for nodes to misreport data of other nodes, which would confuse the monitoring system, so it would display incorrect data.
+This is why \nodewatcher{} also supports secure authentication of node data by using public keys mutually verified via the TLS protocol.
+\end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 4}\\
 Another critical implication seems that the proposed system mandates exclusive configuration rights as any manual parameter change by a node-admin would violate the foreseen approach. This could also be considered a real burden when trying for example to test different parameters (eg when looking for link channels with least interference and highest TP in a given environment).
