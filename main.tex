@@ -230,23 +230,20 @@ This section describes all the components of the platform, beginning with a quic
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.4]{figures/device-mgmt-cycle.pdf}
-  \caption{Device management cycle illustrating how devices are managed in a community network.
-Traditionally the configuration, generation and monitoring steps are performed manually, while \nodewatcher{} enables automation of these tasks, freeing up resources inside a community.}
+  \includegraphics[width=\columnwidth]{figures/device-mgmt-cycle.pdf}
+  \caption{Illustration of the device management cycle in a \nodewatcher{}-supported community network. Traditionally the configuration (a), generation (b) and monitoring (e) steps are performed manually, while \nodewatcher{} enables automation of these tasks, freeing up resources inside the community. On the other hand, the deployment step (c) is still community-driven, allowing the network to automatically grow and adapt with it.}
   \label{fig:device-mgmt-cycle}
 \end{figure}
 
 The core idea behind \nodewatcher{} is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
-The cycle starts with the \textit{configuration stage} where devices are configured for use in a specific location in the network.
-At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device.
-The latter only happens in the next stage, the \textit{generation stage}, where platform-independent configuration is transformed to device- and platform-specific configuration.
-For easier deployment, a firmware image for the target device may also be generated.
-Then, in the \textit{deployment stage}, configuration or firmware is applied to the target device and the device is deployed in the field.
-As soon as the device is deployed and is able to join the network, it is monitored by the platform.
-In the \textit{monitoring stage}, the device is actively validated for correct operation in context of the whole network.
-In case errors in configuration or other problems are detected, the device's maintainer is notified so the device may be fixed and/or reconfigured, repeating the cycle.
+The management cycle starts with the \textit{configuration stage} (Figure~\ref{fig:device-mgmt-cycle}, step a) where devices are configured to be used at a specific location in the network.
+At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device (Section~\ref{sec:platform-independent-configuration}). This configuration can be adjusted using a dynamically adjusted web interface (Section~\ref{sec:form-generation}). Finally, the configuration is verified taking into account limited resources of the network (Section~\ref{sec:resource-allocation}). The second stage is the \textit{generation stage} (Figure~\ref{fig:device-mgmt-cycle}, step b), where platform-independent configuration is transformed to device- and platform-specific configuration and a firmware image for the target device may also be generated (Section~\ref{sec:firmware-generator}).
+Then, in the \textit{deployment stage} (Figure~\ref{fig:device-mgmt-cycle}, steps c and d), the firmware is applied to the target device and the device is deployed in the field.
+As soon as the device is deployed and is able to join the network, it is monitored by the platform (Section~\ref{sec:network-monitoring}).
+In the \textit{monitoring stage} (Figure~\ref{fig:device-mgmt-cycle}, step e), the device is actively validated for correct operation in context of the whole network. This 
+In case errors in configuration or other problems are detected, the device's maintainer is notified (Figure~\ref{fig:device-mgmt-cycle}, step f) so the device may be fixed and/or reconfigured, repeating the cycle.
 
-The \nodewatcher{} platform aims to provide components for all stages of the described device management cycle.
+The \nodewatcher{} platform aims to provide components for all stages of the described device management cycle, automating the repetitive tasks, freeing the human resources of the community and lowering the required entry technical skills level for active participation in the community network.  
 Each part is designed to be easily extensible to networks with various topologies, routing protocols, operating systems and hardware devices.
 
 \subsection{Platform-independent Configuration}
@@ -405,6 +402,7 @@ Automatic form generation combined with context-sensitive defaults also enables 
 Novice users may otherwise get confused by the sheer amount of things to configure, so simplified configuration forms may be shown to them while defaults are configured in the background.
 
 \subsection{Resource Allocation}
+\label{sec:resource-allocation}
 
 As in any network, there is also a need to perform IP address resource allocation in community networks.
 This is especially the case in IPv4-based networks where it is hard to automatically generate node addresses without collisions due to the small available space.
