@@ -499,7 +499,7 @@ If issues with a deployed node are observed, instead of having to retrieve the d
 \begin{figure*}
   \centering
   \includegraphics[scale=0.5]{figures/monitoring-pipeline.pdf}
-  \caption{An overview of the \nodewatcher{} monitoring components. Telemetry data is collected on the devices by \texttt{nodewatcher-agent} modules and is then transported over HTTP to the monitoring pipeline. One of the modules in the pipeline is the datastream processor which stores all the historical data as time series, supporting later interactive visualization through time.}
+  \caption{An overview of the \nodewatcher{} monitoring components. Telemetry data is collected on the devices by \texttt{nodewatcher-agent} modules and is then transported over HTTP(S) to the monitoring pipeline. This can be done either by pulling from the nodes or by the nodes pushing data to nodewatcher. One of the modules in the pipeline is the datastream processor which stores all the historical data as time series, supporting later interactive visualization through time.}
   \label{fig:monitoring-pipeline}
 \end{figure*}
 
@@ -564,7 +564,7 @@ After the firmware images are prepared and devices are deployed in the field, th
 In the same way as the configuration transformation step performs static validation of device configuration before it is deployed, the role of the monitoring component is to perform dynamic validation of device configuration after the device is running.
 While validation is common to both, the scope of the latter is much bigger~-- when deployed in a large network, the functioning of one node may also affect other nodes in its vicinity or sometimes even in completely different parts of the network (for example when considering network announce conflicts in routing protocols).
 Besides performing configuration compliance validation, monitoring may also be used to collect various sensor data through time.
-This is useful for diagnostics under changing network conditions and can also be used to collect various sensor data coming from external sources like temperature, humidity and lightning strike detection sensors.
+This is useful for diagnostics under changing network conditions and can also be used to collect sensor data coming from external sources like temperature, humidity and lightning strike detection sensors.
 
 One may ask why should monitoring be integrated into the provisioning platform?
 It is true that existing network monitoring tools could easily be used instead, but an integrated solution enables the monitoring modules to easily perform validation of current device state and behaviour against the static platform-independent configuration that is stored in the provisioning database.
@@ -609,12 +609,25 @@ For example, in \wlanslovenija{} network we had cases where maintainers connecte
 \nodewatcher{} then detected invalid or missing configuration, provided instructions to resolve them, and maintainers manually vetted and followed them one by one until the node was brought into the compliance with the rest of the network.
 Such approach is of course time-consuming, but it is an important part of community networks spirit to be able to retain complete control over the node and all aspects of its operation and configuration.
 
+\subsubsection{Obtaining Telemetry Data}
+
 An overview of the monitoring system is given in Figure~\ref{fig:monitoring-pipeline} which shows the data flowing from sources on the devices towards the time series data store and current network state as the sinks.
 Data collection starts on a node and is implemented by the \texttt{nodewatcher-agent} process.
-It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form to be served via HTTP.
+It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form.
+There are then two ways for the agent to transfer the data to the nodewatcher backend:
+\begin{itemize}
+    \item \textbf{Pull.} The JSON data may be served over HTTP(S) and the nodewatcher monitoring backend will periodically request new data from the nodes.
+
+    \item \textbf{Push.} The agent on the node will periodically push its monitoring data to the backend using HTTP(S) POST requests. This requires that the push URL and interval be configured on the node.
+\end{itemize}
+
+This behaviour of the agent may be configured per-node, so some nodes may push data while data is pulled from others.
+Supporting both modes of operation is beneficial for situations where the nodewatcher backend installation does not directly see every node in the mesh network, but is instead located somewhere in the public Internet, without VPN access to the network itself.
+With push support, nodes may provide telemetry data even in this case, by pushing data to the public URL.
+As we said, the agent is composed from multiple modules.
 Each module is a shared library which is loaded when the agent process starts.
 Having modules as shared libraries enables simple extension of the monitoring agent by third-party packages.
-Modules may independently fetch data from external sources providing state like current resource usage reported by the Linux kernel, status of various interfaces, wireless configuration and site survey, connected clients, external sensor input, etc.
+Modules may independently fetch data from external sources providing state like current resource usage reported by the Linux kernel, status of various interfaces, wireless configuration and site survey, connected clients, external sensor input, topology information obtained from routing daemons etc.
 
 As can be seen from its description, the monitoring agent is similar in design to other parts of \nodewatcher{}, with a focus on modularity.
 An important feature of a monitoring agent that runs on remote devices in a community network is the ability for modules to independently evolve their schema.
@@ -628,7 +641,7 @@ Each module element may provide whatever elements it wants to report for the cur
 The agent will automatically create a special \texttt{\_meta} element containing the module metadata~-- currently a module version number.
 By inspecting the metadata, the processing pipeline is able to handle multiple versions of the schema for different modules.
 
-But still, the implemented agent that uses JSON over HTTP is just one of the possible monitoring data source implementations.
+But still, the implemented agent that uses JSON over HTTP(S) is just one of the possible monitoring data source implementations.
 The architecture enables other data collection protocols to be used side-by-side.
 One possible such protocol, that many existing device operating systems already support, is SNMP.
 While our custom protocol enables easier schema evolution through per-module versions, SNMP may be used in cases where custom monitoring agents cannot be installed on target devices.
@@ -661,7 +674,8 @@ This co-existence of data sources is enabled by the modular design of the monito
   \label{fig:storage-relationships}
 \end{figure}
 
-On the backend, the processing of all operations related to monitoring is handled by the monitoring pipeline.
+\subsubsection{Monitoring Pipelines}
+On the backend, the processing of all operations related to monitoring is handled by the monitoring pipelines.
 Conforming to the modular philosophy, the pipeline consists of processors which are implemented by modules.
 Throughout the execution of the pipeline two pieces of state are maintained: a working set of node instances and a context.
 The context can contain arbitrary structured data which is communicated between the different processors.
@@ -859,6 +873,48 @@ Some very active communities started discussing and comparing data schemas used 
 During this ongoing process we have been re-evaluating schemas used by other communities and the resulting compromises stemming from the discussions.
 Again and again we have been reaffirmed that we achieved our design goal because we are discovering that \nodewatcher{} can support all of the proposed schemas with little effort and are actually able to quickly provide working implementations of the proposed ideas.
 This strengthens the case for its use in any of the participating community networks, or even to migrate between used data schemas.
+
+\subsection{Security, Availability and Federation}
+
+Community networks are by their nature decentralized networks which grow in an ad-hoc fashion.
+Some community networks may be concerned that having a centralized management system presents a single point of failure for the network, compromise its security or centralize the community too much.
+In this section we analyse these concerns and argue that this may not be the case.
+
+The server where the \nodewatcher{} installation is running may indeed fail.
+In order to support high availability scenarios, standard approaches like using multiple redundant servers and performing database replication, should be considered.
+But even in case all redundancy fails, this will not affect the functioning of the actual community network, as operation of the nodes and routing protocols does not in any way rely on there being a \nodewatcher{} server.
+Therefore, in the worst case, the only process that will be interrupted is network monitoring and support for managing nodes.
+
+The issue of centralization can be addressed by federation. 
+While \nodewatcher{} at the moment does not explicitly support federated deployments, we will show how easily they can be achieved.
+Assuming that there are multiple independent subcommunities within one larger community, there are two basic approaches in making \nodewatcher{} federated.
+
+\begin{description}
+    \item[Independent installations.] Each independent subcommunity or routing domain would have its own \nodewatcher{} installation which performs registration and monitoring for its own nodes.
+    In this way, it would be completely independent from the centralized instance.
+    If the community then wants to have an aggregated picture of the whole network, another top-level \nodewatcher{} instance may be deployed which will use pull and/or push from all the other subcommunity \nodewatcher{} installations.
+    In this manner, the top-level installation would not support registration of nodes and would not monitor the nodes directly.
+    Since in \nodewatcher{} these are all modules, they can be easily removed.
+    Instead, the top-level instance would just get the data from subcommunity installations and use it as is.
+    Because of the modular design, one would only need to develop a module that knows how to aggregate this data from multiple subcommunities and store it using the existing schema.
+
+    \item[Single installation.] The problem with having multiple installations is that it may be hard to handle merge/split scenarios.
+    So instead of having multiple installations, one could also use just a single \nodewatcher{} installation and just structure the nodes and permissions in such a way that each subcommunity has their space.
+    This is similar to how the Guifi.net~\cite{Guifinode_2003,Vega_2012} dashboard splits nodes into zones.
+    In this case, the server infrastructure would still be shared, but control would be distributed over multiple communities.
+    Since there is no need for all the nodes to see each other (only \nodewatcher{} needs to be able to communicate with them), this is already possible using the current implementation.
+    The only thing that would still need to be developed is a module that would enable nicer (visual) grouping of nodes, using a parent-child concept similar to the Guifi.net zones.
+    Currently, there is a module that supports \textit{projects}, but these have a completely flat structure.
+    As far as topology and map visualizations go, they would already show multiple disconnected islands with the current implementation.
+\end{description}
+
+The last concern regards security.
+A centralized network management installation might be an attractive target for attackers.
+Since \nodewatcher{} holds node configurations, those might contain sensitive information like passwords.
+In order to minimize this exposure, public key authentication is supported and should be used instead of passwords whenever possible.
+In this case only the public keys are stored by \nodewatcher{} and access to them does not grant access to the nodes themselves.
+An additional security concern is for nodes to misreport data of other nodes, which would confuse the monitoring system, so it would display incorrect data.
+This is why \nodewatcher{} also supports secure authentication of node data by using public keys mutually verified via the TLS~\cite{RFC_5246} protocol.
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
