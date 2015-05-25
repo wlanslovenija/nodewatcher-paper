@@ -20,6 +20,9 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage[draft]{todonotes}
+\usepackage{multirow}
+\usepackage{footnote}
+\makesavenoteenv{tabular}
 
 \captionsetup[table]{format=plain,labelformat=simple,justification=centering, labelsep=newline, singlelinecheck=false, textfont={sc}}
 
@@ -198,6 +201,57 @@ Their codebase is monolithic, making it hard to extend with new features or cust
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend interface and core functionalities.
 Both node database solutions are built on custom web frameworks, further limiting the ease of adoption by a new community network.
 Additionally, advanced network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
+
+
+\newcommand{\push}{$\uparrow$}
+\newcommand{\pull}{$\downarrow$}
+
+\newcommand{\no}{$\times$}
+\newcommand{\yes}{$\checkmark$}
+\newcommand{\maybe}{P}
+
+\newcommand{\static}{S}
+\newcommand{\dynamic}{D}
+
+\newcommand{\github}{GH}
+\newcommand{\gitlab}{GL}
+\newcommand{\git}{G}
+\begin{table*}[t!]
+\caption{\label{tbl:comparision}Feature comparison of existing node database systems. In the table we show the developer group (DEV) of a project, if it is actively developed (A) and when it was first officially mentioned and deployed (Y). In terms of project functionalities we list network monitoring (NM), configuration generation (CFG), firmware generator (FW), application program interface (API), resource allocation (RA), node authentication (NA), link planning (LP), topology visualization (TP), and map visualization (MP). We also show which projects can be easily extended in terms of user interface (UI), application program interface (API), network monitoring (NM), support of platforms (PL), schema (SC), and routing protocols (RP). In terms of developer accessibility we highlight the code repository used (RCS), documentation status (DOC), programming language (LAN), web framework (WF), and code license (LIC).}
+
+\bgroup
+\def\arraystretch{1.5}
+
+\centering
+\renewcommand{\tabcolsep}{2pt}
+\scriptsize{
+\begin{tabular}{|p{9.5em}|c|p{3em}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|p{4em}|c|c|}
+\hline
+\multirow{2}{*}{Project (Developers)} & \multicolumn{2}{c|}{General}                                   & \multicolumn{10}{c|}{Features}                                                                                                                                 & \multicolumn{6}{c|}{Modularity/Extensibility}                                          & \multicolumn{5}{c|}{Developer Accessibility}                                            \\ \cline{2-24} 
+      & A & Y & NM & FDR & CF & FW & API     & RA & LP & NA & TP & MP     & UI & API & NM & PL & SC  & RP & RCS & DOC & LAN    &  WF & LIC        \\ \hline
+Guifi.net frw. \newline (Guifi.net)            & \yes            & 2004     \newline 2004     & Y               & \no         & \yes                    & \yes               & \yes     & \yes                & \yes          & \no         & \static      & \yes     & \no            & \yes & \yes               & \yes             & \no?     & \no?                & \github     & \yes           & PHP                    & Drupal       & GPL            \\ \hline
+AWMN WiND      \newline (AWMN)                 & \no?            & 2005?    \newline 2005?    & \no              & \no         & \no                     & \no                & \yes     & \yes                & \yes          & ?         & \static      & \yes     & \no            & \no  & \no                & \no              & \no      & \no               & \github     & \no                & PHP                    & custom       & ?              \\ \hline
+FFM/CNDB       \newline (Freifunk)             & \no?            & 2012     \newline ?        & \no?             & ?          & \no?                    & \no?               & ?       & ?                  & ?            & ?         & \no     & ?       & ?             & ?   & ?                 & \no              & ?       & ?                & \github     & ?                 & PY                 & custom?      & ?              \\ \hline
+Nodeshot       \newline (Ninux)                & \yes            & 2011     \newline 2011     & \no              & \yes        & \no                     & \no                & \yes     & \no                 & \yes          & \yes       & \dynamic      & \yes     & \no            & \yes & \no                & \no              & \maybe & \yes              & \github     & \yes               & PY                 & Django       & GPLv3          \\ \hline
+Netmon         \newline (Freifunk)             & \yes            & 2009     \newline 2009?    & \pull           & \no?        & \no?                    & \no?               & \yes     & ?                  & ?            & ?         & \dynamic?     & \yes     & ?             & ?   & ?                 & \no              & \no?     & ?                & \gitlab     & ?                 & PHP                    & -            & ?              \\ \hline
+LibreMap       \newline (Altermundi + ?)       & \yes            & 2013     \newline ?        & ?               & \yes        & \no                     & \no                & ?       & \no                 & \no           & ?         & \no?     & \yes     & ?             & ?   & ?                 & ?               & ?       & ?                & \github     & ?                 & ?                      & ?            & GPLv3          \\ \hline
+kalua          \newline (weimarnetz.de)        & \yes            & 2001     \newline 2001     & \push           & \no         & \yes                    & \yes               & \no      & \yes                & \no           & \yes       & \dynamic      & \yes     & \no            & \no  & \no                & \no              & \no      & \yes              & \github     & \no                 & Sh                  & PHP          & GPL            \\ \hline
+meshviewer     \newline (Freifunk L\"{u}beck)  & \yes            & 2015     \newline 2015     & \push, \pull    & \no         & \no                     & \no                & \yes     & \no                 & \no           & \no         & \dynamic      & \yes     & \no            & \no  & \no                & \no              & \no      & \yes              & \github     & \no                 & JS             & -            & AGPLv3         \\ \hline
+K-Net          \newline (DTU students)         & \yes            & 1996     \newline 1996     & \pull           & \no         & \no                     & \no                & \yes     & P             & \yes          & \no         & \dynamic      & \yes     & \yes           & \yes & \no                & \no              & \no      & \no               & -          & \no                 & C, C++, PY, HS & Django       & \no \\ \hline
+Geronimo       \newline (Opennet Initiative)   & \yes            & 2011     \newline 2011     & \yes             & \no         & ?                      & ?                 & \yes     & \yes                & \no           & ?         & \dynamic?     & Y     & \yes           & \yes & ?                 & \yes             & \yes     & ?                & \git        & \yes               & PHP, Python           & Django       & ?              \\ \hline
+Ondataservice  \newline (Opennet Initiative)   & \yes            & 2009     \newline 2009     & \yes             & ?          & ?                      & ?                 & \yes     & \yes                & \no           & ?         & \no      & N      & \no            & \yes & ?                 & \yes             & \yes     & ?                & \git        & \yes               & C, PHP                 & -            & ?              \\ \hline
+NCD            \newline (Routek/qMp/Guifi)     & \yes            & 2014     \newline 2015     & \pull           & \no         & \no                     & \no                & \no      & \no                 & \no           & P   & \dynamic      & P & \yes           & \no   & \yes               & \no              & \yes     & \yes              & \git        & \no           & Lua, JS                & D3           & GPLv3+         \\ \hline
+Xymon          \newline (xymon.com)            & \yes            & 2005     \newline 2005     &                 &            &                        &                   &         &                    &              &           &        &         &               &     &                   &                 &         &                  &            &                   &                        &              &                \\ \hline
+Nagios         \newline (nagios.org)           & \yes            & 1999     \newline 1999     &                   &            &                        &                   &         &                    &              &           &        &         &               &     &                   &                 &         &                  &            &                   &                        &              &                \\ \hline
+Zabbix         \newline (zabbix.com)           & \yes            &          \newline          &                   &            &                        &                   &         &                    &              &           &        &         &               &     &                   &                 &         &                  &            &                   &                        &              &                \\ \hline
+manman         \newline (Funkfeuer Graz)       & \no             & 2006     \newline 2006     & \pull             & \no         & \no                     & \no                & L & \yes                & \no            & \no        & \yes    & \yes     & \yes           & \no  & \yes               & \no              & \yes     & \no                & ?          & ?                 & RB, PL              & Rails        & ?              \\ \hline
+nodewatcher v2 \newline (wlan slovenija)       & \no             & 2009     \newline 2009     & \pull             & \no         & \yes                    & \yes               & \no      & \yes                & \no           & \no        & \dynamic      & \yes    & \no            & \no  & \no                & \no              & \no       & \no                & \github     & \no                & PY                 & Django       & AGPLv3         \\ \hline
+nodewatcher v3 \newline (wlan slovenija)       & \yes            & 2012     \newline 2015     & \push, \pull      & \no*        & \yes                    & \yes               & \yes     & \yes                & \no           & \yes       & \dynamic      & \yes     & \yes           & \yes & \yes               & \yes             & \yes     & \yes              & \github     & \yes               & PY, C              & Django       & AGPLv3         \\ \hline
+\end{tabular}
+}
+
+\egroup
+\end{table*}
 
 Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
 Nodeshot is an extensible web application for management of community geographic data.
