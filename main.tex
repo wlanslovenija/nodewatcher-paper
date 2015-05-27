@@ -230,8 +230,8 @@ Additionally, advanced network monitoring functionality is missing, requiring th
 \multirow{2}{*}{Project (Developers)} & \multicolumn{2}{c|}{General}                                   & \multicolumn{10}{c|}{Features}                                                                                                                                 & \multicolumn{6}{c|}{Modularity/Extensibility}                                          & \multicolumn{5}{c|}{Developer Accessibility}                                            \\ \cline{2-24} 
       & A & Y & NM & FDR & CF & FW & API     & RA & LP & NA & TP & MP     & UI & API & NM & PL & SC  & RP & RCS & DOC & LAN    &  WF & LIC        \\ \hline
 Guifi.net frw. \newline (Guifi.net)            & \yes            & 2004     \newline 2004     & Y               & \no         & \yes                    & \yes               & \yes     & \yes                & \yes          & \no         & \static      & \yes     & \no            & \yes & \yes               & \yes             & \no?     & \no?                & \github     & \yes           & PHP                    & Drupal       & GPL            \\ \hline
-AWMN WiND      \newline (AWMN)                 & \no?            & 2005?    \newline 2005?    & \no              & \no         & \no                     & \no                & \yes     & \yes                & \yes          & ?         & \static      & \yes     & \no            & \no  & \no                & \no              & \no      & \no               & \github     & \no                & PHP                    & custom       & ?              \\ \hline
-FFM/CNDB       \newline (Freifunk)             & \no?            & 2012     \newline ?        & \no?             & ?          & \no?                    & \no?               & ?       & ?                  & ?            & ?         & \no     & ?       & ?             & ?   & ?                 & \no              & ?       & ?                & \github     & ?                 & PY                 & custom      & AGPLv3              \\ \hline
+AWMN WiND      \newline (AWMN)                 & \yes            & 2005?    \newline 2005?    & \no              & \no         & \no                     & \no                & \yes     & \yes                & \yes          & ?         & \static      & \yes     & \no            & \no  & \no                & \no              & \no      & \no               & \github     & \no                & PHP                    & custom       & ?              \\ \hline
+FFM/CNDB       \newline (Freifunk)             & \no            & 2012     \newline ?        & \no?             & ?          & \no?                    & \no?               & ?       & ?                  & ?            & ?         & \no     & ?       & ?             & ?   & ?                 & \no              & ?       & ?                & \github     & ?                 & PY                 & custom      & AGPLv3              \\ \hline
 Nodeshot       \newline (Ninux)                & \yes            & 2011     \newline 2011     & \no              & \yes        & \no                     & \no                & \yes     & \no                 & \yes          & \yes       & \dynamic      & \yes     & \no            & \yes & \no                & \no              & \maybe & \yes              & \github     & \yes               & PY                 & Django       & GPLv3          \\ \hline
 Netmon         \newline (Freifunk)             & \yes            & 2009     \newline 2009?    & \pull           & \no?        & \no?                    & \no?               & \yes     & ?                  & ?            & ?         & \dynamic?     & \yes     & ?             & ?   & ?                 & \no              & \no?     & ?                & \gitlab     & ?                 & PHP                    & -            & ?              \\ \hline
 LibreMap       \newline (Altermundi + ?)       & \yes            & 2013     \newline ?        & ?               & \yes        & \no                     & \no                & ?       & \no                 & \no           & ?         & \no?     & \yes     & ?             & ?   & ?                 & ?               & ?       & ?                & \github     & ?                 & ?                      & ?            & GPLv3          \\ \hline
@@ -290,12 +290,17 @@ This section describes all the components of the platform, beginning with a quic
 \end{figure}
 
 The core idea behind \nodewatcher{} is the \textit{device management cycle}, illustrated by Figure~\ref{fig:device-mgmt-cycle}.
-The management cycle starts with the \textit{configuration stage} (Figure~\ref{fig:device-mgmt-cycle}, step a) where devices are configured to be used at a specific location in the network.
-At this stage, device configuration is still platform-independent and does not depend on the hardware that will be later used to deploy the device (Section~\ref{sec:platform-independent-configuration}). This configuration can be adjusted using a dynamically adjusted web interface (Section~\ref{sec:form-generation}). Finally, the configuration is verified taking into account limited resources of the network (Section~\ref{sec:resource-allocation}). The second stage is the \textit{generation stage} (Figure~\ref{fig:device-mgmt-cycle}, step b), where platform-independent configuration is transformed to device- and platform-specific configuration and a firmware image for the target device may also be generated (Section~\ref{sec:firmware-generator}).
-Then, in the \textit{deployment stage} (Figure~\ref{fig:device-mgmt-cycle}, steps c and d), the firmware is applied to the target device and the device is deployed in the field.
+The management cycle is a model of how devices are managed in a community network.
+It starts with the \textit{configuration stage} (Figure~\ref{fig:device-mgmt-cycle}, step a), where devices are configured to be used at a specific location in the network.
+At this stage, the device configuration does not depend on the hardware that will be later used to deploy the device, making it platform-independent (Section~\ref{sec:platform-independent-configuration}).
+Configuration can be adjusted by members of the community using a dynamically generated web interface (Section~\ref{sec:form-generation}), reflecting the schema that is used for describing configuration.
+Additionally in the course of configuration, \nodewatcher{} may automatically allocate the resources (eg. IP addresses) needed for proper functioning of a device in the network, taking into account any defined allocation policies (Section~\ref{sec:resource-allocation}).
+The next stage is the \textit{generation stage} (Figure~\ref{fig:device-mgmt-cycle}, step b), where platform-independent configuration is transformed to device- and platform-specific configuration.
+In addition to just a device-specific configuration, a firmware image, suitable for the target device, may also be generated (Section~\ref{sec:firmware-generator}) in order to ease deployment.
+Then, in the \textit{deployment stage} (Figure~\ref{fig:device-mgmt-cycle}, steps c and d), members of the community apply the firmware to a suitable target device and deploy the device in the field.
 As soon as the device is deployed and is able to join the network, it is monitored by the platform (Section~\ref{sec:network-monitoring}).
-In the \textit{monitoring stage} (Figure~\ref{fig:device-mgmt-cycle}, step e), the device is actively validated for correct operation in context of the whole network. This 
-In case errors in configuration or other problems are detected, the device's maintainer is notified (Figure~\ref{fig:device-mgmt-cycle}, step f) so the device may be fixed and/or reconfigured, repeating the cycle.
+In the \textit{monitoring stage} (Figure~\ref{fig:device-mgmt-cycle}, step e), the device is actively validated for correct operation in context of the whole network.
+In case errors in configuration or other problems are detected, the device's maintainer is notified (Figure~\ref{fig:device-mgmt-cycle}, step f), so the device may be fixed and/or reconfigured, repeating the cycle.
 
 The \nodewatcher{} platform aims to provide components for all stages of the described device management cycle, automating the repetitive tasks, freeing the human resources of the community and lowering the required entry technical skills level for active participation in the community network.  
 Each part is designed to be easily extensible to networks with various topologies, routing protocols, operating systems and hardware devices.
@@ -407,7 +412,7 @@ Using such an approach means that communities are not forced to adapt to a speci
 Instead, it empowers them to adapt the platform for their own use cases.
 In case such modifications show themselves to also benefit other communities, they may also be more easily reused due to their modular nature.
 
-\subsection{Form Generation and Rule-based Defaults}
+\subsubsection{Form Generation and Rule-based Defaults}
 \label{sec:form-generation}
 
 \begin{figure}[t]
@@ -455,7 +460,7 @@ In order to detect which rules have already been evaluated, forms generated by t
 Automatic form generation combined with context-sensitive defaults also enables the possibility of generating different forms for the same schema, for example, depending on user settings or permissions.
 Novice users may otherwise get confused by the sheer amount of things to configure, so simplified configuration forms may be shown to them while defaults are configured in the background.
 
-\subsection{Resource Allocation}
+\subsubsection{Resource Allocation}
 \label{sec:resource-allocation}
 
 As in any network, there is also a need to perform IP address resource allocation in community networks.
@@ -751,27 +756,20 @@ This greatly reduces the amount of context transfer between processes and speeds
 The modular nature of the monitoring pipeline enables different communities to completely adapt it to their own network.
 Since the base framework is common to all, modules from different community networks may interoperate inside the same pipeline, passing data through the context in a loosely coupled manner and increasing code reuse possibilities.
 
-\subsection{Storing Monitored Data}
+\subsubsection{Storing Monitored Data}
 
 In Section~\ref{sec:platform-independent-configuration} we described how \nodewatcher{} uses the registry to store nodes' platform-independent configuration, described by the configuration schema.
 For storing monitoring data we use two different approaches that serve slightly different goals:
 \begin{itemize}
 \item Latest data obtained by the monitoring pipeline, describing the current network state, is stored in a similar form as configuration for each node.
-In addition to a configuration schema also a monitoring schema is defined and data is stored into a relational database in the form of schema items.
-This design automatically brings the same schema item extensibility that we described for platform-independent configuration also to monitoring data.
-Data stored in this way may be queried by value and is thus used for performing the mentioned configuration validation against monitoring data.
+In addition to a configuration schema, also a monitoring schema is defined and data is stored into a relational database in the form of schema items.
+Reusing the same functionality, this automatically gives us the same schema item extensibility.
+Data stored in this way may be queried by value and is thus used for performing configuration validation against observed data.
 
 \item In addition to the above, we also want to keep historical data of how the network operated through time.
 The storage and query requirements for historical data are completely different as these data are represented as time-series, indexed by time, not value.
-We describe the time-series data store in Section~\ref{sec:time-series-data-storage}.
-\end{itemize}
-
 Being a modular platform, the historical data storage is implemented as a module which may be added or removed as needed by the community.
-An overview of the relationships between these storage components is shown in Figure~\ref{fig:storage-relationships}.
-Latest monitoring data are sampled on every monitoring run and stored into the time-series data store.
-
-\subsection{Time-series Data Storage}
-\label{sec:time-series-data-storage}
+\end{itemize}
 
 \begin{figure}
   \centering
@@ -780,6 +778,8 @@ Latest monitoring data are sampled on every monitoring run and stored into the t
   \label{fig:datastream-storage}
 \end{figure}
 
+An overview of the relationships between these storage components is shown in Figure~\ref{fig:storage-relationships}.
+Latest data are sampled on every monitoring run and stored into the time-series data store.
 The monitoring pipeline may generate large amounts of time-series data during its operation (for example \wlanslovenija{} has accumulated over 200 GiB of data in the last five years, storing everything from network diagnostics to external sensor data).
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
 Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
