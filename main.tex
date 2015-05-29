@@ -307,9 +307,9 @@ This is handled in the \textit{configuration stage} (Figure~\ref{fig:device-mgmt
 At this stage, the device configuration does not depend on the hardware that will be later used to deploy the device, making it platform-independent (Section~\ref{sec:platform-independent-configuration}).
 Configuration can be adjusted by members of the community using a dynamically generated web interface (Section~\ref{sec:form-generation}), reflecting the schema that is used for describing configuration.
 Additionally in the course of configuration, \nodewatcher{} may automatically allocate the resources (eg. IP addresses) needed for proper functioning of a device in the network, taking into account any defined allocation policies (Section~\ref{sec:resource-allocation}).
-The next stage is the \textit{generation stage} (Figure~\ref{fig:device-mgmt-cycle}, step b), where platform-independent configuration is transformed to device- and platform-specific configuration.
-In addition to just configuration, a firmware image, suitable for the target device, may also be generated (Section~\ref{sec:firmware-generator}) in order to ease deployment.
-Then, in the \textit{deployment stage} (Figure~\ref{fig:device-mgmt-cycle}, steps c and d), members of the community apply the firmware to a suitable target device and deploy the device in the field.
+The next stage is the \textit{generation stage} (Figure~\ref{fig:device-mgmt-cycle}, step b), where platform-independent configuration is transformed to device- and platform-specific configuration. 
+If the transformation is successful, a firmware image, suitable for the target device, may also be generated (Section~\ref{sec:firmware-generator}) in order to ease deployment.
+In case of successful outcome of the generation process (Figure~\ref{fig:device-mgmt-cycle}, step c), the next stage is the \textit{deployment stage} (Figure~\ref{fig:device-mgmt-cycle}, step d), in which members of the community apply the firmware to a suitable target device and deploy the device at the desired location.
 As soon as the device is deployed and is able to join the network, it is monitored by the platform (Section~\ref{sec:network-monitoring}).
 In the \textit{monitoring stage} (Figure~\ref{fig:device-mgmt-cycle}, step e), the device is actively validated for correct operation in context of the whole network.
 In case errors in configuration or other problems are detected, the device's maintainer is notified (Figure~\ref{fig:device-mgmt-cycle}, step f), so the device may be fixed and/or reconfigured, repeating the cycle.
@@ -333,7 +333,7 @@ Obtaining exactly the same device for a replacement is hard in community network
 However, while having a platform-independent configuration is a noble goal, some configuration properties depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
 This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
-This clearly shows the need to have instant validation and feedback (the \textit{feedback} arrow in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
+This clearly shows the need to have instant validation and feedback (step c in Figure~\ref{fig:device-mgmt-cycle}) when updating platform-independent configuration.
 Such validation must be based on the selected target device with all its hardware and software properties.
 The \nodewatcher{} enables instant validation which is handled by the firmware generator component (see Section~\ref{sec:firmware-generator}).
 
@@ -547,8 +547,7 @@ This feature greatly improves the time to fully support new devices which is imp
 Using device descriptors and the platform-independent configuration provided in the first stage, \nodewatcher{} is able to generate device-specific configuration using a transformation step (see Figure~\ref{fig:firmware-build-system} for an overview of the whole process).
 The transformation step is built from a pipeline of modules where each of them gets the platform-independent configuration as input and may produce modifications to the device-specific configuration as its output.
 Such a modular transformation step ensures that the pipeline can be adapted to a wide range of transformations (for example, supporting various routing protocols, sensor inputs, network configurations etc.), so everything that a target device and operating system support may be used.
-Recalling the importance of the feedback arrow in Figure~\ref{fig:device-mgmt-cycle}, the transformation module pipeline may also raise errors when parts of the input configuration could not be properly transformed.
-These errors are immediately propagated up to the user who is entering configuration via the \nodewatcher{}'s web interface, so that problems may be corrected as soon as possible.
+The transformation module pipeline may also raise errors when parts of the input configuration could not be properly transformed. These errors are immediately visible to the user who is entering configuration via the \nodewatcher{}'s web interface (as a part of step c in Figure~\ref{fig:device-mgmt-cycle}).
 The validation system will not save a configuration which has outstanding errors, preventing invalid configurations from being used to deploy devices.
 
 In order to further ease deployment the resulting device-specific configuration can be automatically packaged together with a firmware image which can then be flashed directly onto the target device.
