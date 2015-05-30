@@ -96,10 +96,19 @@ Jernej Kos, Mitar Milutinović and Luka Čehovin
 Overall the "work" is valuable and it is extremely relevant with the call for paper.
 
 \vspace{0.5cm}\noindent\textsc{Comment 1}\\
-However the paper is a little bit boring. The authors  have difficulty in simply explaining at higher level the system architecture and get the discussion in too much details, in order to motivate any choice. It would be better to introduce an overview section with highlights all the user/administrator steps from the user decision to participate to the community network up to the time when her node is operational. By sequentially of describing each piece of the (good) system, the reader have a complete view only at the end. And this discourage the reading. In would be better to provide a bird-eye-view at the start of the paper. 
+However the paper is a little bit boring. The authors have difficulty in simply explaining at higher level the system architecture and get the discussion in too much details, in order to motivate any choice. It would be better to introduce an overview section with highlights all the user/administrator steps from the user decision to participate to the community network up to the time when her node is operational. By sequentially of describing each piece of the (good) system, the reader have a complete view only at the end. And this discourage the reading. In would be better to provide a bird-eye-view at the start of the paper. 
 
 \vspace{0.2cm}\noindent\textsc{Response}\\
-TODO
+In the revised version we have updated the entire Section 3 to better motivate our choices and to make the structure of the paper more clear. Starting with the overview in Section 3.1, we have updated the description with a more user-centric scenario that ties in the rest of the text in this section through the device management cycle.
+The Figure 2 (was Figure 1 in the previous revision) has also been updated to better show the role of the community in the process of network creation and maintenance. Furthermore the rest of the Section 3 has been restructured to follow the description in the overview. In particular we have:
+
+\begin{itemize}
+\item Created Section 3.2 (Platform-independent configuration) that describes the modules that are important in the configuration step. In this section we have merged Section ... and Section ... 
+\item Created Section 3.3 (Firmware generator) that describes the modules that are important in the generation step. In this section we have merged Section ... and Section ... 
+\item Created Section 3.4 (Network monitoring) that describes the modules that are important in the monitoring step. In this section we have merged Section ... and Section ... 
+\end{itemize}
+
+In addition to this we have also modified the introduction a bit and added Figure 1 to better motivate the difference between proprietary and community networks. We believe that the modifications to the manuscript provide a clearer and more consistent description of the proposed system, as requested by the reviewer.
 
 \newpage
 
@@ -241,7 +250,7 @@ Assuming that there are multiple independent subcommunities within one larger co
 \vspace{0.5cm}\noindent\textsc{Response}\\
 It depends on the routing daemon that is in use.
 There needs to be a way for \nodewatcher{} to connect to the routing daemon and obtain topology information and announced networks from it.
-As far as I know, both Quagga and Bird expose such data via an IPC protocol (in case of Bird, there is even a Python interface for this protocol\footnote{\url{https://pypi.python.org/pypi/pybird}}).
+As far as we are aware, both Quagga and Bird expose such data via an IPC protocol (in case of Bird, there is even a Python interface for this protocol\footnote{\url{https://pypi.python.org/pypi/pybird}}).
 Currently, \nodewatcher{} implements modules for two commonly used routing protocols, namely OLSR and Babel.
 In a similar way, a module for monitoring BGP could be added.
 But in addition to monitoring, this same module could also implement functionality to configure Bird or Quagga for use in the network, leveraging the same configuration architecture that is already used for generating firmwares.
@@ -349,7 +358,7 @@ This is why \nodewatcher{} also supports secure authentication of node data by u
 Another critical implication seems that the proposed system mandates exclusive configuration rights as any manual parameter change by a node-admin would violate the foreseen approach. This could also be considered a real burden when trying for example to test different parameters (eg when looking for link channels with least interference and highest TP in a given environment).
 
 \vspace{0.5cm}\noindent\textsc{Response}\\
-It is true that the system will actively validate current node configuration with the preconfigured one and emit warnings in case there are mismatches.
+It is true that the system will actively validate current node configuration with the pre-configured one and emit warnings in case there are mismatches.
 But these are only warnings, meant for node maintainers.
 The system will therefore not automatically go and fix any of these problems and maintainers may choose to ignore the warning if they know that it is expected.
 Functionality for muting certain warnings by the node maintainers is also planned, so that node maintainers may mark certain warnings as acknowledged so they will not be raised again.
