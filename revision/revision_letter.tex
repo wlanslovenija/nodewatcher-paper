@@ -199,8 +199,41 @@ With push support, nodes may provide telemetry data even in this case, by pushin
 
 By isolated clouds, we assume you mean different subcommunities, for example in large community networks that need to segment things into multiple independent routing domains.
 There is currently no explicit support for federation in \nodewatcher{}.
-We have added a discussion subsection which describes federation possibilities.
-It is listed in full under our response to Comment 3 of Reviewer 3.
+But it is still possible to implement federation, which we now discuss in a subsection, containing the following paragraphs.
+
+\begin{quote}
+Community networks are by their nature decentralized networks which grow in an ad-hoc fashion.
+Some community networks may be concerned that having a centralized management system presents a single point of failure for the network, compromise its security or centralize the community too much.
+In this section we analyse these concerns and argue that this may not be the case.
+
+[...]
+
+The issue of centralization can be addressed by federation.
+While \nodewatcher{} at the moment does not explicitly support federated deployments, we will show how easily they can be achieved.
+Assuming that there are multiple independent subcommunities within one larger community, there are two basic approaches in making \nodewatcher{} federated.
+
+\begin{description}
+    \item[Independent installations.] Each independent subcommunity or routing domain would have its own \nodewatcher{} installation which performs registration and monitoring for its own nodes.
+    In this way, it would be completely independent from the centralized instance.
+    If the community then wants to have an aggregated picture of the whole network, another top-level \nodewatcher{} instance may be deployed which will use pull and/or push from all the other subcommunity \nodewatcher{} installations.
+    In this manner, the top-level installation would not support registration of nodes and would not monitor the nodes directly.
+    Since in \nodewatcher{} these are all modules, they can be easily removed.
+    Instead, the top-level instance would just get the data from subcommunity installations and use it as is.
+    Because of the modular design, one would only need to develop a module that knows how to aggregate this data from multiple subcommunities and store it using the existing schema.
+
+    \item[Single installation.] The problem with having multiple installations is that it may be hard to handle merge/split scenarios.
+    So instead of having multiple installations, one could also use just a single \nodewatcher{} installation and just structure the nodes and permissions in such a way that each subcommunity has their space.
+    This is similar to how the Guifi.net~[17, 24] dashboard splits nodes into zones.
+    In this case, the server infrastructure would still be shared, but control would be distributed over multiple communities.
+    Since there is no need for all the nodes to see each other (only \nodewatcher{} needs to be able to communicate with them), this is already possible using the current implementation.
+    The only thing that would still need to be developed is a module that would enable nicer (visual) grouping of nodes, using a parent-child concept similar to the Guifi.net zones.
+    Currently, there is a module that supports \textit{projects}, but these have a completely flat structure.
+    As far as topology and map visualizations go, they would already show multiple disconnected islands with the current implementation.
+\end{description}
+
+[...]
+
+\end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 3}\\
   2) if how to develop "monitor pipelines" presented Fig.6 is well documented, e.g. to develop one for BGP
@@ -209,7 +242,9 @@ It is listed in full under our response to Comment 3 of Reviewer 3.
 It depends on the routing daemon that is in use.
 There needs to be a way for \nodewatcher{} to connect to the routing daemon and obtain topology information and announced networks from it.
 As far as I know, both Quagga and Bird expose such data via an IPC protocol (in case of Bird, there is even a Python interface for this protocol\footnote{\url{https://pypi.python.org/pypi/pybird}}).
-So a module for monitoring BGP could be added.
+Currently, \nodewatcher{} implements modules for two commonly used routing protocols, namely OLSR and Babel.
+In a similar way, a module for monitoring BGP could be added.
+But in addition to monitoring, this same module could also implement functionality to configure Bird or Quagga for use in the network, leveraging the same configuration architecture that is already used for generating firmwares.
 
 \newpage
 
@@ -226,13 +261,40 @@ Particularly in the former aspect, the review given by the paper could be signif
 A table summarizing characteristics of existing management solutions would be desirable, (e.g. showing features, addressed issues, concerns, openness, usage, age, developer community size, ...).
 
 \vspace{0.5cm}\noindent\textsc{Response}\\
-TODO
+We have now performed a comprehensive survey of all existing community network management solutions that we could find.
+The result is now visible in Table~1, quoting from the paper:
+
+\begin{quote}
+
+\newcommand{\push}{$\uparrow$}
+\newcommand{\pull}{$\downarrow$}
+
+\newcommand{\no}{$\times$}
+\newcommand{\yes}{$\checkmark$}
+\newcommand{\maybe}{$\circ$}
+
+\newcommand{\static}{S}
+\newcommand{\dynamic}{D}
+
+Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the growing number of wireless mesh nodes.
+We present a comprehensive overview of properties of existing solutions in Table~1. The data was obtained by studying the public information available about the projects (e.g. source code) and verified by reaching out to the members of the corresponding communities.
+We list several properties of community network management solutions, starting with the name of the project and the community that forms its core development group.
+We show whether the project is being actively developed and when was it first officially mentioned and deployed in an actual network.
+Properties are then organized into three major areas, namely  features (functionality that the system has), modularity/extensibility (can the individual functionalities be extended without modifying the core) and developer accessibility.
+For most of the features, we list whether the described system implements the feature fully (\yes), only partially (\maybe) or not at all (\no).
+In case of network monitoring, we also list whether the system supports pulling data from nodes (\pull) and if nodes can push data to the system (\push).
+For topology visualization, we mark whether the system renders the topology just based on configuration (\static) or it can also display live topology as it changes based on some routing protocol (\dynamic).
+\end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 2}\\
 For example the guifi.net management system is able to generate firmware configurations (building of the entire firmware is due to the closed-source policy of Mikrotik, a different issue than for openWRT based systems) from a web-user interface for many different devices. But the paper claims this as a somehow unique feature of the nodewatcher platform. 
 
 \vspace{0.5cm}\noindent\textsc{Response}\\
-TODO
+This fact is now reflected in the survey results table and a paragraph in related work has also been modified, to more explicitly show that the Guifi.net framework does support configuration generation.
+
+\begin{quote}
+While the Guifi.net framework does support generating device configuration, none of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices.
+\end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 3}\\
 Another interesting comparison would be on the implications of different designs approaches. One examples is the issue of centrality, single-point of failure, and security which seems pretty neglected in the whole discussion but, to the best of my knowledge, plays a very important role in community networks.
@@ -287,7 +349,14 @@ This is why \nodewatcher{} also supports secure authentication of node data by u
 Another critical implication seems that the proposed system mandates exclusive configuration rights as any manual parameter change by a node-admin would violate the foreseen approach. This could also be considered a real burden when trying for example to test different parameters (eg when looking for link channels with least interference and highest TP in a given environment).
 
 \vspace{0.5cm}\noindent\textsc{Response}\\
-TODO
+It is true that the system will actively validate current node configuration with the preconfigured one and emit warnings in case there are mismatches.
+But these are only warnings, meant for node maintainers.
+The system will therefore not automatically go and fix any of these problems and maintainers may choose to ignore the warning if they know that it is expected.
+Functionality for muting certain warnings by the node maintainers is also planned, so that node maintainers may mark certain warnings as acknowledged so they will not be raised again.
+When an optimal configuration is found, it can then be saved into \nodewatcher{}, so it will exist even if the node later malfunctions and needs to be configured again.
+
+Relating to link and channel planning, we intend to implement advanced functionality in the future.
+Since \nodewatcher{} has access to live wireless survey data from multiple vantage points in an area, this information, combined with elevation data, may be used to assist link planning.
 
 \vspace{0.5cm}\noindent\textsc{Comment 5}\\
 It remains unclear to what extend the proposed system can indeed achieve its promises. An overview of successful adoptions by other communities or completely different (unforeseen by the original developers) scenarios would be interesting. The authors could describe in more detail since how long and with which acceptance and experience the new system (nodewatcher v3) has been used in their own community.
