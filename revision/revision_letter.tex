@@ -135,6 +135,9 @@ Regarding hardware diversity, we have now added a subsection detailing how \node
 The subsection now contains the following paragraphs.
 
 \begin{quote}
+
+[...]
+
 Hardware device use may vary a lot between different community networks.
 Additionally, new hardware is being developed all the time.
 Therefore in order for the platform to really be useful, it must make it really easy to support new devices and even whole new operating systems.
@@ -156,6 +159,9 @@ To enable this, \nodewatcher{} splits hardware support into different components
     They provide to the transformation modules the knowledge required to correctly adapt the platform-dependent configuration to the target device.
     Since a device may in theory support different runtime platforms (eg. some Mikrotik devices may use either OpenWrt or RouterOS), the same device descriptor can be reused by multiple runtime platforms.
     In this case, the platform-specific properties are specified for each platform, while the common ones are specified only once for each device.
+
+[...]
+
 \end{description}
 
 The only component that we have not yet described are the firmware builders.
@@ -163,7 +169,7 @@ As said, they are kept separate from the runtime platform, so that proprietary s
 The link between the runtime platform and the firmware builders is the platform-specific configuration.
 This configuration is the output of the transformation modules defined for the target runtime platform.
 
-The toolchains used to build firmware images for embedded devices can be complex and may vary wildly between the runtime platforms.
+The toolchains used to build firmware images for embedded devices can be complex and may vary greatly between the runtime platforms.
 This is why the firmware build system in \nodewatcher{} has been designed in such a way that it can be used by completely different toolchains in a modular fashion.
 To achieve this, the build system is structured into multiple Docker containers~[34].
 Docker containers are a lightweight wrapper around the Linux namespacing API and filesystem layers with a goal to enable an interface for packaging applications in a reusable and extensible way.
@@ -179,17 +185,22 @@ This decoupling of platform-specific configuration and firmware builders enables
 The described system is also extensible~-- adding support for new architectures simply requires a new builder container to be prepared, while adding support for new runtime platforms also requires an extension of the configuration transformation pipeline.
 \end{quote}
 
-Regarding installation of a daemon on each node.
-In Section~3.6 we describe how the agent runs on the node, collects data and enables the \nodewatcher{} backend to acquire the data from the ndoes.
+\noindent {\em Installation of a daemon on each node.} In Section~3.6 we describe how the agent runs on the node, collects data and enables the \nodewatcher{} backend to acquire the data from the ndoes.
 But as we mention in the following paragraph, this notion of our own monitoring agent is just one possible way of handling reporting.
 We have modified the paragraph a little, to make this more clear.
 
 \begin{quote}
-But still, the implemented agent that uses JSON over HTTP(S) is just one of the possible monitoring data source implementations.
+
+[...]
+
+The implemented agent that uses JSON over HTTP(S) connections is just one of the possible monitoring data source implementations.
 The architecture enables other data collection protocols to be used side-by-side.
 One possible such protocol, that many existing device operating systems already support, is SNMP.
 While our custom protocol enables easier schema evolution through per-module versions, SNMP may be used in cases where custom monitoring agents cannot be installed on target devices.
 This co-existence of data sources is enabled by the modular design of the monitoring backend.
+
+[...]
+
 \end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 2}\\
@@ -201,6 +212,9 @@ This now enables setups where the nodewatcher instance does not even have access
 We have modified the section describing the monitoring agent to contain this new development.
 
 \begin{quote}
+
+[...]
+
 It is a small C application with a minimal core that is able to periodically request the loaded modules to provide their state updates which are then compiled into the current node status and exported in a JSON form.
 There are then two ways for the agent to transfer the data to the nodewatcher backend:
 \begin{itemize}
@@ -212,13 +226,19 @@ There are then two ways for the agent to transfer the data to the nodewatcher ba
 This behaviour of the agent may be configured per-node, so some nodes may push data while data is pulled from others.
 Supporting both modes of operation is beneficial for situations where the nodewatcher backend installation does not directly see every node in the mesh network, but is instead located somewhere in the public Internet, without VPN access to the network itself.
 With push support, nodes may provide telemetry data even in this case, by pushing data to the public URL.
+
+[...]
+
 \end{quote}
 
-By isolated clouds, we assume you mean different subcommunities, for example in large community networks that need to segment things into multiple independent routing domains.
+By isolated clouds, we assume that the reviewer means different sub-communities, for example in large community networks that need to segment things into multiple independent routing domains.
 There is currently no explicit support for federation in \nodewatcher{}.
 But it is still possible to implement federation, which we now discuss in a subsection, containing the following paragraphs.
 
 \begin{quote}
+
+[...]
+
 Community networks are by their nature decentralized networks which grow in an ad-hoc fashion.
 Some community networks may be concerned that having a centralized management system presents a single point of failure for the network, compromise its security or centralize the community too much.
 In this section we analyse these concerns and argue that this may not be the case.
@@ -283,6 +303,8 @@ The result is now visible in Table~1, quoting from the paper:
 
 \begin{quote}
 
+[...]
+
 \newcommand{\push}{$\uparrow$}
 \newcommand{\pull}{$\downarrow$}
 
@@ -301,6 +323,9 @@ Properties are then organized into three major areas, namely  features (function
 For most of the features, we list whether the described system implements the feature fully (\yes), only partially (\maybe) or not at all (\no).
 In case of network monitoring, we also list whether the system supports pulling data from nodes (\pull) and if nodes can push data to the system (\push).
 For topology visualization, we mark whether the system renders the topology just based on configuration (\static) or it can also display live topology as it changes based on some routing protocol (\dynamic).
+
+[...]
+
 \end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 2}\\
@@ -310,7 +335,11 @@ For example the guifi.net management system is able to generate firmware configu
 This fact is now reflected in the survey results table and a paragraph in related work has also been modified, to more explicitly show that the Guifi.net framework does support configuration generation.
 
 \begin{quote}
+[...]
+
 While the Guifi.net framework does support generating device configuration, none of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices.
+
+[...]
 \end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 3}\\
@@ -321,6 +350,8 @@ We have now added a discussion subsection (Section 4.5 titled \textit{Security, 
 It now contains the following paragraphs.
 
 \begin{quote}
+[...]
+
 Community networks are by their nature decentralized networks which grow in an ad-hoc fashion.
 Some community networks may be concerned that having a centralized management system presents a single point of failure for the network, compromise its security or centralize the community too much.
 In this section we analyse these concerns and argue that this may not be the case.
@@ -360,6 +391,9 @@ In order to minimize this exposure, public key authentication is supported and s
 In this case only the public keys are stored by \nodewatcher{} and access to them does not grant access to the nodes themselves.
 An additional security concern is for nodes to misreport data of other nodes, which would confuse the monitoring system, so it would display incorrect data.
 This is why \nodewatcher{} also supports secure authentication of node data by using public keys mutually verified via the TLS protocol.
+
+[...]
+
 \end{quote}
 
 \vspace{0.5cm}\noindent\textsc{Comment 4}\\
@@ -383,6 +417,9 @@ To address this issue, we have now highlighted how the new nodewatcher platform 
 The paper now contains the following paragraphs in sections 4, 4.1 and 4.4.
 
 \begin{quote}
+
+[...]
+
 Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new version presented in this paper is being run in parallel, since the beginning of 2015, in order to enable a smooth transition.
 The old version is designed similarly to other existing community network platforms that we surveyed in Section~2 and shares many of the same problems.
 Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management by addressing the exposed problems.
@@ -400,6 +437,9 @@ In contrast, the new platform enabled us to quickly support the new device, simp
 Additionally, in the beginning of 2015, the \nodewatcher{} platform has been chosen to be the basis for the Commotion Wireless platform~(Josh King. \textit{Announcing collaboration with wlan slovenija}. commotionwireless.net, 2015).
 In order to adapt to the specifics of the Commotion network, \nodewatcher{} has been extended to support security features, such as node-server mutual authentication and encryption of monitoring data, and support for data push in addition to data pull.
 The platform's modular architecture has shown itself to be particularly suitable for customizing solutions for specific communities.
+
+[...]
+
 \end{quote}
 
 \end{document}

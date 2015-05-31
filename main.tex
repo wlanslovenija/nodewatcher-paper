@@ -73,7 +73,7 @@
 Community networks differ from regular networks by their organic growth patterns -- there is no central planning body that would decide how the network is built.
 Instead, the network grows in a bottom-up fashion as more people express interest in participating in the community and connect with their neighbours.
 People who participate in community networks are usually volunteers with limited free time.
-Due to these factors, making the management of community networks simpler and easier for all participants is key in boosting their growth.
+Due to these factors, making the management of community networks simpler and easier for all participants is the key component in boosting their growth.
 Specifics of individual networks often force communities to develop their own sets of tools and best practices which are hard to share and do not interoperate well with others.
 We propose a new general community network management platform \nodewatcher{} that is built around the core principle of modularity and extensibility, making it suitable for reuse by different community networks.
 Devices are configured using platform-independent configuration which \nodewatcher{} can transform into deployable firmware images, eliminating any manual device configuration, reducing errors, and enabling participation of novice maintainers.
@@ -708,7 +708,7 @@ Each module element may provide whatever elements it wants to report for the cur
 The agent will automatically create a special \texttt{\_meta} element containing the module metadata~-- currently a module version number.
 By inspecting the metadata, the processing pipeline is able to handle multiple versions of the schema for different modules.
 
-But still, the implemented agent that uses JSON over HTTP(S) is just one of the possible monitoring data source implementations.
+The implemented agent that uses JSON over HTTP(S) connections is just one of the possible monitoring data source implementations.
 The architecture enables other data collection protocols to be used side-by-side.
 One possible such protocol, that many existing device operating systems already support, is SNMP.
 While our custom protocol enables easier schema evolution through per-module versions, SNMP may be used in cases where custom monitoring agents cannot be installed on target devices.
@@ -758,7 +758,7 @@ There are two basic types of processors:
 Algorithm~\ref{alg:monitoring-pipeline} shows a simplified version of the processing run execution.
 As can be seen from the algorithm, the pipeline is completely generic and its content depends entirely on the processor implementations which are provided by modules.
 In order to increase performance, the pipeline implementation actually performs some optimizations that cannot be observed in the above pseudocode.
-Network processors must be executed serially as each may modify the working set which is part of the state for downstream processors.
+Network processors must be executed sequentially as each may modify the working set which is part of the state for downstream processors.
 But there is no reason why execution of node processors cannot be done in parallel for each node.
 Additionally, if there are multiple consecutive node processors which will run on the same working set (note that only network processors may change the working set), they can all be executed inside the same thread, one after the other.
 This greatly reduces the amount of context transfer between processes and speeds up the monitoring run execution.
@@ -858,7 +858,7 @@ But as already mentioned, for platform users, the user interface is the most imp
 We presented an automatic configuration input form generation in Secton~\ref{sec:form-generation} and we similarly developed interfaces which allow developers to build upon modularity when they are reading, displaying and/or visualizing data for the user:
 
 \begin{itemize}
-\item We extended official Django templating engine to allow modules to override or extend existing templates in a cascading way~\cite{Overextend_2013}.
+\item We extended Django templating engine to allow modules to override or extend existing templates in a cascading way~\cite{Overextend_2013}.
 By structuring templates appropriately this enables developers to augment or change any server-side rendered content.
 They can modify and define new menus, add new partials, or wrap or change existing ones.
 \item In a similar way how we can automatically render forms based on the registry ORM we can provide an automatically generated REST endpoints/APIs for all data.
@@ -994,9 +994,9 @@ Support for more routing protocols.
 But instead of us developing all these new features ourselves, the main next step is to engage other network communities to develop features specific to their networks.
 We have already established partnerships with other community networks who are starting to work in this direction.
 
-But we expect to also see completely new features.
+We also expect to see completely new features added to the platform by third-party developers.
 For example, a warehouse module to help organize the inventory of equipment in community networks, a store module helping users order preconfigured devices, and local community and services modules to help people who are using the community networks to form better communities.
-Using a strong but modular base is opening doors to innovation.
+Using a strong and modular base is enabling further innovation and progress.
 
 Data collected through \nodewatcher{} can be used in future research~\cite{Braem_2013}.
 Researchers could analyze how community, wireless, or mesh networks operate over larger time spans.
