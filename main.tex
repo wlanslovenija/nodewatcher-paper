@@ -884,7 +884,7 @@ In this section we evaluate \nodewatcher{} in the context of \wlanslovenija{} wi
 \wlanslovenija{} has been an active network since the year 2009.
 It is a medium-sized network with around $400$ online nodes at the moment (the growth of the number of online nodes since 2010 may be seen in Figure~\ref{fig:wlansi-nodes-up}).
 
-Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new version presented in this paper is being run in parallel in order to enable a smooth transition.
+Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new version presented in this paper is being run in parallel, since the beginning of 2015, in order to enable a smooth transition.
 The old version is designed similarly to other existing community network platforms that we surveyed in Section~\ref{sec:related-work} and shares many of the same problems.
 Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management by addressing the exposed problems.
 
@@ -935,6 +935,10 @@ Some very active communities started discussing and comparing data schemas used 
 During this ongoing process we have been re-evaluating schemas used by other communities and the resulting compromises stemming from the discussions.
 Again and again we have been reaffirmed that we achieved our design goal because we are discovering that \nodewatcher{} can support all of the proposed schemas with little effort and are actually able to quickly provide working implementations of the proposed ideas.
 This strengthens the case for its use in any of the participating community networks, or even to migrate between used data schemas.
+
+Additionally, in the beginning of 2015, the \nodewatcher{} platform has been chosen to be the basis for the Commotion Wireless platform~\cite{Commotion_2015}.
+In order to adapt to the specifics of the Commotion network, \nodewatcher{} has been extended to support security features, such as node-server mutual authentication and encryption of monitoring data, and support for data push in addition to data pull.
+The platform's modular architecture has shown itself to be particularly suitable for customizing solutions for specific communities.
 
 \subsection{Security, Availability and Federation}
 

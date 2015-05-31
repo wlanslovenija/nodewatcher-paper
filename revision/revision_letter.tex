@@ -81,7 +81,8 @@
 \item Updated Section 3.1 and updated Figure 2 to show the overview of the role that the proposed system has in a community network.
 \item Added Table 1 that provides a quantitative overview of related work.
 \item Reorganized Section 3 to follow the steps in the device management cycle.
-\item TBD
+\item Added Section 3.3.2, to better describe how the platform deals with hardware diversity.
+\item Updated the discussion section to include a subsection on security, availability and implementing federation support.
 \end{itemize}
 
 \noindent In addition to these major changes (which are in detail explained in the subsequent pages as responses to concrete comments from the reviewers), we have also made several minor changes (corrected spelling mistakes, shortened some paragraphs, ...) that we do not highlight in this revision letter.
@@ -378,6 +379,27 @@ Since \nodewatcher{} has access to live wireless survey data from multiple vanta
 It remains unclear to what extend the proposed system can indeed achieve its promises. An overview of successful adoptions by other communities or completely different (unforeseen by the original developers) scenarios would be interesting. The authors could describe in more detail since how long and with which acceptance and experience the new system (nodewatcher v3) has been used in their own community.
 
 \vspace{0.5cm}\noindent\textsc{Response}\\
-TODO
+To address this issue, we have now highlighted how the new nodewatcher platform is being used, also by other communities.
+The paper now contains the following paragraphs in sections 4, 4.1 and 4.4.
+
+\begin{quote}
+Primary management of the network is currently still based on the older version 2.0 of \nodewatcher{}, while the new version presented in this paper is being run in parallel, since the beginning of 2015, in order to enable a smooth transition.
+The old version is designed similarly to other existing community network platforms that we surveyed in Section~2 and shares many of the same problems.
+Due to this state we have a unique opportunity to qualitatively compare the workings of both solutions and show how the new version of the platform substantially improves network management by addressing the exposed problems.
+
+[...]
+
+It is much easier to support new devices and keep up with the pace of requirements from other communities in the new platform.
+Currently, our platform is also being used by the neighbouring community network in Croatia where they use some unique devices due to their cheap local availability.
+In old version of the platform, every new device required substantial effort to support it properly as \nodewatcher{} required substantial changes to the provisioning system code.
+Additionally, \nodewatcher{} did not have advanced validation capabilities, resulting several times in erroneous configurations which required re-flashing to fix.
+In contrast, the new platform enabled us to quickly support the new device, simply by writing a new device descriptor for it (see Section~3.3).
+
+[...]
+
+Additionally, in the beginning of 2015, the \nodewatcher{} platform has been chosen to be the basis for the Commotion Wireless platform~(Josh King. \textit{Announcing collaboration with wlan slovenija}. commotionwireless.net, 2015).
+In order to adapt to the specifics of the Commotion network, \nodewatcher{} has been extended to support security features, such as node-server mutual authentication and encryption of monitoring data, and support for data push in addition to data pull.
+The platform's modular architecture has shown itself to be particularly suitable for customizing solutions for specific communities.
+\end{quote}
 
 \end{document}
