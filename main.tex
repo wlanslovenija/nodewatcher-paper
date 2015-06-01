@@ -105,10 +105,9 @@ Even in developed countries many rural areas are underserved with Internet conne
 
 The common property of all community networks is that they grow organically~-- there is no central planning body that would decide how and where the network is built, as is usually the case with proprietary networks.
 Instead, the network grows in a bottom-up fashion as more people express interest in participating in the community and connect with their neighbours as illustrated in Figure~\ref{fig:community}.
-When a new person or a new group decides to expand the community network they can do this themselves by deploying new access points, routers, antennas, and other devices, connecting them to the rest of the network, effectively growing it.
-Often only very local coordination is needed, with direct neighbors.
-Through this both the community and the network grows further, enabling even more people to participate in the network in the future.
-
+When a new person or a new group decides to expand the community network, they can do this themselves by deploying new access points, routers, antennas, and other devices, connecting them to the rest of the network, effectively growing it.
+Often only very local coordination, with direct neighbours, is needed.
+Through this process, both the community and the network grows further, enabling even more people to participate in the network in the future.
 Because of this bottom-up growth pattern and community involvement, management of such networks poses some unique challenges:
 
 \begin{itemize}
@@ -364,6 +363,14 @@ Because community networks are mostly operated by volunteers, dealing with urgen
 Additionally, replacement of a broken hardware device can be done easily by one volunteer, while fixing a device can be done at a later time by another volunteer.
 Obtaining exactly the same device for a replacement is hard in community networks which utilize diverse hardware devices, so having a way to apply the same configuration to a new and different hardware device is needed.
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.47]{figures/registry-example-models.pdf}
+  \caption{Schema item definition from Figure~\ref{fig:schema-node-general}, displayed using an entity relationship diagram.
+  The \textit{core} module only contains a minimal \texttt{Node} while any attributes are provided by attached schema items in other modules.}
+  \label{fig:registry-schema-example}
+\end{figure}
+
 However, while having a platform-independent configuration is a noble goal, some configuration properties depend on features which are inherently device-dependent (for example the number of Ethernet ports, available wireless radios, supported protocols, etc.).
 In such cases the user editing the platform-independent configuration may create a configuration which will fail to work when applied to the target device.
 This can further delay problem discovery until the \textit{deployment} stage when it is already too late and costly to fix problems, especially in wireless networks where nodes may be deployed in hard-to-reach locations.
@@ -374,14 +381,6 @@ The \nodewatcher{} enables instant validation which is handled by the firmware g
 In the introduction we have mentioned the problem with attempting to design an all-encompassing schema or a single node database application that would cover every possible deployment of community networks.
 Communities will usually have some specifics regarding their operations~-- for example, because of different local regulations, hardware availability, or differences in philosophy.
 Having a single unified schema can quickly become a limiting factor that prohibits straightforward adaptation of the system for the local community.
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.47]{figures/registry-example-models.pdf}
-  \caption{Schema item definition from Figure~\ref{fig:schema-node-general}, displayed using an entity relationship diagram.
-  The \textit{core} module only contains a minimal \texttt{Node} while any attributes are provided by attached schema items in other modules.}
-  \label{fig:registry-schema-example}
-\end{figure}
 
 \nodewatcher{} avoids this problem by making the platform-independent schema itself completely extensible.
 Individual modules may register schema items and the final schema is the union of all these items.
@@ -790,6 +789,13 @@ Since the base framework is common to all, modules from different community netw
   \label{fig:datastream-storage}
 \end{figure}
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.4]{figures/datastream-counter-reset.pdf}
+  \caption{Correct rate computation example using the counter derivative operator, automatically derived from two streams.}
+  \label{fig:datastream-counter-reset}
+\end{figure}
+
 In Section~\ref{sec:platform-independent-configuration} we described how \nodewatcher{} uses the registry to store nodes' platform-independent configuration, described by the configuration schema.
 For storing monitoring data we use two different approaches that serve slightly different goals:
 \begin{itemize}
@@ -809,13 +815,6 @@ The monitoring pipeline may generate large amounts of time-series data during it
 As shown in Figure~\ref{fig:monitoring-pipeline}, one of the processors in the monitoring pipeline can be a \textit{datastream} processor, storing time-series data.
 Datastream is a system we developed, enabling storage, processing and retrieval of time-series data.
 In contrast to round-robin databases~\cite{Oetiker_1999}, where the database size is fixed in advance and old data is simply discarded, we are taking a different approach, storing all the data that we can for possible later analysis, enabling future research on improving automatic network diagnostics.
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.4]{figures/datastream-counter-reset.pdf}
-  \caption{Correct rate computation example using the counter derivative operator, automatically derived from two streams.}
-  \label{fig:datastream-counter-reset}
-\end{figure}
 
 \begin{figure*}
   \centering
