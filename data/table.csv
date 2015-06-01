@@ -1,0 +1,36 @@
+Solution,Core Developers,"Actively
+Developed",Appeared,Deployed,Features,,,,,,,,,,Modularity/Extensibility,,,,,,Developer Accessibility,,,,
+,,,,,"Network
+Monitoring",Federation,"Configuration
+Generator","Firmware
+Generator",API,"Resource
+Allocation","Link
+Planning","Node
+Auth.","Topology
+Vis.",Map,"User
+Interface",API,"Network
+Monitoring","Platform
+Support",Schema,"Routing
+Protocols",Repository,"Code
+Documentation","Programming
+Language","Web
+Framework",License
+Guifi.net framework,Guifi.net,yes,2004,2004,partial,no,yes,no,yes,yes,yes,no,static,yes,no,yes,no,no,no,no,GitHub,yes,PHP,Drupal,GPLv2
+AWMN WiND,AWMN,yes,2005,2005,no,no,no,no,yes,yes,yes,no,static,yes,no,no,no,no,no,no,GitHub,no,PHP,custom,AGPLv3
+FFM/CNDB,Funkfeuer,yes,2012,2015,no,no,no,no,yes,yes,no,no,no,yes,yes,yes,no,no,yes,no,GitHub,yes,Python,custom,BSD 3-Clause
+Nodeshot,Ninux,yes,2011,2011,no,yes,no,no,yes,no,yes,yes,dynamic,yes,no,yes,no,no,partial,yes,GitHub,yes,Python,Django,GPLv3
+nodewatcher v2,wlan slovenija,no,2009,2009,pull,no,yes,yes,no,yes,no,no,dynamic,yes,no,no,no,no,no,no,GitHub,no,Python,Django,AGPLv3
+nodewatcher v3,wlan slovenija,yes,2012,2015,"push, pull",no,yes,yes,yes,yes,no,yes,dynamic,yes,yes,yes,yes,yes,yes,yes,GitHub,yes,"Python, C",Django,AGPLv3
+Netmon,Freifunk,yes,2009,2009,"push, pull",no,no,no,yes,yes,no,no,dynamic,yes,no,yes,no,no,no,no,GitLab,no,PHP,custom,GPLv3
+LibreMap,Altermundi,yes,2013,2013,push,yes,no,no,yes,no,no,no,dynamic,yes,no,yes,yes,no,yes,yes,GitHub,no,JavaScript,custom,GPLv3
+kalua,weimarnetz.de,yes,2001,2001,push,no,yes,yes,no,yes,no,yes,dynamic,yes,no,no,no,no,no,yes,GitHub,no,"shell, PHP",custom,GPLv2
+meshviewer,Freifunk Lübeck,yes,2015,2015,"push, pull",no,no,no,yes,no,no,no,dynamic,yes,no,no,no,no,no,yes,GitHub,no,JavaScript,custom,AGPLv3
+K-Net,K-Net (DTU Students),yes,1996,1996,pull,no,no,no,yes,partly,yes,no,dynamic,yes,yes,yes,no,no,no,no,-,no,"C, C++, Python, Haskel",Django,none
+Geronimo,Opennet Initiative,yes,2011,2011,no,no,no,no,yes,no,no,no,dynamic,yes,no,yes,no,no,partial,no,git,yes,"PHP, Python",Django,none
+Ondataservice,Opennet Initiative,no,2009,2009,push,yes,no,no,yes,no,no,no,dynamic,no,no,no,no,yes,no,no,git,no,"C, PHP",custom,BSD 3-Clause
+NCD,Routek/qMp/Guifi,yes,2014,2015,pull,no,no,no,no,no,no,no,dynamic,no,yes,no,yes,no,yes,yes,git,no,"Lua, JavaScript",D3.js,GPLv3
+manman,Funkfeuer Graz,no,2006,2006,pull,no,no,no,partial,yes,no,no,no,yes,yes,no,yes,no,yes,no,-,no,"Ruby, Perl",Rails,none
+Xymon,xymon.com,yes,2005,2005,,,,,,,,,,,,,,,,,,,,,
+Nagios,nagios.org,yes,1999,1999,,,,,,,,,,,,,,,,,,,,,
+Zabbix,zabbix.com,yes,,,,,,,,,,,,,,,,,,,,,,,
+smokeping,,,,,,,,,,,,,,,,,,,,,,,,,
