@@ -262,13 +262,13 @@ AWMN WIND is built on a custom web framework, further limiting the ease of adopt
 Additionally, advanced network monitoring functionality is missing, requiring the use of external utilities, which causes duplication of configuration and is an error-prone process (see Section~\ref{sec:network-monitoring}).
 The Guifi.net framework does support including network monitoring graphs, but it requires the use of external monitoring services to perform the actual monitoring.
 
-Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and Freifunk FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and Freifunk community networks, respectively.
+Two more recent representatives of community network node databases are Nodeshot~\cite{Nodeshot_2012} and FFM/CNDB~\cite{Funkfeuer_2012}, developed by Ninux and FunkFeuer community networks, respectively.
 Nodeshot is an extensible web application for management of community geographic data.
 It focuses on mapping features with a more modular approach where various functionalities are extracted into modules.
 The modularity makes extending the application easier, but in contrast to \nodewatcher{}, there is no common approach to managing schema extensions which makes the database models hard to extend in a modular fashion.
 There is some monitoring support, but it is mostly limited to device discovery in an existing network and is not meant for long-term monitoring and diagnostics.
 
-Freifunk FFM/CNDB features an extensive database schema which models everything from devices to companies and people.
+FFM/CNDB features an extensive database schema which models everything from devices to companies and people.
 With its very detailed modelling of individual objects it is an example of the large common base approach.
 Similar to Nodeshot, there is no common approach to managing schema extensions and there is also no monitoring support.
 It uses a custom web framework with almost nonexistent documentation, having a steep learning curve before extending and adapting the system to another community network is possible.
