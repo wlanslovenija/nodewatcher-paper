@@ -233,7 +233,7 @@ LibreMap       \newline (Altermundi)       & \yes            & 2013     \newline
 kalua          \newline (weimarnetz.de)        & \yes            & 2001     \newline 2001     & \push           & \no         & \yes                    & \yes               & \no      & \yes                & \no           & \yes       & \dynamic      & \yes     & \no            & \no  & \no                & \no              & \no      & \yes       & \no                 & Sh, PHP                  & custom          & GPLv2            \\ \hline
 meshviewer     \newline (Freifunk L\"{u}beck)  & \yes            & 2015     \newline 2015     & \push, \pull    & \no         & \no                     & \no                & \yes     & \no                 & \no           & \no         & \dynamic      & \yes     & \no            & \no  & \no                & \no              & \no      & \yes             & \no                 & JS             & custom            & AGPLv3         \\ \hline
 K-Net          \newline (DTU Students)         & \yes            & 1996     \newline 1996     & \pull           & \no         & \no                     & \no                & \yes     & \maybe             & \yes          & \no         & \dynamic      & \yes     & \yes           & \yes & \no                & \no              & \no      & \no              & \no                 & C, C++, PY, HS & Django       & none \\ \hline
-Geronimo       \newline (Opennet Initiative)   & \yes            & 2011     \newline 2011     & \no             & \no         & \no                      & \no                 & \yes     & \no                & \no           & \no         & \dynamic     & \yes     & \no           & \yes & \no                 & \no             & \maybe     & \no                & \yes               & PHP, Python           & Django       & none              \\ \hline
+Geronimo       \newline (Opennet Initiative)   & \yes            & 2011     \newline 2011     & \no             & \no         & \no                      & \no                 & \yes     & \no                & \no           & \no         & \dynamic     & \yes     & \no           & \yes & \no                 & \no             & \maybe     & \no                & \yes               & PHP, PY           & Django       & none              \\ \hline
 Ondataservice  \newline (Opennet Initiative)   & \no            & 2009     \newline 2009     & \push             & \yes          & \no                      & \no                 & \yes     & \no                & \no           & \no         & \dynamic      & \no      & \no            & \no & \no                 & \yes             & \no     & \no              & \no               & C, PHP                 & custom            & BSD              \\ \hline
 NCD            \newline (Routek/qMp/Guifi)     & \yes            & 2014     \newline 2015     & \pull           & \no         & \no                     & \no                & \no      & \no                 & \no           & \no   & \dynamic      & \no & \yes           & \no   & \yes               & \no              & \yes     & \yes              & \no           & Lua, JS                & D3.js           & GPLv3         \\ \hline
 manman         \newline (Funkfeuer Graz)       & \no             & 2006     \newline 2006     & \pull             & \no         & \no                     & \no                & \maybe & \yes                & \no            & \no        & \no    & \yes     & \yes           & \no  & \yes               & \no              & \yes     & \no                & \no                 & RB, PL              & Rails        & none              \\ \hline
@@ -272,11 +272,17 @@ Freifunk FFM/CNDB features an extensive database schema which models everything 
 With its very detailed modelling of individual objects it is an example of the large common base approach.
 Similar to Nodeshot, there is no common approach to managing schema extensions and there is also no monitoring support.
 It uses a custom web framework with almost nonexistent documentation, having a steep learning curve before extending and adapting the system to another community network is possible.
-
 While the Guifi.net framework does support generating device configuration, none of the existing solutions support generating functional and pre-configured firmware images that can be directly flashed to devices.
 This would reduce the required administration burden and make the whole process easier for novices.
 As a consequence, these solutions also do not support comparing running configuration with provisioned one and detecting misconfiguration and unwanted changes.
 This makes detecting possible issues in advance impossible, and debugging issues once they occur slower.
+
+In this section we have presented an overview of existing community network management solutions.
+From these, we summarize a list of open problems:
+(a) existing solutions mostly lack modularity and easy extensibility in several areas including user interface, network monitoring, schema, configuration/firmware generation and routing protocols;
+(b) there is limited support for generating configuration, and no support for generating pre-configured firmware images;
+(c) there is limited support for interactive display of time-series monitoring data.
+The next section presents possible solutions to these problems.
 
 \section{Platform}
 \label{sec:platform}
@@ -493,7 +499,7 @@ Nodes may be removed from the database, but not yet permanently removed from the
 \subsection{Firmware Generator}
 \label{sec:firmware-generator}
 
-Traditionally, devices may be configured manually before they are deployed.
+Traditionally, in the generation stage of the device management cycle, devices are configured manually before they are deployed.
 This is usually done either through a command-line interface via telnet or secure shell (SSH) or a web-based user interface running on the device, depending on the device's firmware.
 In both cases, however, this is an error-prone process due to manual user input.
 Mistakes can easily happen and sometimes they might propagate to the deployment stage where they are hard and costly to fix.
@@ -976,8 +982,10 @@ This is why \nodewatcher{} also supports secure authentication of node data by u
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-We conclude that we achieved our goal of creating a modular platform with a guiding design goal of being extensible in all possible aspects to facilitate use, reuse, and collaboration in the wider community networks community.
-While the platform provides minimal end-user features by itself, its extensible base allows quick development of more features.
+In this paper we have presented \nodewatcher{}, a community network management platform, which is built around the core principle of modularity and extensibility, making it suitable for reuse by different community networks.
+Devices are configured using platform-independent configuration which \nodewatcher{} can transform into deployable firmware images, eliminating any manual device configuration, reducing errors, and enabling participation of novice maintainers.
+An embedded monitoring system enables live overview and validation of the whole community network.
+We have shown how the system successfully operates in an actual community wireless network, \wlanslovenija{}, while it is also starting to be used by other network communities.
 
 There are many possible modules to be made to further improve the networking aspects of community networks.
 Help with radio signal and propagation planing using realistic models and geographic data.
