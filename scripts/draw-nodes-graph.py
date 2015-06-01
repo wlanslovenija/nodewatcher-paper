@@ -6,7 +6,7 @@
 #
 # Run this script as in the top-level directory containing 'main.tex':
 #
-# ./scripts/draw-nodes-graph.py < node-up-status.json
+# ./scripts/draw-nodes-graph.py < ./data/node-up-status.json
 
 import fileinput
 import json
