@@ -169,7 +169,7 @@ Section~\ref{sec:conclusion} presents conclusions and ideas for future work.
 \section{Related Work}
 \label{sec:related-work}
 
-A lot of research has been done into individual wireless mesh network building blocks. Among them are routing~\cite{Murray_2010,Neumann_2012}, security~\cite{Siddiqui_2007}, and analyses of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008}.
+A lot of research has been done into individual wireless mesh network building blocks. Among them are routing~\cite{Murray_2010,Neumann_2012,Neumann_2013}, security~\cite{Siddiqui_2007}, and analyses of topologies, performance, mobility~\cite{Vega_2012,Zakrzewska_2008,Braem_2014,Cerda_2013,Maccari_2015}.
 But research into community network management solutions and best practices still remains scarce.
 This is why most of the related work in this area comes from the individual community networks which have each developed its own solutions, practices and philosophy.
 
@@ -214,7 +214,7 @@ They are often developed as an independent codebase which makes it much harder t
 \newcommand{\dynamic}{D}
 
 \begin{table*}[t!]
-\caption{\label{tbl:comparision}Feature comparison of existing node database systems as of May 2015. In the table we show the developer group (DEV) of a project, if it is actively developed (A) and when it was first officially mentioned and deployed (Y). In terms of project functionalities we list network monitoring (NM), federation support (FDR), configuration generation (CF), firmware generator (FW), application program interface (API), resource allocation (RA), node authentication (NA), link planning (LP), topology visualization (TP), and map visualization (MP). We also show which projects can be easily extended in terms of user interface (UI), application program interface (API), network monitoring (NM), support of platforms (PL), schema (SC), and routing protocols (RP). In terms of developer accessibility we highlight the documentation status (DOC), programming language (LAN), web framework (WF), and code license (LIC).}
+\caption{\label{tbl:comparision}Feature comparison of existing node database systems as of May 2015. In the table we show the developer group of a project, if it is actively developed (A) and when it was first officially mentioned and deployed (Y). In terms of project functionalities we list network monitoring (NM), federation support (FDR), configuration generation (CF), firmware generator (FW), application program interface (API), resource allocation (RA), node authentication (NA), link planning (LP), topology visualization (TP), and map visualization (MP). We also show which projects can be easily extended in terms of user interface (UI), application program interface (API), network monitoring (NM), support of platforms (PL), schema (SC), and routing protocols (RP). In terms of developer accessibility we highlight the documentation status (DOC), programming language (LAN), web framework (WF), and code license (LIC).}
 
 \bgroup
 \def\arraystretch{1.5}
@@ -250,13 +250,13 @@ nodewatcher v3 \newline (wlan slovenija)       & \yes            & 2012     \new
 Many wireless mesh network communities have quickly recognized the need for having a central system that would be able to manage the growing number of wireless mesh nodes.
 We present a comprehensive overview of properties of existing solutions in Table~\ref{tbl:comparision}. The data was obtained by studying the public information available about the projects (e.g. source code) and verified by reaching out to the members of the corresponding communities.
 We list several properties of community network management solutions, starting with the name of the project and the community that forms its core development group.
-We show whether the project is being actively developed and when was it first officially mentioned and deployed in an actual network.
+We show whether the project is being actively developed (A) and when was it first officially mentioned and deployed in an actual network (Y).
 Properties are then organized into three major areas, namely  features (functionality that the system has), modularity/extensibility (can the individual functionalities be extended without modifying the core) and developer accessibility.
 For most of the features, we list whether the described system implements the feature fully (\yes), only partially (\maybe) or not at all (\no).
-In case of network monitoring, we also list whether the system supports pulling data from nodes (\pull) and if nodes can push data to the system (\push).
-For topology visualization, we mark whether the system renders the topology just based on configuration (\static) or it can also display live topology as it changes based on some routing protocol (\dynamic).
+In case of network monitoring (NM), we also list whether the system supports pulling data from nodes (\pull) and if nodes can push data to the system (\push).
+For topology visualization (TP), we mark whether the system renders the topology just based on configuration (\static) or it can also display live topology as it changes based on some routing protocol (\dynamic).
 
-One of the oldest and largest mesh networks are Guifi.net~\cite{Guifinode_2003,Vega_2012} and the Athens Wireless Metropolitan Network~\cite{AWMN_WIND_2002}.
+One of the oldest and largest mesh networks are Guifi.net~\cite{Guifinode_2003,Vega_2012} and the Athens Wireless Metropolitan Network (AWMN)~\cite{AWMN_WIND_2002}.
 As the node database solutions evolved with their respective networks, both are tailored to specific structures of their networks and its management structure.
 Their codebase is monolithic, making it hard to extend with new features or customizations.
 This applies to the schema (which lacks any kind of object-relational mapping~\cite{ONeil_2008} and is therefore hard to manage when developing extensions), frontend interface and core functionalities.
