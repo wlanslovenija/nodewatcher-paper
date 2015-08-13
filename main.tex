@@ -963,8 +963,7 @@ Assuming that there are multiple independent subcommunities within one larger co
     A flat structure does not scale to a large number of subcommunities.
     A better way would be to develop a module that would enable nicer visual grouping of nodes, using a parent-child concept similar to the Guifi.net zones.
     As far as topology and map visualizations go, the existing implementation already supports disconnected islands of nodes.
-    Note that supporting large single installations would most likely require optimizations in the monitoring modules.
-    But since the whole monitoring pipeline is modular and designed to be easy to distribute over multiple servers, it can be improved upon by communities of such scale.
+    Note that supporting large single installations (several thousand nodes and more) would most likely require performance optimizations in the monitoring modules, but since the whole monitoring pipeline is modular and designed to be easy to distribute over multiple servers, it can be improved upon by communities of such size.
 \end{description}
 
 The last concern regards security.
@@ -983,12 +982,7 @@ Devices are configured using platform-independent configuration which \nodewatch
 An embedded monitoring system enables live overview and validation of the whole community network.
 We have shown how the system successfully operates in an actual community wireless network, \wlanslovenija{}, while it is also starting to be used by other network communities.
 
-There are many possible modules to be made to further improve the networking aspects of community networks.
-Help with radio signal and propagation planing using realistic models and geographic data.
-Support for more routing protocols.
-Further optimizations for really large networks.
-But instead of us developing all these new features ourselves, the main next step is to engage other network communities to develop features specific to their networks.
-We have already established partnerships with other community networks who are starting to work in this direction.
+There are many possible improvements that could make various aspects of community networks easier to manage, e.g. help with radio signal and propagation planing using realistic models and geographic data, support for more routing protocols, and further optimizations for really large networks. Instead of developing all these new features ourselves, we envision the next step is to engage other network communities to develop features that are specific to their networks. We have already established partnerships with other community networks who are starting to work in this direction.
 
 We also expect to see completely new features added to the platform by third-party developers.
 For example, a warehouse module to help organize the inventory of equipment in community networks, a store module helping users order preconfigured devices, and local community and services modules to help people who are using the community networks to form better communities.
