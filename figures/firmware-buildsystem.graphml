@@ -14,7 +14,38 @@
   <key for="edge" id="d10" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
     <data key="d0"/>
-    <node id="n0">
+    <node id="n0" yfiles.foldertype="group">
+      <data key="d4"/>
+      <data key="d6">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Geometry height="141.921875" width="290.8385416666665" x="-208.0468749999999" y="66.3203125"/>
+              <y:Fill color="#F5F5F57F" transparent="false"/>
+              <y:BorderStyle color="#0000007F" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" backgroundColor="#EBEBEB7F" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="38.921875" modelName="internal" modelPosition="t" textColor="#0000007F" visible="true" width="290.8385416666665" x="0.0" y="0.0">Transform Modules
+[runtime platform RouterOS]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.07291666666662877" top="0" topF="0.0"/>
+            </y:GroupNode>
+            <y:GroupNode>
+              <y:Geometry height="50.0" width="50.0" x="-17.718749999999886" y="-51.56510416666666"/>
+              <y:Fill color="#F5F5F5" transparent="false"/>
+              <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.4609375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="65.201171875" x="-7.6005859375" y="0.0">Folder 2</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="true" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="5" bottomF="5.0" left="5" leftF="5.0" right="5" rightF="5.0" top="5" topF="5.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="n0:"/>
+    </node>
+    <node id="n1">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="53.4375" width="138.07291666666663" x="119.81250000000003" y="155.5625"/>
@@ -32,7 +63,7 @@ Specific Config.<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n1">
+    <node id="n2">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="78.17708333333337" width="164.11458333333337" x="106.79166666666666" y="288.32291666666663"/>
@@ -58,13 +89,14 @@ Image<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n2">
+    <node id="n3">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="93.80208333333331" x="-124.52864583333329" y="288.32291666666663"/>
+          <y:Geometry height="39.323651452282206" width="147.1875" x="-151.22135416666663" y="288.32291666666663"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="66.326171875" x="13.737955729166657" y="6.015625">Device DB<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" modelName="custom" textColor="#000000" visible="true" width="117.443359375" x="14.8720703125" y="3.693075726141103">Hardware
+Device Descriptors<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -75,7 +107,7 @@ Image<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n3">
+    <node id="n4">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="53.4375" width="164.11458333333337" x="-439.18229166666663" y="155.5625"/>
@@ -93,7 +125,7 @@ Configuration<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n4">
+    <node id="n5">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="164.11458333333337" x="-439.18229166666663" y="209.0"/>
@@ -110,16 +142,17 @@ Configuration<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n5" yfiles.foldertype="group">
+    <node id="n6" yfiles.foldertype="group">
       <data key="d4"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="186.3671875" width="177.1875" x="324.97916666666663" y="78.3671875"/>
+              <y:Geometry height="203.828125" width="177.1875" x="324.97916666666663" y="60.90625"/>
               <y:Fill color="#F5F5F5" transparent="false"/>
               <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.4609375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="177.1875" x="0.0" y="0.0">Firmware Builders</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="38.921875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="177.1875" x="0.0" y="0.0">Firmware Builders
+[OpenWrt]</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
               <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
               <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
@@ -138,8 +171,8 @@ Configuration<y:LabelModel>
           </y:Realizers>
         </y:ProxyAutoBoundsNode>
       </data>
-      <graph edgedefault="directed" id="n5:">
-        <node id="n5::n0">
+      <graph edgedefault="directed" id="n6:">
+        <node id="n6::n0">
           <data key="d6">
             <y:ShapeNode>
               <y:Geometry height="31.197916666666686" width="147.1875" x="339.97916666666663" y="166.68229166666666"/>
@@ -157,7 +190,7 @@ Configuration<y:LabelModel>
             </y:ShapeNode>
           </data>
         </node>
-        <node id="n5::n1">
+        <node id="n6::n1">
           <data key="d6">
             <y:ShapeNode>
               <y:Geometry height="31.197916666666686" width="147.1875" x="339.97916666666663" y="218.16666666666666"/>
@@ -175,7 +208,7 @@ Configuration<y:LabelModel>
             </y:ShapeNode>
           </data>
         </node>
-        <node id="n5::n2">
+        <node id="n6::n2">
           <data key="d6">
             <y:ShapeNode>
               <y:Geometry height="31.197916666666686" width="147.1875" x="339.97916666666663" y="115.19791666666666"/>
@@ -195,17 +228,17 @@ Configuration<y:LabelModel>
         </node>
       </graph>
     </node>
-    <node id="n6" yfiles.foldertype="group">
+    <node id="n7" yfiles.foldertype="group">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="124.4609375" width="290.8385416666665" x="-223.0468749999999" y="119.1015625"/>
+              <y:Geometry height="141.921875" width="290.8385416666665" x="-223.0468749999999" y="111.3203125"/>
               <y:Fill color="#F5F5F5" transparent="false"/>
               <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.4609375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="290.8385416666665" x="0.0" y="0.0">Transform Modules</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="38.921875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="290.8385416666665" x="0.0" y="0.0">Transform Modules
+[runtime platform OpenWrt]</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
               <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
               <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
@@ -224,12 +257,11 @@ Configuration<y:LabelModel>
           </y:Realizers>
         </y:ProxyAutoBoundsNode>
       </data>
-      <graph edgedefault="directed" id="n6:">
-        <node id="n6::n0">
-          <data key="d5"/>
+      <graph edgedefault="directed" id="n7:">
+        <node id="n7::n0">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="30.0" width="123.0" x="-70.28124999999997" y="198.5625"/>
+              <y:Geometry height="30.0" width="123.0" x="-70.28124999999997" y="208.2421875"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="48.748046875" x="37.1259765625" y="6.015625">System<y:LabelModel>
@@ -243,11 +275,10 @@ Configuration<y:LabelModel>
             </y:ShapeNode>
           </data>
         </node>
-        <node id="n6::n1">
-          <data key="d5"/>
+        <node id="n7::n1">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="30.0" width="123.0" x="-208.0468749999999" y="198.5625"/>
+              <y:Geometry height="30.0" width="123.0" x="-208.0468749999999" y="208.2421875"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="63.9765625" x="29.51171875" y="6.015625">Interfaces<y:LabelModel>
@@ -261,11 +292,10 @@ Configuration<y:LabelModel>
             </y:ShapeNode>
           </data>
         </node>
-        <node id="n6::n2">
-          <data key="d5"/>
+        <node id="n7::n2">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="30.0" width="123.0" x="-70.28124999999997" y="155.5625"/>
+              <y:Geometry height="30.0" width="123.0" x="-70.28124999999997" y="165.2421875"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="92.32421875" x="15.337890625" y="6.015625">Routing: Babel<y:LabelModel>
@@ -279,11 +309,10 @@ Configuration<y:LabelModel>
             </y:ShapeNode>
           </data>
         </node>
-        <node id="n6::n3">
-          <data key="d5"/>
+        <node id="n7::n3">
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="30.0" width="123.0" x="-208.0468749999999" y="155.5625"/>
+              <y:Geometry height="30.0" width="123.0" x="-208.0468749999999" y="165.2421875"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="90.490234375" x="16.2548828125" y="6.015625">Routing: OLSR<y:LabelModel>
@@ -299,7 +328,7 @@ Configuration<y:LabelModel>
         </node>
       </graph>
     </node>
-    <edge id="e0" source="n0" target="n5::n0">
+    <edge id="e0" source="n1" target="n6::n0">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -311,7 +340,7 @@ Configuration<y:LabelModel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e1" source="n0" target="n1">
+    <edge id="e1" source="n1" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -321,8 +350,7 @@ Configuration<y:LabelModel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e2" source="n2" target="n6">
-      <data key="d9"/>
+    <edge id="e2" source="n3" target="n7">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -332,8 +360,7 @@ Configuration<y:LabelModel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e3" source="n3" target="n6">
-      <data key="d9"/>
+    <edge id="e3" source="n4" target="n7">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -343,8 +370,7 @@ Configuration<y:LabelModel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e4" source="n6" target="n0">
-      <data key="d9"/>
+    <edge id="e4" source="n7" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -354,17 +380,16 @@ Configuration<y:LabelModel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e5" source="n6" target="n3">
-      <data key="d9"/>
+    <edge id="e5" source="n7" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-152.76250000000002" y="69.23750000000001"/>
-            <y:Point x="-322.7625" y="69.23750000000001"/>
+            <y:Point x="-152.76250000000002" y="39.934595435684656"/>
+            <y:Point x="-345.405653526971" y="39.934595435684656"/>
           </y:Path>
           <y:LineStyle color="#FF6600" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#FF6600" visible="true" width="135.794921875" x="-187.1191266479492" y="-67.77760278320312">Transformation Errors<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/>
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#FF6600" visible="true" width="135.794921875" x="-198.03322237260113" y="-90.60374960365138">Transformation Errors<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/>
           </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
