@@ -19,6 +19,7 @@ journal `Computer Networks`_, in the `special issue on community networks`_,
 Available at:
 
 * http://www.sciencedirect.com/science/article/pii/S1389128615003400
+* https://www.sharelatex.com/github/repos/wlanslovenija/nodewatcher-paper/builds/latest/output.pdf
 
 Abstract:
 
