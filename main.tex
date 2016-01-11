@@ -14,7 +14,7 @@
 \usepackage[flushleft]{threeparttable}
 \usepackage[english]{babel}
 \usepackage[shortcuts]{extdash}
-\usepackage{minted}
+\usepackage{listings}
 \usepackage[inline]{enumitem}
 \usepackage[labelformat=simple]{subcaption}
 \usepackage{algorithm}
@@ -330,7 +330,7 @@ Each part is designed to be easily extensible to networks with various topologie
 
 \begin{figure}
 \centering
-\begin{minted}[fontsize=\small,frame=single,framesep=2mm]{python}
+\begin{lstlisting}[language=Python,frame=single,basicstyle=\ttfamily\footnotesize,breaklines=true]
 # Module A
 class InfoCfg(RegistryItem):
   name = CharField()
@@ -349,7 +349,7 @@ class ExtendedCfg(module_a.InfoCfg):
 registration.point('node.config').register_item(
   ExtendedCfg
 )
-\end{minted}
+\end{lstlisting}
 \caption{A simplified example of a schema definition for a node's name and used device hardware, split over two modules to show extension capabilities.}
 \label{fig:schema-node-general}
 \end{figure}
@@ -405,20 +405,20 @@ Suppose that we would like to also add two more fields which would specify what 
 We may do that in another module by defining \texttt{ExtendedCfg} as shown in Figure~\ref{fig:schema-node-general}.
 Now, another module would like to perform a query, listing only nodes that use a device called \texttt{tp-wr741ndv4}.
 As mentioned, these two classes actually represent ORM model definitions, so a traditional query traversing these two relations could be written using the SQL-like relational query notation introduced in~\cite{ONeil_2008}:
-\begin{minted}[fontsize=\small]{sql}
+\begin{lstlisting}[language=sql,frame=single,basicstyle=\ttfamily\footnotesize,breaklines=true]
 SELECT n FROM Node n
 WHERE n.infocfg.extendedcfg.device = 'tp-wr741ndv4'
-\end{minted}
+\end{lstlisting}
 
 Here we make an assumption that there is a one-to-one relation between a \texttt{Node} and \texttt{InfoCfg}.
 While one-to-many relations are also supported (so each node can have multiple instances of a model, for example multiple network interfaces), we limit ourselves to this simple case for ease of exposition.
 Note how even in this very simple example we had to explicitly specify the hierarchical path that is spanning these two relations to get to the wanted field.
 This makes such a method not very developer-friendly under the requirement of extensibility and even more complex schemas.
 One of the features that the registry enables, is that we can simplify the same query as:
-\begin{minted}[fontsize=\small]{sql}
+\begin{lstlisting}[language=sql,frame=single,basicstyle=\ttfamily\footnotesize,breaklines=true]
 SELECT n FROM Node n
 WHERE REGISTRY info.device = 'tp-wr741ndv4'
-\end{minted}
+\end{lstlisting}
 
 In this case, \texttt{info} is the \textit{registry identifier} that we attached to the base model using its meta \textit{Registry ID} attribute (see Figure~\ref{fig:registry-schema-example}) and represents itself or any of its subclasses at the same time.
 In the background, the proper relations are automatically deduced and the query executed.
@@ -647,7 +647,7 @@ Thus, an integrated monitoring component is key in ensuring ease of deployment a
 
 \begin{figure}[t]
 \centering
-\begin{minted}[fontsize=\small,frame=single,framesep=2mm]{json}
+\begin{lstlisting}[frame=single,basicstyle=\ttfamily\footnotesize,breaklines=true]
 {
   "core.general": {
     "_meta": { "version": 4 },
@@ -664,7 +664,7 @@ Thus, an integrated monitoring component is key in ensuring ease of deployment a
     }
   }
 }
-\end{minted}
+\end{lstlisting}
 \caption{Example part of the JSON schema compiled by the \nodewatcher{} monitoring agent, showing sample output for two monitoring modules.}
 \label{fig:monitoring-json-schema}
 \end{figure}
