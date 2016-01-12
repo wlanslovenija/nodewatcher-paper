@@ -20,6 +20,7 @@ Available at:
 
 * http://www.sciencedirect.com/science/article/pii/S1389128615003400
 * https://www.sharelatex.com/github/repos/wlanslovenija/nodewatcher-paper/builds/latest/output.pdf
+* http://arxiv.org/abs/1601.02372
 
 Abstract:
 
